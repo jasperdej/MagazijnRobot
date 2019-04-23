@@ -6,12 +6,14 @@ import java.util.Comparator;
 
 public class ModifiedBestFit {
 
+    private Order order;
     private ArrayList<Article> list;
     private ArrayList<Bin> bins;
     private double binCapacity;
     private int binMaxItems;
 
-    public ModifiedBestFit(double binCapacity, int binMaxItems) {
+    public ModifiedBestFit(Order order, double binCapacity, int binMaxItems) {
+        this.order = order;
         list = new ArrayList<>();
         bins = new ArrayList<>();
         this.binCapacity = binCapacity;
@@ -58,7 +60,7 @@ public class ModifiedBestFit {
             }
 //
             if (placed == false) {
-                bins.add(new Bin(bins.size() + 1));
+                bins.add(new Bin(order, bins.size() + 1));
                 bins.get(bins.size() - 1).addItem(l);
                 bins.get(bins.size() - 1).addToTotalWeight(l.getWeight());
             }

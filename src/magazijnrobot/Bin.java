@@ -16,7 +16,8 @@ public class Bin {
     private int percentageFilled;
 
     //needs adjusting
-    public Bin(int binNumber) {
+    public Bin(Order order, int binNumber) {
+        this.order = order;
         this.binNumber = binNumber;
         totalWeight = 0.0;
         articles = new ArrayList<>();
