@@ -21,6 +21,7 @@ public class Article {
     public Article(int id, String name, double weight, int amountAvailable, CoordinatePoint location) {
         this(id, name, weight, amountAvailable, 0, location);
     }
+//comment
 
     public int getId() {
         return id;
