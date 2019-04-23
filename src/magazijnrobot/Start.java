@@ -8,6 +8,7 @@ public class Start {
         //hallo hallo
         //doei
         //nee, hallo
+        //ik wou ook ff testen || rick
     }
 
 }
