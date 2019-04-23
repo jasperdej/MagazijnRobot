@@ -15,6 +15,8 @@ public class Route {
         zetInVolgorde();
     }
 
+    //comment toegevoegd
+
 
     private void zetInVolgorde(){
         berekenRouteAfstand();
