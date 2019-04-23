@@ -27,9 +27,9 @@ class DbConn {
                 DbConn.dbConnect();
                 try {
                         Statement stmt = con.createStatement();
-                        ResultSet rs = stmt.executeQuery("select * from orders");
+                        ResultSet rs = stmt.executeQuery("select * from stockitemholdings");
                         while (rs.next())
-                                System.out.println(rs.getInt(1) + "  " + rs.getString(2) + "  " + rs.getString(3) + "  " + rs.getString(4));
+                                System.out.println("ID: " + rs.getInt(1) + "  Aantal: " + rs.getString(2) + "  Locatie: " + rs.getString(3) + "  StockBefore: " + rs.getString(4));
                         stmt.close();
                         DbConn.dbKill();
                 } catch (Exception e) {
