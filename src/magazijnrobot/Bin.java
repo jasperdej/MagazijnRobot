@@ -5,13 +5,22 @@ import java.util.ArrayList;
 public class Bin {
 
     private int binNumber;
-    private Integer totalWeight;
-    private ArrayList<Integer> items;
+    private Order order;
+    private Double totalWeight;
+    private CoordinatePoint topCoordinatePoint;
+    private CoordinatePoint bottomCoordinatePoint;
+    private int maximumWeight;
+    private int maximumQuantity;
+    private ArrayList<Article> articles;
+    private String status;
+    private int percentageFilled;
 
-    public Bin(int binNumber) {
+    //needs adjusting
+    public Bin(Order order, int binNumber) {
+        this.order = order;
         this.binNumber = binNumber;
-        totalWeight = 0;
-        items = new ArrayList<>();
+        totalWeight = 0.0;
+        articles = new ArrayList<>();
     }
 
     public int getBinNumber() {
@@ -19,24 +28,24 @@ public class Bin {
     }
 
     public void printBin() {
-        for (Integer i : items) {
-            System.out.println("- " + i);
+        for (Article i : articles) {
+            System.out.println("- " + i.getId());
         }
     }
 
-    public Integer getTotalWeight() {
+    public Double getTotalWeight() {
         return totalWeight;
     }
 
-    public void addToTotalWeight(int weight) {
+    public void addToTotalWeight(double weight) {
         totalWeight += weight;
     }
 
-    public ArrayList<Integer> getItems() {
-        return items;
+    public ArrayList<Article> getItems() {
+        return articles;
     }
 
-    public void addItem(Integer weight) {
-        items.add(weight);
+    public void addItem(Article article) {
+        articles.add(article);
     }
 }
