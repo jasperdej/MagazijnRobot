@@ -35,5 +35,7 @@ public class InventoryScreen extends JFrame {
     //put all articles from database in allArticles.
     private void fillAllArticle() {
         //gegevens uit de database halen
+        DbConn dbConn = new DbConn();
+        dbConn.getDb("select StockItemName, StockItemID, TypicalWeightPerUnit, ")
     }
 }

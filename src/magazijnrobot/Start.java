@@ -4,7 +4,7 @@ public class Start {
 
     public static void main(String[] args) {
 
-        //test
+        DbConn.dbConnect();
         CoordinatePoint testCoordinate = new CoordinatePoint(0, 2);
         Order testOrder = new Order(1);
         Article testArticle0 = new Article(1, testCoordinate, 12);
