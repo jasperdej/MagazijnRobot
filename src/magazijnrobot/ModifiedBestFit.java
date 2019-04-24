@@ -14,7 +14,7 @@ public class ModifiedBestFit {
 
     public ModifiedBestFit(Order order, double binCapacity, int binMaxItems) {
         this.order = order;
-        list = new ArrayList<>();
+        list = order.getArticles();
         bins = new ArrayList<>();
         this.binCapacity = binCapacity;
         this.binMaxItems = binMaxItems;
@@ -25,7 +25,14 @@ public class ModifiedBestFit {
     }
 
     public void packItems() {
-        Collections.sort(list, Collections.reverseOrder());
+        Collections.sort(list, new Comparator<Article>() {
+            @Override
+            public int compare(Article a, Article b) {
+                return a.getWeight().compareTo(b.getWeight());
+            }
+        });
+        Collections.reverse(list);
+        printList();
         for (Article l : list) {
             Collections.sort(bins, new Comparator<Bin>() {
                 @Override
@@ -60,7 +67,7 @@ public class ModifiedBestFit {
             }
 //
             if (placed == false) {
-                bins.add(new Bin(order, bins.size() + 1));
+                bins.add(new Bin(order, binCapacity, binMaxItems));
                 bins.get(bins.size() - 1).addItem(l);
                 bins.get(bins.size() - 1).addToTotalWeight(l.getWeight());
             }
@@ -71,6 +78,12 @@ public class ModifiedBestFit {
         for (Bin b : bins) {
             System.out.println("Bin " + b.getBinNumber());
             b.printBin();
+        }
+    }
+
+    public void printList() {
+        for (Article l : list) {
+            l.printWeight();
         }
     }
 }

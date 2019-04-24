@@ -1,15 +1,20 @@
 package magazijnrobot;
 
+import java.util.ArrayList;
+
 public class Order {
+
     private int orderNr;
     private String status;
     private int amountOfArticles;
     private double totalWeight;
-    private Article[] article;
+    private ArrayList<Article> articles;
     private Customer customer;
 
-    public Order () {
-
+    public Order(int orderNr) {
+        this.orderNr = orderNr;
+        //haal rest op uit database
+        articles = new ArrayList<>(); //10 wordt aantal items uit de database
     }
 
     public String getStatus() {
@@ -24,8 +29,8 @@ public class Order {
         return totalWeight;
     }
 
-    public Article[] getArticle() {
-        return article;
+    public ArrayList<Article> getArticles() {
+        return articles;
     }
 
     public Customer getCustomer() {
@@ -34,5 +39,9 @@ public class Order {
 
     public int getOrderNr() {
         return orderNr;
+    }
+
+    public void addArticle(Article article) {
+        articles.add(article);
     }
 }

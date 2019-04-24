@@ -4,24 +4,17 @@ public class Article {
 
     private int id;
     private String name;
-    private double weight;
+    private Double weight;
     private int amountAvailable;
     private int amountReserved;
     private CoordinatePoint location;
 
-    public Article(int id, String name, double weight, int amountAvailable, int amountReserved, CoordinatePoint location) {
+    public Article(int id, CoordinatePoint location, double weight/*weight = temporary*/) {
         this.id = id;
-        this.name = name;
-        this.weight = weight;
-        this.amountAvailable = amountAvailable;
-        this.amountReserved = amountReserved;
         this.location = location;
+        //aangevuld uit de database
+        this.weight = weight;//temporary
     }
-
-    public Article(int id, String name, double weight, int amountAvailable, CoordinatePoint location) {
-        this(id, name, weight, amountAvailable, 0, location);
-    }
-//comment
 
     public int getId() {
         return id;
@@ -31,7 +24,7 @@ public class Article {
         return name;
     }
 
-    public double getWeight() {
+    public Double getWeight() {
         return weight;
     }
 
@@ -45,6 +38,10 @@ public class Article {
 
     public CoordinatePoint getLocation() {
         return location;
+    }
+
+    public void printWeight() {
+        System.out.println(weight);
     }
 
 }
