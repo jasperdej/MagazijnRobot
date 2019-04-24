@@ -2,7 +2,7 @@ package magazijnrobot;
 
 import java.sql.*;
 
-class DbConn {
+public class DbConn {
         private static Connection con;
 
         public static void dbConnect() {
@@ -23,10 +23,11 @@ class DbConn {
         }
 
         public Article[][] getDb(String sql) {
-                 Article[][] articles;
+                 Article[][] articles = {};
                 try {
                         Statement stmt = con.createStatement();
                         ResultSet rs = stmt.executeQuery(sql);
+
 
 
                         stmt.close();
@@ -34,22 +35,23 @@ class DbConn {
                 } catch (Exception e) {
                         System.out.println(e);
         }
+                return articles;
 
         // Testen of de database connectie werkt
-        public static void main(String args[]) {
-                DbConn.dbConnect();
-                try {
-                        Statement stmt = con.createStatement();
-                        ResultSet rs = stmt.executeQuery("select * from stockitemholdings");
-                        while (rs.next())
-                                System.out.println("ID: " + rs.getInt(1) + "  Aantal: " + rs.getString(2) + "  Locatie: " + rs.getString(3) + "  StockBefore: " + rs.getString(4));
-                        stmt.close();
-                        DbConn.dbKill();
-                } catch (Exception e) {
-                        System.out.println(e);
-                }
-
-
+//        public static void main(String args[]) {
+//                DbConn.dbConnect();
+//                try {
+//                        Statement stmt = con.createStatement();
+//                        ResultSet rs = stmt.executeQuery("select * from stockitemholdings");
+//                        while (rs.next())
+//                                System.out.println("ID: " + rs.getInt(1) + "  Aantal: " + rs.getString(2) + "  Locatie: " + rs.getString(3) + "  StockBefore: " + rs.getString(4));
+//                        stmt.close();
+//                        DbConn.dbKill();
+//                } catch (Exception e) {
+//                        System.out.println(e);
+//                }
+//
+//
         }
 }
 
