@@ -2,8 +2,8 @@
   <library name="arduino">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/../libraries/arduino.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../libraries/mysql-connector-java-8.0.15.jar!/" />
       <root url="jar://$PROJECT_DIR$/../libraries/jSerialComm-1.3.11.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../libraries/mysql-connector-java-8.0.15.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
