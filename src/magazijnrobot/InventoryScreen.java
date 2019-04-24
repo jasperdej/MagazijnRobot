@@ -1,41 +1,39 @@
 package magazijnrobot;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class InventoryScreen extends JFrame {
-    private Article[] allArticles;
+    //private Object[][] allArticles = new Article[2][3];
+    private String[][] allArticles = {};
+    private String[] columnNames = {"Naam", "ItemId", "Gewicht", "Aantal", "Gereserveerd"};
     private int amountOfArticles;
+    JTable jTable;
 
     public InventoryScreen () {
-        fillArticle();
+        fillAllArticle();
         setTitle("Voorraad overzicht");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //sets screensize to fullscreen.
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setUndecorated(true);
+
+        //makes the frame completely fullscreen.
+        //setUndecorated(true);
 
 
+        jTable = new JTable(allArticles, columnNames);
+        //ik weet niet wat dit doet, voorbeeld van internet overgenomen.
+        //jTable.setBounds(30, 40, 200, 300);
 
-
+        JScrollPane sp = new JScrollPane(jTable);
+        add(sp);
 
         setVisible(true);
     }
 
     //put all articles from database in allArticles.
-    private void fillArticle() {
+    private void fillAllArticle() {
         //gegevens uit de database halen
     }
-
-    //responsible for projecting all articles on screen.
-    private void showAllArticles() {
-        for(Article a: allArticles) {
-            showArticle(a.getId());
-        }
-    }
-
-    //projects article rows on screen.
-    private void showArticle(int id) {
-        add(new JLabel("text vanuit de db."));
-    }
-
 }
