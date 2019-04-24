@@ -10,7 +10,7 @@ class DbConn {
                         Class.forName("com.mysql.cj.jdbc.Driver");
                         con = DriverManager.getConnection("jdbc:mysql://localhost:3306/wideworldimporters?useTimezone=true&serverTimezone=UTC", "root", "");
                 } catch (Exception e) {
-                        System.out.println(e);
+                        System.out.println("zet je XAMPP aan idioot ;)");
                 }
         }
 
@@ -20,6 +20,19 @@ class DbConn {
                 } catch (Exception e) {
                         System.out.println(e);
                 }
+        }
+
+        public Article[][] getDb(String sql) {
+                 Article[][] articles;
+                try {
+                        Statement stmt = con.createStatement();
+                        ResultSet rs = stmt.executeQuery(sql);
+
+
+                        stmt.close();
+                        DbConn.dbKill();
+                } catch (Exception e) {
+                        System.out.println(e);
         }
 
         // Testen of de database connectie werkt
