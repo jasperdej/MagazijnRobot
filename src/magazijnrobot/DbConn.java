@@ -8,7 +8,7 @@ class DbConn {
         public static void dbConnect() {
                 try {
                         Class.forName("com.mysql.cj.jdbc.Driver");
-                        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/wideworldimporters", "root", "");
+                        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/wideworldimporters?useTimezone=true&serverTimezone=UTC", "root", "");
                 } catch (Exception e) {
                         System.out.println(e);
                 }

@@ -5,7 +5,7 @@ import java.awt.*;
 
 public class InventoryScreen extends JFrame {
     //private Object[][] allArticles = new Article[2][3];
-    private String[][] allArticles = {};
+    private String[][] allArticles;
     private String[] columnNames = {"Naam", "ItemId", "Gewicht", "Aantal", "Gereserveerd"};
     private int amountOfArticles;
     JTable jTable;
