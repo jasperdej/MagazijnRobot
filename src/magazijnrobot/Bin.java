@@ -4,21 +4,23 @@ import java.util.ArrayList;
 
 public class Bin {
 
+    private static int binCount = 0;
     private int binNumber;
     private Order order;
     private Double totalWeight;
     private CoordinatePoint topCoordinatePoint;
     private CoordinatePoint bottomCoordinatePoint;
-    private int maximumWeight;
+    private double maximumWeight;
     private int maximumQuantity;
     private ArrayList<Article> articles;
     private String status;
     private int percentageFilled;
 
     //needs adjusting
-    public Bin(Order order, int binNumber) {
+    public Bin(Order order, double maximumWeight, int maximumQuantity) {
         this.order = order;
-        this.binNumber = binNumber;
+        binCount++;
+        binNumber = binCount;
         totalWeight = 0.0;
         articles = new ArrayList<>();
     }
@@ -29,7 +31,7 @@ public class Bin {
 
     public void printBin() {
         for (Article i : articles) {
-            System.out.println("- " + i.getId());
+            System.out.println("- " + i.getWeight());
         }
     }
 
