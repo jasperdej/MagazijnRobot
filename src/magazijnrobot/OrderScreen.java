@@ -2,11 +2,12 @@ package magazijnrobot;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class OrderScreen extends JFrame implements ActionListener {
+public class OrderScreen extends JFrame implements MouseListener {
     private Object[][] allOrders;
     private String[] columnNames = {"Ordernummer","Aantal","Gewicht","Klantnummer","Status"};
     JTable jTable;
@@ -20,9 +21,11 @@ public class OrderScreen extends JFrame implements ActionListener {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         jTable = new JTable(allOrders, columnNames);
+        jTable.addMouseListener(this);
 
         JScrollPane sp = new JScrollPane(jTable);
         add(sp);
+
 
         setVisible(true);
     }
@@ -72,7 +75,35 @@ public class OrderScreen extends JFrame implements ActionListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void mouseClicked(MouseEvent e) {
+        int row = jTable.getSelectedRow();
+        int orderId;
+        try {
+            orderId = Integer.parseInt((String)jTable.getValueAt(row,0));
+        } catch (ClassCastException ex) {
+            orderId = 0;
+        }
+        //create dialog
+        System.out.println(orderId);
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e){
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e){
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e){
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
 
     }
 }
