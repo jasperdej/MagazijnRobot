@@ -13,7 +13,7 @@ public class InventoryScreen extends JFrame {
     JTable jTable;
 
     public InventoryScreen () {
-        fillAllArticle();
+        fillAllArticles();
         setTitle("Voorraad overzicht");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -32,12 +32,14 @@ public class InventoryScreen extends JFrame {
         add(sp);
 
         setVisible(true);
+        refreshInventoryScreen();
     }
 
     //put all articles from database in allArticles.
-    private void fillAllArticle() {
+    private void fillAllArticles() {
         //get results from database.
         DbConn dbConn = new DbConn();
+        dbConn.dbConnect();
         ResultSet rs = dbConn.getResultSetFromDb("select si.StockItemName, si.StockItemID, si.TypicalWeightPerUnit, sih.QuantityOnHand, sum(ol.Quantity) from stockitemholdings sih join stockitems si on sih.StockItemID = si.StockItemID left join Orderlines ol on ol.Stockitemid = si.Stockitemid  where si.StockItemID < 6 group by ol.Stockitemid");
 
         //int for measuring the amount of rows in the resultset.
@@ -71,5 +73,10 @@ public class InventoryScreen extends JFrame {
             dbConn.killStatement();
         }
 
+    }
+
+    public void refreshInventoryScreen() {
+        fillAllArticles();
+        jTable = new JTable(allArticles, columnNames);
     }
 }
