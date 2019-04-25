@@ -8,6 +8,9 @@ public class Start {
         new InventoryScreen();
 //        new OrderScreen();
 
+        new RobotScreen();
+
+
 
 //        CoordinatePoint testCoordinate = new CoordinatePoint(0, 2);
 //        Order testOrder = new Order(1);
