@@ -6,6 +6,7 @@ public class Start {
         //Establishes a connection with the database.
         DbConn.dbConnect();
         new InventoryScreen();
+//        new OrderScreen();
 
 
 //        CoordinatePoint testCoordinate = new CoordinatePoint(0, 2);
