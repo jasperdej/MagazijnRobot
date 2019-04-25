@@ -2,10 +2,12 @@ package magazijnrobot;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class InventoryScreen extends JFrame {
     //private Object[][] allArticles = new Article[2][3];
-    private String[][] allArticles;
+    private Object[][] allArticles;
     private String[] columnNames = {"Naam", "ItemId", "Gewicht", "Aantal", "Gereserveerd"};
     private int amountOfArticles;
     JTable jTable;
@@ -34,8 +36,40 @@ public class InventoryScreen extends JFrame {
 
     //put all articles from database in allArticles.
     private void fillAllArticle() {
-        //gegevens uit de database halen
+        //get results from database.
         DbConn dbConn = new DbConn();
-        dbConn.getDb("select StockItemName, StockItemID, TypicalWeightPerUnit, ");
+        ResultSet rs = dbConn.getResultSetFromDb("select si.StockItemName, si.StockItemID, si.TypicalWeightPerUnit, sih.QuantityOnHand, sum(ol.Quantity) from stockitemholdings sih join stockitems si on sih.StockItemID = si.StockItemID left join Orderlines ol on ol.Stockitemid = si.Stockitemid  where si.StockItemID < 6 group by ol.Stockitemid");
+
+        //int for measuring the amount of rows in the resultset.
+        int amountOfRows = 0;
+
+        //add results to two-dimensional array;
+        try{
+            if (rs != null) {
+                rs.last();
+                amountOfRows = rs.getRow();
+                rs.first();
+            }
+
+            //initiating two-dimensional array with correct amount of rows.
+            //the amount of rows is dependant on the amount of results returned from the database.
+            allArticles = new Object[amountOfRows][5];
+
+            //adding results from resultset to two-dimensional array for JTable.
+            for (int i = 0, y = 1; i < amountOfRows; i++) {
+                allArticles[i][0] = rs.getString("si.StockItemName");
+                allArticles[i][1] = rs.getInt("si.StockItemID");
+                allArticles[i][2] = rs.getDouble("si.TypicalWeightPerUnit");
+                allArticles[i][3] = rs.getInt("sih.QuantityOnHand");
+                allArticles[i][4] = rs.getInt("sum(ol.Quantity)");
+                rs.next();
+            }
+
+        } catch (SQLException sqle) {
+            System.out.println(sqle);
+        } finally {
+            dbConn.killStatement();
+        }
+
     }
 }
