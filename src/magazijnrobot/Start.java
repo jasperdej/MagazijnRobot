@@ -3,9 +3,8 @@ package magazijnrobot;
 public class Start {
 
     public static void main(String[] args) {
-        //Establishes a connection with the database.
-        DbConn.dbConnect();
-        new InventoryScreen();
+
+        new RobotScreen();
 
 
 //        CoordinatePoint testCoordinate = new CoordinatePoint(0, 2);
