@@ -5,10 +5,10 @@ public class Start {
     public static void main(String[] args) {
         //Establishes a connection with the database.
         DbConn.dbConnect();
-        new InventoryScreen();
-//        new OrderScreen();
+//        new InventoryScreen();
+        new OrderScreen();
 
-        new RobotScreen();
+//        new RobotScreen();
 
 
 
