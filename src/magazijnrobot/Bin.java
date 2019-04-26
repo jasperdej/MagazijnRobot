@@ -26,7 +26,7 @@ public class Bin {
     }
 
     public int getBinNumber() {
-        return binNumber;
+        return this.binNumber;
     }
 
     public void printBin() {
