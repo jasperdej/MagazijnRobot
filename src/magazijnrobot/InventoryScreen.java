@@ -40,7 +40,7 @@ public class InventoryScreen extends JFrame {
         //get results from database.
         DbConn dbConn = new DbConn();
         dbConn.dbConnect();
-        ResultSet rs = dbConn.getResultSetFromDb("select si.StockItemName, si.StockItemID, si.TypicalWeightPerUnit, (SELECT sum(QuantityOnHand) FROM stockitemholdings sih WHERE sih.StockItemID = si.StockItemID), sum(ol.Quantity) from stockitems si left join Orderlines ol on ol.Stockitemid = si.Stockitemid where si.StockItemID < 6 group by ol.Stockitemid;");
+        ResultSet rs = dbConn.getResultSetFromDb("select si.StockItemName, si.StockItemID, si.TypicalWeightPerUnit, (SELECT sum(QuantityOnHand) FROM stockitemholdings sih WHERE sih.StockItemID = si.StockItemID), sum(ol.Quantity) from stockitems si join Orderlines ol on ol.Stockitemid = si.Stockitemid group by ol.Stockitemid;");
 
         //int for measuring the amount of rows in the resultset.
         int amountOfRows = 0;
@@ -58,7 +58,7 @@ public class InventoryScreen extends JFrame {
             allArticles = new Object[amountOfRows][5];
 
             //adding results from resultset to two-dimensional array for JTable.
-            for (int i = 0, y = 1; i < amountOfRows; i++) {
+            for (int i = 0; i < amountOfRows; i++) {
                 allArticles[i][0] = rs.getString("si.StockItemName");
                 allArticles[i][1] = rs.getInt("si.StockItemID");
                 allArticles[i][2] = rs.getDouble("si.TypicalWeightPerUnit");
