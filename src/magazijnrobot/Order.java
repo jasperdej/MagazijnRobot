@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Order {
 
     private int orderNr;
-    private String status;
+    private String status = "a";
     private int amountOfArticles;
     private double totalWeight;
     private ArrayList<Article> articles;
