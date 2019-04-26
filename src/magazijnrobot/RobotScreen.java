@@ -61,7 +61,7 @@ public class RobotScreen extends JFrame implements ActionListener {
         bins = new Bin[]{bin1, bin2, bin3};
         orderPickRobot = new OrderPick(new Order(15));
         inpakRobot = new Inpak(new Order(12), bin1, bin2, bin3);
-        robotDraw = new RobotDraw(this, orderPickRobot, inpakRobot);
+        robotDraw = new RobotDraw(this, new OrderPick(new Order(15)), inpakRobot);
 
         allLabels[0] = opLabels1;
         allLabels[2] = ipLabels1;
@@ -163,5 +163,9 @@ public class RobotScreen extends JFrame implements ActionListener {
         JLabel ipBinId2 = new JLabel(Integer.toString(inpakRobot.getCurrentBin().getBinNumber()));
         ipLabels2 = new JLabel[]{ipFiller, ipStatus2, ipOrderNr2, ipTotalArticlesInOrder2,ipAmountOfArticlesPacked2, ipBinId2};
         allLabels[3] = ipLabels2;
+    }
+
+    public RobotDraw getRobotDraw() {
+        return this.robotDraw;
     }
 }
