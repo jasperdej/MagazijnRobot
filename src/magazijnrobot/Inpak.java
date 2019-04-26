@@ -1,7 +1,7 @@
 package magazijnrobot;
 
 public class Inpak extends Robot {
-    private int amountOfArticlesPacked;
+    private int amountOfArticlesPacked = 1;
     private Bin[] bins;
     private Bin currentBin;
 
