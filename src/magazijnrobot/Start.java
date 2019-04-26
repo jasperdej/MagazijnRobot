@@ -4,9 +4,9 @@ public class Start {
 
     public static void main(String[] args) {
         //Establishes a connection with the database.
-        DbConn.dbConnect();
+//        DbConn.dbConnect();
 //        new InventoryScreen();
-//        new OrderScreen();
+        new OrderScreen();
 
 //        new RobotScreen();
         Order order = new Order(18);

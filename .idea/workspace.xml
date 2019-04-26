@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c7e060e6-c693-4031-bc37-0ccc655b2d2e" name="Default Changelist" comment="">
+    <list default="true" id="550c487f-a8eb-4820-a4a1-f26045aebd81" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/MagazijnRobot/magazijnrobot/Inpak.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MagazijnRobot/magazijnrobot/Inpak.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/MagazijnRobot/magazijnrobot/RobotDraw.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MagazijnRobot/magazijnrobot/RobotDraw.class" afterDir="false" />
@@ -170,35 +170,6 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="magazijnrobot" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="MagazijnRobot" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-            </path>
-            <path>
-              <item name="MagazijnRobot" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="arduino" type="70bed36:NamedLibraryElementNode" />
-            </path>
-            <path>
-              <item name="MagazijnRobot" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="arduino" type="70bed36:NamedLibraryElementNode" />
-              <item name="mysql-connector-java-8.0.15.jar" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="MagazijnRobot" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="arduino" type="70bed36:NamedLibraryElementNode" />
-              <item name="mysql-connector-java-8.0.15.jar" type="462c0819:PsiDirectoryNode" />
-              <item name="mysql" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="MagazijnRobot" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="arduino" type="70bed36:NamedLibraryElementNode" />
-              <item name="mysql-connector-java-8.0.15.jar" type="462c0819:PsiDirectoryNode" />
-              <item name="META-INF" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -334,7 +305,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.49798658" weight="0.19971672" />
+      <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.49798658" weight="0.19893429" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Terminal" order="10" />
       <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.17181209" side_tool="true" weight="0.3186969" />
@@ -398,13 +369,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/magazijnrobot/OrderDialog.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/magazijnrobot/OrderLine.java" />
     <entry file="file://$PROJECT_DIR$/src/magazijnrobot/ModifiedBestFit.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -414,16 +378,6 @@
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/Desktop/MouseEventDemo.jnlp" />
-    <entry file="file://$PROJECT_DIR$/src/magazijnrobot/OrderScreen.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="203">
-          <caret line="85" column="23" selection-start-line="85" selection-start-column="23" selection-end-line="85" selection-end-column="23" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/magazijnrobot/CoordinatePoint.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
@@ -462,7 +416,14 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/magazijnrobot/InventoryScreen.java">
+    <entry file="file://$PROJECT_DIR$/src/magazijnrobot/Order.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" column="22" selection-start-line="15" selection-start-column="22" selection-end-line="15" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/magazijnrobot/RobotDraw.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-624">
           <caret line="23" column="31" lean-forward="true" selection-start-line="23" selection-start-column="10" selection-end-line="23" selection-end-column="31" />
@@ -504,10 +465,7 @@
         <state relative-caret-position="68">
           <caret line="7" column="30" selection-start-line="7" selection-start-column="30" selection-end-line="7" selection-end-column="30" />
           <folding>
-            <element signature="e#481#482#0" expanded="true" />
-            <element signature="e#510#511#0" expanded="true" />
-            <element signature="e#550#551#0" expanded="true" />
-            <element signature="e#589#590#0" expanded="true" />
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -544,13 +502,31 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/magazijnrobot/RobotDraw.java">
+    <entry file="file://$PROJECT_DIR$/src/magazijnrobot/Start.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="142">
           <caret line="30" column="18" selection-start-line="30" selection-start-column="18" selection-end-line="30" selection-end-column="18" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/magazijnrobot/OrderDialog.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="78" column="13" lean-forward="true" selection-start-line="78" selection-start-column="13" selection-end-line="78" selection-end-column="13" />
+          <folding>
+            <element signature="e#3053#3054#0" expanded="true" />
+            <element signature="e#3078#3079#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/magazijnrobot/DbConn.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="424">
+          <caret line="28" column="22" selection-start-line="28" selection-start-column="22" selection-end-line="28" selection-end-column="22" />
         </state>
       </provider>
     </entry>
