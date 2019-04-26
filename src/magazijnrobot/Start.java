@@ -6,7 +6,7 @@ public class Start {
         //Establishes a connection with the database.
 //        DbConn.dbConnect();
 //        new InventoryScreen();
-        new OrderScreen();
+//        new OrderScreen();
 
 //        new RobotScreen();
         Order order = new Order(18);
