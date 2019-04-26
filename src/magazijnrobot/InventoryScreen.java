@@ -40,7 +40,7 @@ public class InventoryScreen extends JFrame {
         //get results from database.
         DbConn dbConn = new DbConn();
         dbConn.dbConnect();
-        ResultSet rs = dbConn.getResultSetFromDb("select si.StockItemName, si.StockItemID, si.TypicalWeightPerUnit, sih.QuantityOnHand, sum(ol.Quantity) from stockitemholdings sih join stockitems si on sih.StockItemID = si.StockItemID left join Orderlines ol on ol.Stockitemid = si.Stockitemid  where si.StockItemID < 6 group by ol.Stockitemid");
+        ResultSet rs = dbConn.getResultSetFromDb("select si.StockItemName, si.StockItemID, si.TypicalWeightPerUnit, (SELECT sum(QuantityOnHand) FROM stockitemholdings sih WHERE sih.StockItemID = si.StockItemID), sum(ol.Quantity) from stockitems si left join Orderlines ol on ol.Stockitemid = si.Stockitemid where si.StockItemID < 6 group by ol.Stockitemid;");
 
         //int for measuring the amount of rows in the resultset.
         int amountOfRows = 0;
@@ -62,7 +62,7 @@ public class InventoryScreen extends JFrame {
                 allArticles[i][0] = rs.getString("si.StockItemName");
                 allArticles[i][1] = rs.getInt("si.StockItemID");
                 allArticles[i][2] = rs.getDouble("si.TypicalWeightPerUnit");
-                allArticles[i][3] = rs.getInt("sih.QuantityOnHand");
+                allArticles[i][3] = rs.getInt("(SELECT sum(QuantityOnHand) FROM stockitemholdings sih WHERE sih.StockItemID = si.StockItemID)");
                 allArticles[i][4] = rs.getInt("sum(ol.Quantity)");
                 rs.next();
             }
