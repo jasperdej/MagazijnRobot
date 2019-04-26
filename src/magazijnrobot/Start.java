@@ -4,7 +4,7 @@ public class Start {
 
     public static void main(String[] args) {
 
-        new RobotScreen();
+        new RobotScreen(new Bin(new Order(69), 25, 25), new Bin(new Order(69), 25, 25),new Bin(new Order(69), 25, 25));
 
 
 //        CoordinatePoint testCoordinate = new CoordinatePoint(0, 2);
