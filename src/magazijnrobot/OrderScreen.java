@@ -33,6 +33,7 @@ public class OrderScreen extends JFrame implements MouseListener {
     private void fillAllOrders() {
         //get results from database.
         DbConn dbConn = new DbConn();
+        DbConn.dbConnect();
         ResultSet rs = dbConn.getResultSetFromDb("SELECT o.OrderId, SUM(ol.quantity), SUM(ol.quantity * s.TypicalWeightPerUnit), o.CustomerId, o.status FROM orders o JOIN orderlines ol ON o.OrderId = ol.OrderId JOIN stockitems s ON ol.StockItemID = s.StockItemID GROUP BY o.OrderId;");
 
         //int for measuring the amount of rows in the resultset.
@@ -51,7 +52,7 @@ public class OrderScreen extends JFrame implements MouseListener {
             allOrders = new Object[amountOfRows][5];
 
             //adding results form resultset to two-dimensional array for JTable.
-            for (int i = 0, y = 1; i < amountOfRows; i++) {
+            for (int i = 0; i < amountOfRows; i++) {
                 allOrders[i][0] = rs.getString("o.OrderId");
                 allOrders[i][1] = rs.getString("SUM(ol.quantity)");
                 allOrders[i][2] = rs.getString("SUM(ol.quantity * s.TypicalWeightPerUnit)");
@@ -84,7 +85,7 @@ public class OrderScreen extends JFrame implements MouseListener {
             orderId = 0;
         }
         //create dialog
-        System.out.println(orderId);
+        OrderDialog dialog = new OrderDialog(this,orderId);
     }
 
     @Override
