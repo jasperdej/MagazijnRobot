@@ -45,9 +45,9 @@ public class RobotDraw extends JPanel{
             g2.draw(new Line2D.Float((screenSize.width/2)*i/5, 0, screenSize.width/2*i/5, screenSize.height/2)); // draws vertical lines
             g2.draw(new Line2D.Float(0, screenSize.height * i/11+4, screenSize.width/2, screenSize.height * i/11+4));
         }
-        for (int i = 1; i <= 5; i++){
-            for (int n =1; n <= 5; n++) {
-                graphics.drawString(i + " - " + n, widthDiffLeft * i - widthDiffLeft/2 - 8, (heightDiffLeft-8) * n - (heightDiffLeft-8)/2+4);
+        for (int i = 1; i <=5 ; i++){
+            for (int n = 1; n <= 5; n++) {
+                graphics.drawString(i + " - " + n, widthDiffLeft * i - widthDiffLeft/2 - 8, (5 *(heightDiffLeft-8) ) - n*(heightDiffLeft -8) + heightDiffLeft - (heightDiffLeft-8)/2+4);
             }
         }
 
