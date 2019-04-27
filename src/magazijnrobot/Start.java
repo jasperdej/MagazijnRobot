@@ -9,11 +9,12 @@ public class Start {
 //        new OrderScreen();
 
 //        new RobotScreen();
-        Order order = new Order(18);
-        Bin bin1 = new Bin(order, 15,15);
-        Bin bin2 = new Bin(order, 16,16);
-        Bin bin3 = new Bin(order, 17,17);
-        RobotScreen robotScreen = new RobotScreen(bin1, bin2, bin3);
+//        Order order = new Order(18);
+//        Bin bin1 = new Bin(order, 15,15);
+//        Bin bin2 = new Bin(order, 16,16);
+//        Bin bin3 = new Bin(order, 17,17);
+//        RobotScreen robotScreen = new RobotScreen(bin1, bin2, bin3);
+        new OrderScreen();
 
 
 //        new RobotScreen(new Bin(new Order(69), 25, 25), new Bin(new Order(69), 25, 25),new Bin(new Order(69), 25, 25));
@@ -21,9 +22,9 @@ public class Start {
 //        RobotScreen robotScreen = new RobotScreen(new Bin(new Order(69), 25, 25), new Bin(new Order(69), 25, 25),new Bin(new Order(69), 25, 25));
 //        Inpak inpak = new Inpak(new Order(15), new Bin(new Order(15), 15, 15), new Bin(new Order(15), 15, 15), new Bin(new Order(15), 15, 15), robotScreen.getRobotDraw().getGraphics());
 
-        ArduinoConn.arduinoConnectHardcoded();
-        OrderPick.sendToCoords("1,2,3,1,2,3");
-        System.out.println(ArduinoConn.arduinoInpakRobot.serialRead());
+//        ArduinoConn.arduinoConnectHardcoded();
+//        OrderPick.sendToCoords("1,2,3,1,2,3");
+//        System.out.println(ArduinoConn.arduinoInpakRobot.serialRead());
 //        try {
 //            Thread.sleep(5000);
 //            OrderPick.sendToCoords("1");
