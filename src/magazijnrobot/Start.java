@@ -15,6 +15,7 @@ public class Start {
 //        Bin bin3 = new Bin(order, 17,17);
 //        RobotScreen robotScreen = new RobotScreen(bin1, bin2, bin3);
         new OrderScreen();
+        //test
 
 
 //        new RobotScreen(new Bin(new Order(69), 25, 25), new Bin(new Order(69), 25, 25),new Bin(new Order(69), 25, 25));
