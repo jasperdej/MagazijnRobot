@@ -8,12 +8,11 @@ import java.awt.event.ActionListener;
 import static java.awt.GridBagConstraints.*;
 
 public class RobotScreen extends JFrame implements ActionListener {
-    JPanel opLabelPanel = new JPanel();
-    JPanel ipLabelPanel = new JPanel();
-    JPanel topPanel = new JPanel();
+    private JPanel opLabelPanel = new JPanel();
+    private JPanel ipLabelPanel = new JPanel();
+    private JPanel topPanel = new JPanel();
 
     private RobotDraw robotDraw;
-    private Bin[] bins;
     private OrderPick orderPickRobot;
     private Inpak inpakRobot;
     private JLabel[][] allLabels = new JLabel[4][5];
@@ -31,13 +30,6 @@ public class RobotScreen extends JFrame implements ActionListener {
     private JButton opOnOffButton = new JButton("ON/OFF");
     private JButton opResetButton = new JButton("Reset");
 
-//    private JLabel opStatus2;
-//    private JLabel opOrderNr2;
-//    private JLabel opTotalAmountOfArticles2;
-//    private JLabel opAmountOfArticlesPicked2;
-//    private JLabel opCoordinate2;
-
-
     private JLabel ipName = new JLabel("Inpak robot");
     private JLabel ipStatus1 = new JLabel("Status: ");
     private JLabel ipOrderNr1 = new JLabel("Ordernummer: ");
@@ -49,18 +41,9 @@ public class RobotScreen extends JFrame implements ActionListener {
     private JButton ipOnOffButton = new JButton("ON/OFF");
     private JButton ipResetButton = new JButton("Reset");
 
-    //    private JLabel ipStatus2;
-    //    private JLabel ipOrderNr2;
-    //    private JLabel ipTotalArticlesInOrder2;
-    //    private JLabel ipAmountOfArticlesPacked2;
-    //    private JLabel ipBinId2;
-    //    private JLabel ipBinPercentageFilled; //laten we dit hier printen? en dan x3?
-
-
-    public RobotScreen (Bin bin1, Bin bin2, Bin bin3) {
-        bins = new Bin[]{bin1, bin2, bin3};
-        orderPickRobot = new OrderPick(new Order(15));
-        inpakRobot = new Inpak(new Order(12), bin1, bin2, bin3);
+    public RobotScreen (Inpak inpakRobot, OrderPick orderPickRobot) {
+        this.inpakRobot = inpakRobot;
+        this.orderPickRobot = orderPickRobot;
         robotDraw = new RobotDraw(this, new OrderPick(new Order(15)), inpakRobot);
 
         allLabels[0] = opLabels1;
