@@ -16,9 +16,24 @@ public class Start {
         RobotScreen robotScreen = new RobotScreen(bin1, bin2, bin3);
 
 
+//        new RobotScreen(new Bin(new Order(69), 25, 25), new Bin(new Order(69), 25, 25),new Bin(new Order(69), 25, 25));
+
 //        RobotScreen robotScreen = new RobotScreen(new Bin(new Order(69), 25, 25), new Bin(new Order(69), 25, 25),new Bin(new Order(69), 25, 25));
 //        Inpak inpak = new Inpak(new Order(15), new Bin(new Order(15), 15, 15), new Bin(new Order(15), 15, 15), new Bin(new Order(15), 15, 15), robotScreen.getRobotDraw().getGraphics());
 
+        ArduinoConn.arduinoConnectHardcoded();
+        OrderPick.sendToCoords("1,2,3,1,2,3");
+        System.out.println(ArduinoConn.arduinoInpakRobot.serialRead());
+//        try {
+//            Thread.sleep(5000);
+//            OrderPick.sendToCoords("1");
+//            Thread.sleep(5000);
+//            OrderPick.sendToCoords("3");
+//            Thread.sleep(5000);
+//            OrderPick.sendToCoords("1");
+//
+//        } catch (Exception e) {
+//        }
 
 //        CoordinatePoint testCoordinate = new CoordinatePoint(0, 2);
 //        Order testOrder = new Order(1);
@@ -46,6 +61,8 @@ public class Start {
 //        ModifiedBestFit bppTest = new ModifiedBestFit(testOrder, 10, 3);
 //        bppTest.packItems();
 //        bppTest.printPackedItems();
-    }
+            }
 
-}
+
+        }
+

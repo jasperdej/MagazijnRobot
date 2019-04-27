@@ -4,13 +4,25 @@ import arduino.*;
 
 public class ArduinoConn {
 
-    static Arduino arduinoPickRobot;
-    static Arduino arduinoInpakRobot;
-    static boolean isPickArduino = false;
-    static boolean isInpakArduino = false;
-    static int i;
+    protected static Arduino arduinoPickRobot;
+    protected static Arduino arduinoInpakRobot;
+    private static boolean isPickArduino = false;
+    private static boolean isInpakArduino = false;
+    private static int i;
 
 
+    public static void arduinoConnectHardcoded() {
+        arduinoInpakRobot = new Arduino("COM12", 9600);
+        if (arduinoInpakRobot.openConnection()) {
+            try {
+                Thread.sleep(1500);
+                String arduino = arduinoInpakRobot.serialRead();
+                System.out.println("Verbonden met: " + arduino);
+            } catch (Exception e) {
+
+            }
+        }
+    }
     public static void arduinoConnectPickRobot() {
         i=0;
         while(!isPickArduino) {
