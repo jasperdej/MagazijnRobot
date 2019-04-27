@@ -21,84 +21,26 @@ public class OrderDialog extends JDialog implements ActionListener {
         super(jFrame);
         this.orderId = orderId;
         fillOrderDetails(orderId);
-        setSize(400,400);
+        setSize(450,400);
         setTitle("Order overzicht extra informatie");
-        setLayout(new GridBagLayout());
+        setLayout(new BorderLayout());
         setLocationRelativeTo(null);
 
-//        JLabel jlOrderId = new JLabel("Ordernummer " + orderId);
-//        jlOrderId.setHorizontalAlignment(JLabel.CENTER);
+        JLabel jlOrderId = new JLabel("Ordernummer " + orderId);
+        jlOrderId.setHorizontalAlignment(JLabel.CENTER);
+        jlOrderId.setFont(new Font("Ariel", Font.BOLD, 40));
 
-//        JPanel jpOrderDetails = new JPanel();
-//        jpOrderDetails.setLayout(new GridLayout(0,3));
-//
-//        JPanel jpTotalWeight = new JPanel();
-//        jpTotalWeight.setLayout(new GridLayout(1,2));
-//
-//        for(int a = 0; a < 3; a++) {
-//            String item = columnNames[a];
-//            jpOrderDetails.add(new JLabel(item));
-//        }
+        JTable jTable = new JTable(allOrderLines,columnNames);
+        JScrollPane sp = new JScrollPane(jTable);
 
-//        String item;
-//        for(int y = 0; y < allOrderLines.length; y++){
-//            for(int x = 0; x < 3; x++) {
-//                try {
-//                    item = (String) allOrderLines[y][x];
-//                } catch (ClassCastException ex) {
-//                    item = "Onbekend";
-//                }
-//
-//                if (x == 2) {
-//                    double weight = Double.parseDouble(item);
-//                    totalWeight += weight;
-//                    jpOrderDetails.add(new JLabel(item + " kg"));
-//                } else {
-//                    jpOrderDetails.add(new JLabel(item));
-//                }
-//            }
-//        }
+        totalWeight = getTotalWeight();
+        JLabel jlWeight = new JLabel("Totaal gewicht: " + totalWeight);
+        jlWeight.setHorizontalAlignment(JLabel.CENTER);
+        jlWeight.setVerticalAlignment(JLabel.BOTTOM);
 
-//        jpTotalWeight.add(new JLabel("Totaal gewicht:"));
-//        jpTotalWeight.add(new JLabel(totalWeight + " kg"));
-//
-//        add(jlOrderId);
-//        add(jpOrderDetails);
-//        add(new JScrollPane(jpOrderDetails));
-//        add(jpTotalWeight);
-
-//        JPanel jpOrderDetails = new JPanel();
-//        jpOrderDetails.setLayout(new GridBagLayout());
-//        add(jpOrderDetails);
-
-        GridBagConstraints c_START = new GridBagConstraints();
-        c_START.gridx = 0;
-        c_START.gridy = 1;
-        c_START.anchor = LINE_START;
-
-        GridBagConstraints c_MIDDLE = new GridBagConstraints();
-        c_MIDDLE.gridx = c_START.gridx + 1;
-        c_MIDDLE.gridy = c_START.gridy;
-        c_MIDDLE.anchor = LINE_START;
-
-        GridBagConstraints c_END = new GridBagConstraints();
-        c_END.gridx = c_START.gridx + 2;
-        c_END.gridy = c_START.gridy;
-        c_END.anchor = LINE_START;
-
-        String item;
-
-        for (int y = 0; y < allOrderLines.length; y++){
-            item = (String)allOrderLines[y][0];
-            add(new JLabel(item),c_START);
-            item = (String)allOrderLines[y][1];
-            add(new JLabel(item),c_MIDDLE);
-            item = allOrderLines[y][2] + " kg";
-            add(new JLabel(item),c_END);
-            c_START.gridy++;
-            c_MIDDLE.gridy = c_START.gridy;
-            c_END.gridy = c_START.gridy;
-        }
+        add(jlOrderId,BorderLayout.PAGE_START);
+        add(sp,BorderLayout.CENTER);
+        add(jlWeight,BorderLayout.PAGE_END);
 
         setVisible(true);
     }
@@ -133,8 +75,23 @@ public class OrderDialog extends JDialog implements ActionListener {
         }
     }
 
-    public int dbGetItemQuantity(){
-        return 10;
+    public double getTotalWeight(){
+        double weight;
+        double count;
+        for(int y = 0; y < allOrderLines.length; y++){
+            try {
+                weight = Double.parseDouble((String)allOrderLines[y][2]);
+            } catch (ClassCastException ex){
+                weight = 0.0;
+            }
+            try {
+                count = Double.parseDouble((String)allOrderLines[y][1]);
+            } catch (ClassCastException ex) {
+                count = 0.0;
+            }
+            totalWeight += weight * count;
+        }
+        return totalWeight;
     }
 
     @Override
