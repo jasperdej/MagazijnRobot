@@ -9,17 +9,37 @@ public class Start {
 //        new OrderScreen();
 
 //        new RobotScreen();
-        Order order = new Order(18);
-        Bin bin1 = new Bin(order, 15,15);
-        Bin bin2 = new Bin(order, 16,16);
-        Bin bin3 = new Bin(order, 17,17);
-        OrderPick orderPick = new OrderPick(order);
-        Inpak inpak = new Inpak(order, bin1, bin2, bin3);
-        RobotScreen robotScreen = new RobotScreen();
-        robotScreen.updateOp(orderPick);
-        robotScreen.updateIp(inpak);
-        robotScreen.createScreen();
-        inpak.drawArticle(robotScreen.getRobotDraw().getGraphics());
+//        OrderScreen orderScreen = new OrderScreen();
+//        Thread orderScreenThread = new Thread(orderScreen);
+//        orderScreenThread.start();
+//        orderScreen.createScreen();
+//        orderScreen.setVisible(true);
+
+//        Order order = new Order(18);
+//        Bin bin1 = new Bin(order, 15,15);
+//        Bin bin2 = new Bin(order, 16,16);
+//        Bin bin3 = new Bin(order, 17,17);
+//        OrderPick orderPick = new OrderPick(order);
+//        Inpak inpak = new Inpak(order, bin1, bin2, bin3);
+        ScreenManager screenManager = new ScreenManager();
+//
+        RobotDraw robotDraw = new RobotDraw(screenManager);
+        RobotScreen robotScreen = new RobotScreen(screenManager, robotDraw);
+        OrderScreen orderScreen = new OrderScreen();
+        InventoryScreen inventoryScreen = new InventoryScreen();
+        screenManager.setRobotDraw(robotDraw);
+        screenManager.setRobotScreen(robotScreen);
+        screenManager.setOrderScreen(orderScreen);
+        screenManager.setInventoryScreen(inventoryScreen);
+        screenManager.start();
+
+
+//        RobotScreen robotScreen = new RobotScreen();
+//        robotScreen.updateOp(orderPick);
+//        robotScreen.updateIp(inpak);
+//        robotScreen.createScreen();
+//        inpak.drawArticle(robotScreen.getRobotDraw().getGraphics());
+//        robotScreen.changeVisible(true);
 //        new OrderScreen();
         //test
 

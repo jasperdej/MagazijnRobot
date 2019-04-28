@@ -5,14 +5,20 @@ import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class InventoryScreen extends JFrame {
+public class InventoryScreen extends JFrame implements Runnable {
     //private Object[][] allArticles = new Article[2][3];
     private Object[][] allArticles;
     private String[] columnNames = {"Naam", "ItemId", "Gewicht", "Aantal", "Gereserveerd"};
     private int amountOfArticles;
-    JTable jTable;
+    private JTable jTable;
+    private Boolean isReady = false;
 
-    public InventoryScreen () {
+    public void run() {
+        createScreen();
+        isReady = true;
+    }
+
+    public void createScreen() {
         fillAllArticles();
         setTitle("Voorraad overzicht");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -31,7 +37,7 @@ public class InventoryScreen extends JFrame {
         JScrollPane sp = new JScrollPane(jTable);
         add(sp);
 
-        setVisible(true);
+//        setVisible(true);
         refreshInventoryScreen();
     }
 
@@ -78,5 +84,9 @@ public class InventoryScreen extends JFrame {
     public void refreshInventoryScreen() {
         fillAllArticles();
         jTable = new JTable(allArticles, columnNames);
+    }
+
+    public boolean isReady() {
+        return this.isReady;
     }
 }

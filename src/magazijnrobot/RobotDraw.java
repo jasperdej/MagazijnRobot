@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.geom.Line2D;
 
 public class RobotDraw extends JPanel{
-    private RobotScreen robotScreen;
+    private ScreenManager screenManager;
     private Bin bin1;
     private Bin bin2;
     private Bin bin3;
@@ -13,8 +13,8 @@ public class RobotDraw extends JPanel{
     private Graphics2D g2;
     private Graphics graphics;
 
-    public  RobotDraw(RobotScreen robotScreen) {
-        this.robotScreen = robotScreen;
+    public  RobotDraw(ScreenManager screenManager) {
+        this.screenManager = screenManager;
         setLayout(new GridLayout(0, 1));
         setPreferredSize(new Dimension());
         setBackground(Color.GRAY);
@@ -53,5 +53,7 @@ public class RobotDraw extends JPanel{
 
     }
 
-
+    public void changeVisible(boolean bool) {
+        setVisible(bool);
+    }
 }

@@ -7,12 +7,19 @@ import java.awt.event.MouseListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class OrderScreen extends JFrame implements MouseListener {
+public class OrderScreen extends JFrame implements MouseListener, Runnable {
+    private static OrderScreen thisJFrame = new OrderScreen();
     private Object[][] allOrders;
     private String[] columnNames = {"Ordernummer","Aantal","Gewicht","Klantnummer","Status"};
-    JTable jTable;
+    private JTable jTable;
+    private Boolean isReady = false;
 
-    public OrderScreen() {
+    public void run() {
+        createScreen();
+        isReady = true;
+    }
+
+    public void createScreen() {
         fillAllOrders();
         setTitle("Order overzicht");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -25,9 +32,6 @@ public class OrderScreen extends JFrame implements MouseListener {
 
         JScrollPane sp = new JScrollPane(jTable);
         add(sp);
-
-
-        setVisible(true);
     }
 
     private void fillAllOrders() {
@@ -71,10 +75,6 @@ public class OrderScreen extends JFrame implements MouseListener {
 
     }
 
-    public void printAllOrders() {
-
-    }
-
     @Override
     public void mouseClicked(MouseEvent e) {
         int row = jTable.getSelectedRow();
@@ -107,6 +107,15 @@ public class OrderScreen extends JFrame implements MouseListener {
     public void mouseExited(MouseEvent e) {
 
     }
+
+    public OrderScreen getThisJFrame() {
+        return thisJFrame;
+    }
+
+    public boolean isReady() {
+        return this.isReady;
+    }
+
 }
 
 
