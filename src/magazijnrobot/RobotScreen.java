@@ -8,6 +8,9 @@ import java.awt.event.ActionListener;
 import static java.awt.GridBagConstraints.*;
 
 public class RobotScreen extends JFrame implements ActionListener {
+    //screenmanager is responsible for showing the right screen.
+    private ScreenManager screenManager;
+
     //panels for screenlayout.
     private JPanel opLabelPanel = new JPanel();
     private JPanel ipLabelPanel = new JPanel();
@@ -55,18 +58,19 @@ public class RobotScreen extends JFrame implements ActionListener {
     private JButton ipOnOffButton = new JButton("ON/OFF");
     private JButton ipResetButton = new JButton("Reset");
 
-    public RobotScreen () {
-        robotDraw = new RobotDraw(this);
+    public RobotScreen (ScreenManager screenManager, RobotDraw robotDraw) {
+        this.robotDraw = robotDraw;
+        this.screenManager = screenManager;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == robotScreen) {
-
+            screenManager.buttonPressed("RobotScreen");
         } else if (e.getSource() == orderScreen) {
-
+            screenManager.buttonPressed("OrderScreen");
         } else if (e.getSource() == inventoryScreen) {
-
+            screenManager.buttonPressed("InventoryScreen");
         } else if (e.getSource() == opOnOffButton) {
 
         } else if (e.getSource() == opResetButton) {
@@ -215,7 +219,20 @@ public class RobotScreen extends JFrame implements ActionListener {
         //add robotDraw to screen. fills the bottom part of the screen.
         add(robotDraw);
 
+        opOnOffButton.addActionListener(this);
+        opResetButton.addActionListener(this);
+        ipOnOffButton.addActionListener(this);
+        ipResetButton.addActionListener(this);
 
-        setVisible(true);
+        robotScreen.addActionListener(this);
+        orderScreen.addActionListener(this);
+        inventoryScreen.addActionListener(this);
+
+//        setVisible(true);
+
+    }
+
+    public void changeVisible(boolean bool) {
+        setVisible(bool);
     }
 }
