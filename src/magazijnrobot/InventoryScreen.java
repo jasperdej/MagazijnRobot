@@ -2,51 +2,90 @@ package magazijnrobot;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class InventoryScreen extends JFrame implements Runnable {
-    //private Object[][] allArticles = new Article[2][3];
+import static java.awt.GridBagConstraints.*;
+
+public class InventoryScreen extends JFrame implements ActionListener {
     private Object[][] allArticles;
     private String[] columnNames = {"Naam", "ItemId", "Gewicht", "Aantal", "Gereserveerd"};
-    private int amountOfArticles;
     private JTable jTable;
-    private Boolean isReady = false;
+    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    private ScreenManager screenManager;
 
-    public void run() {
+    //buttons for swithing screens.
+
+    private JButton robotScreen = new JButton("Robot overzicht");
+    private JButton orderScreen = new JButton("Order overzicht");
+    private JButton inventoryScreen = new JButton("Voorraad overzicht");
+    public InventoryScreen() {
         createScreen();
-        isReady = true;
+        System.out.println("InventoryScreen ready!");
     }
 
-    public void createScreen() {
+    private void createScreen() {
         fillAllArticles();
-        setTitle("Voorraad overzicht");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new GridBagLayout());
 
         //sets screensize to fullscreen.
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-        //makes the frame completely fullscreen.
-        //setUndecorated(true);
 
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        buttonPanel.setMinimumSize(new Dimension(screenSize.width, 35));
+        buttonPanel.setMaximumSize(new Dimension(screenSize.width, 35));
+        buttonPanel.setPreferredSize(new Dimension(screenSize.width, 35));
+
+        buttonPanel.add(robotScreen);
+        buttonPanel.add(orderScreen);
+        buttonPanel.add(inventoryScreen);
+
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weightx = 1;
+        c.weighty = 1;
+        c.fill = HORIZONTAL;
+        c.anchor = NORTH;
+        add(buttonPanel, c);
+
+        c.fill = BOTH;
+        c.insets = new Insets(-350, 0, 0, 0);
+        c.gridy = 1;
+
+        //makes the frame completely fullscreen.
+        setUndecorated(true);
 
         jTable = new JTable(allArticles, columnNames);
+        jTable.setMinimumSize(new Dimension(screenSize.width, screenSize.height - 35));
+        jTable.setMaximumSize(new Dimension(screenSize.width, screenSize.height - 35));
+        jTable.setPreferredSize(new Dimension(screenSize.width, screenSize.height - 35));
         //ik weet niet wat dit doet, voorbeeld van internet overgenomen.
         //jTable.setBounds(30, 40, 200, 300);
 
+        add(jTable, c);
         JScrollPane sp = new JScrollPane(jTable);
-        add(sp);
+        add(sp, c);
 
-//        setVisible(true);
+        robotScreen.addActionListener(this);
+        orderScreen.addActionListener(this);
+        inventoryScreen.addActionListener(this);
+
         refreshInventoryScreen();
     }
 
     //put all articles from database in allArticles.
+
     private void fillAllArticles() {
         //get results from database.
         DbConn dbConn = new DbConn();
-        dbConn.dbConnect();
-        ResultSet rs = dbConn.getResultSetFromDb("select si.StockItemName, si.StockItemID, si.TypicalWeightPerUnit, (SELECT sum(QuantityOnHand) FROM stockitemholdings sih WHERE sih.StockItemID = si.StockItemID), sum(ol.Quantity) from stockitems si join Orderlines ol on ol.Stockitemid = si.Stockitemid group by ol.Stockitemid;");
+        dbConn.dbConnect(); //"select si.StockItemName, si.StockItemID, si.TypicalWeightPerUnit, (SELECT sum(QuantityOnHand) FROM stockitemholdings sih WHERE sih.StockItemID = si.StockItemID), sum(ol.Quantity) from stockitems si join Orderlines ol on ol.Stockitemid = si.Stockitemid  group by ol.Stockitemid;"
+        ResultSet rs = dbConn.getResultSetFromDb("select si.StockItemName, si.StockItemID, si.TypicalWeightPerUnit, (SELECT sum(QuantityOnHand) FROM stockitemholdings sih WHERE sih.StockItemID = si.StockItemID), sum(ol.Quantity) from stockitems si join Orderlines ol on ol.Stockitemid = si.Stockitemid  group by ol.Stockitemid;");
 
         //int for measuring the amount of rows in the resultset.
         int amountOfRows = 0;
@@ -80,13 +119,25 @@ public class InventoryScreen extends JFrame implements Runnable {
         }
 
     }
-
     public void refreshInventoryScreen() {
         fillAllArticles();
         jTable = new JTable(allArticles, columnNames);
     }
 
-    public boolean isReady() {
-        return this.isReady;
+    public void setScreenManager(ScreenManager screenManager) {
+        this.screenManager = screenManager;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        System.out.println("e");
+        if (e.getSource() == robotScreen) {
+            System.out.println("robot");
+            screenManager.buttonPressed("RobotScreen");
+        } else if (e.getSource() == orderScreen) {
+            screenManager.buttonPressed("OrderScreen");
+        } else if (e.getSource() == inventoryScreen) {
+            screenManager.buttonPressed("InventoryScreen");
+        }
     }
 }
