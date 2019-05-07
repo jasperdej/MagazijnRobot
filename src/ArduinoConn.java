@@ -1,5 +1,3 @@
-package magazijnrobot;
-
 import arduino.*;
 
 public class ArduinoConn {

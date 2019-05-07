@@ -1,5 +1,3 @@
-package magazijnrobot;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -7,45 +5,45 @@ import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class EditArticleDialog extends JDialog implements ActionListener {
+public class EditOrderDialog extends JDialog implements ActionListener {
 
-    private int articleId;
-    private boolean articleExists = true;
+    private int orderId;
+    private boolean orderExists = true;
 
-    public EditArticleDialog(JFrame jFrame, int articleId){
+    public EditOrderDialog(JFrame jFrame, int orderId){
         super(jFrame,true);
-        this.articleId = articleId;
+        this.orderId = orderId;
         createDialog();
     }
 
-    public EditArticleDialog(JFrame jFrame){
+    public EditOrderDialog(JFrame jFrame){
         super(jFrame,true);
-        setNewArticleId();
-        articleExists = false;
+        setNewOrderId();
+        orderExists = false;
         createDialog();
     }
 
     public void createDialog(){
         setSize(450,400);
-        setTitle("Artikel " + articleId);
+        setTitle("Order " + orderId);
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);
 
-        JLabel test = new JLabel("ID = " + articleId + ", exists = " + articleExists);
+        JLabel test = new JLabel("ID = " + orderId + ", exists = " + orderExists);
         add(test);
 
         setVisible(true);
     }
 
-    public void setNewArticleId(){
+    public void setNewOrderId(){
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();
-        ResultSet rs = dbConn.getResultSetFromDb("SELECT MAX(StockItemID) FROM StockItems;");
+        ResultSet rs = dbConn.getResultSetFromDb("SELECT MAX(OrderID) FROM Orders;");
 
 
         try{
             rs.first();
-            articleId = rs.getInt("MAX(StockItemID)") + 1;
+            orderId = rs.getInt("MAX(OrderID)") + 1;
         } catch (SQLException sqle) {
             System.out.println(sqle);
         } catch (NumberFormatException nfe) {

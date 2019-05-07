@@ -1,4 +1,3 @@
-package magazijnrobot;
 public class DbScreens extends Thread{
     private OrderScreen orderScreen;
     private InventoryScreen inventoryScreen;

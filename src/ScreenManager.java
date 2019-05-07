@@ -1,5 +1,3 @@
-package magazijnrobot;
-
 import javax.swing.*;
 
 public class ScreenManager extends Thread {

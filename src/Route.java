@@ -1,5 +1,3 @@
-package magazijnrobot;
-
 public class Route {
     private double totaleAfstand;
     private CoordinatePoint nulpunt = new CoordinatePoint(0, 0);

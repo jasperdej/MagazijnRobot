@@ -1,5 +1,3 @@
-package magazijnrobot;
-
 public class Article {
 
     private int id;

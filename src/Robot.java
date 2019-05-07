@@ -1,5 +1,3 @@
-package magazijnrobot;
-
 public abstract class Robot {
     protected String status;
     protected Order order;
