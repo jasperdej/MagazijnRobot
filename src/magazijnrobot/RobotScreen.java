@@ -18,10 +18,13 @@ public class RobotScreen extends JFrame implements ActionListener {
     //JPanel to which all labels are added. this panel fills the upperscreen en devides it into two columns.
     private JPanel topPanel = new JPanel();
 
+    //devides buttons from labels.
     private JPanel opDevider = new JPanel();
+
+    //contains buttonns for switching between screens.
     private JPanel buttonPanel = new JPanel();
 
-    //local variables.
+    //local variables for all labels and drawing of warehouse.
     private RobotDraw robotDraw;
     private JLabel[][] allLabels = new JLabel[4][5];
     private JLabel[] opLabels2;
@@ -58,70 +61,16 @@ public class RobotScreen extends JFrame implements ActionListener {
     private JButton ipOnOffButton = new JButton("ON/OFF");
     private JButton ipResetButton = new JButton("Reset");
 
+    //constructor initiates robotdraw and screenmanager.
     public RobotScreen (ScreenManager screenManager, RobotDraw robotDraw) {
         this.robotDraw = robotDraw;
         this.screenManager = screenManager;
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == robotScreen) {
-            screenManager.buttonPressed("RobotScreen");
-        } else if (e.getSource() == orderScreen) {
-            screenManager.buttonPressed("OrderScreen");
-        } else if (e.getSource() == inventoryScreen) {
-            screenManager.buttonPressed("InventoryScreen");
-        } else if (e.getSource() == opOnOffButton) {
-
-        } else if (e.getSource() == opResetButton) {
-
-        } else if (e.getSource() == ipOnOffButton) {
-
-        } else if (e.getSource() == ipResetButton) {
-
-        }
-    }
-
-    public void updateOp(OrderPick orderPickRobot) {
-        //updates information on OrderPick panel. information comes from Arduino/Java.
-        JLabel opFiller = new JLabel("");
-        JLabel opStatus2 = new JLabel(orderPickRobot.status);
-        JLabel opOrderNr2 = new JLabel(Integer.toString(orderPickRobot.getOrder().getOrderNr()));
-        JLabel opTotalAmountOfArticles2 = new JLabel(Integer.toString(orderPickRobot.getOrder().getAmountOfArticles()));
-        JLabel opAmountOfArticlesPicked2 = new JLabel(Integer.toString(orderPickRobot.getAmountOfArticlesPicked()));
-        JLabel opCoordinate2 = new JLabel(orderPickRobot.getCurrentLocation().toString());
-
-        //adds labels to opLabels which makes it easier to display.
-        opLabels2 = new JLabel[]{opFiller, opStatus2, opOrderNr2, opTotalAmountOfArticles2, opAmountOfArticlesPicked2, opCoordinate2};
-        //adds opLabels to allLabels.
-        allLabels[1] = opLabels2;
-    }
-
-    public void updateIp(Inpak inpakRobot){
-        //updates information on Inpak panel. information comes from Arduino/Java.
-        JLabel ipFiller = new JLabel("");
-        JLabel ipStatus2 = new JLabel(inpakRobot.status);
-        JLabel ipOrderNr2 = new JLabel(Integer.toString(inpakRobot.order.getOrderNr()));
-        JLabel ipTotalArticlesInOrder2 = new JLabel(Integer.toString(inpakRobot.order.getAmountOfArticles()));
-        JLabel ipAmountOfArticlesPacked2 = new JLabel(Integer.toString(inpakRobot.getAmountOfArticlesPacked()));
-        JLabel ipBinId2 = new JLabel(Integer.toString(inpakRobot.getCurrentBin().getBinNumber()));
-
-        //adds labels to opLabels which makes it easier to display.
-        ipLabels2 = new JLabel[]{ipFiller, ipStatus2, ipOrderNr2, ipTotalArticlesInOrder2,ipAmountOfArticlesPacked2, ipBinId2};
-        //adds opLabels to allLabels.
-        allLabels[3] = ipLabels2;
-    }
-
-    public RobotDraw getRobotDraw() {
-        return this.robotDraw;
     }
 
     public void createScreen() {
         //creates information labels for both robots and adds all JLabels to allLabels. allLabels[0] and allLabels[2] are information description. 1 and 3 are actual information.
         allLabels[0] = opLabels1;
         allLabels[2] = ipLabels1;
-//        updateOp();
-//        updateIp();
 
         //sets all JLabels to Ariel and size 50/35. 50 for titles, 35 for information description and information.
         for (int i = 0; i < allLabels.length; i++) {
@@ -146,6 +95,7 @@ public class RobotScreen extends JFrame implements ActionListener {
         c_START.gridx = 0;
         c_START.gridy = 1;
         c_START.anchor = LINE_START;
+        c_START.insets = new Insets(0, 0, 0, 100);
 
         GridBagConstraints c_END = new GridBagConstraints();
         c_END.gridx = c_START.gridx + 1;
@@ -155,7 +105,8 @@ public class RobotScreen extends JFrame implements ActionListener {
         GridBagConstraints c_Buttons = new GridBagConstraints();
         c_Buttons.gridx = 0;
         c_Buttons.gridy = 0;
-        c_Buttons.anchor = LINE_START;
+        c_Buttons.anchor = NORTHWEST;
+        c_Buttons.insets = new Insets(0, 0, 40, 0);
 
         buttonPanel.add(robotScreen, c_Buttons);
         c_Buttons.gridx++;
@@ -164,7 +115,7 @@ public class RobotScreen extends JFrame implements ActionListener {
         buttonPanel.add(inventoryScreen, c_Buttons);
 
         //filler. ain't beautiful, but it works...
-        buttonPanel.add(new JLabel("                                                          "), c_Buttons);
+//        buttonPanel.add(new JLabel("                                                          "), c_Buttons);
 
 
         for (int i = 0; i < opLabels1.length; i++) {
@@ -220,6 +171,7 @@ public class RobotScreen extends JFrame implements ActionListener {
         //add robotDraw to screen. fills the bottom part of the screen.
         add(robotDraw);
 
+        //adds actionlistener for all buttons.
         opOnOffButton.addActionListener(this);
         opResetButton.addActionListener(this);
         ipOnOffButton.addActionListener(this);
@@ -229,11 +181,55 @@ public class RobotScreen extends JFrame implements ActionListener {
         orderScreen.addActionListener(this);
         inventoryScreen.addActionListener(this);
 
-//        setVisible(true);
-
+        setVisible(true);
     }
 
-    public void changeVisible(boolean bool) {
-        setVisible(bool);
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == robotScreen) {
+            screenManager.buttonPressed("RobotScreen");
+        } else if (e.getSource() == orderScreen) {
+            screenManager.buttonPressed("OrderScreen");
+        } else if (e.getSource() == inventoryScreen) {
+            screenManager.buttonPressed("InventoryScreen");
+        } else if (e.getSource() == opOnOffButton) {
+
+        } else if (e.getSource() == opResetButton) {
+
+        } else if (e.getSource() == ipOnOffButton) {
+
+        } else if (e.getSource() == ipResetButton) {
+
+        }
+    }
+
+    //updates information on OrderPick panel. information comes from Arduino/Java.
+    public void updateOp(OrderPick orderPickRobot) {
+        JLabel opFiller = new JLabel("");
+        JLabel opStatus2 = new JLabel(orderPickRobot.status);
+        JLabel opOrderNr2 = new JLabel(Integer.toString(orderPickRobot.getOrder().getOrderNr()));
+        JLabel opTotalAmountOfArticles2 = new JLabel(Integer.toString(orderPickRobot.getOrder().getAmountOfArticles()));
+        JLabel opAmountOfArticlesPicked2 = new JLabel(Integer.toString(orderPickRobot.getAmountOfArticlesPicked()));
+        JLabel opCoordinate2 = new JLabel(orderPickRobot.getCurrentLocation().toString());
+
+        //adds labels to opLabels which makes it easier to display.
+        opLabels2 = new JLabel[]{opFiller, opStatus2, opOrderNr2, opTotalAmountOfArticles2, opAmountOfArticlesPicked2, opCoordinate2};
+        //adds opLabels to allLabels.
+        allLabels[1] = opLabels2;
+    }
+
+    //updates information on inpak panel. information comes from Arduino/Java.
+    public void updateIp(Inpak inpakRobot){
+        JLabel ipFiller = new JLabel("");
+        JLabel ipStatus2 = new JLabel(inpakRobot.status);
+        JLabel ipOrderNr2 = new JLabel(Integer.toString(inpakRobot.order.getOrderNr()));
+        JLabel ipTotalArticlesInOrder2 = new JLabel(Integer.toString(inpakRobot.order.getAmountOfArticles()));
+        JLabel ipAmountOfArticlesPacked2 = new JLabel(Integer.toString(inpakRobot.getAmountOfArticlesPacked()));
+        JLabel ipBinId2 = new JLabel(Integer.toString(inpakRobot.getCurrentBin().getBinNumber()));
+
+        //adds labels to opLabels which makes it easier to display.
+        ipLabels2 = new JLabel[]{ipFiller, ipStatus2, ipOrderNr2, ipTotalArticlesInOrder2,ipAmountOfArticlesPacked2, ipBinId2};
+        //adds opLabels to allLabels.
+        allLabels[3] = ipLabels2;
     }
 }
