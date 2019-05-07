@@ -19,6 +19,7 @@ Thumbs.db
 
 # Java
 *.class
+.class
 # packages 
 #*.jar uitgecomment vanwege aanpassingen aan de jserial library.
 *.war
