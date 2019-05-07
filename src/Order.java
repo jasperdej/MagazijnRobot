@@ -1,18 +1,44 @@
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Order {
 
     private int orderNr;
-    private String status = "a";
+    private ArrayList<Article> articles;
     private int amountOfArticles;
     private double totalWeight;
-    private ArrayList<Article> articles;
+
+    private String status = "a";
     private Customer customer;
 
     public Order(int orderNr) {
         this.orderNr = orderNr;
-        //haal rest op uit database
+
         articles = new ArrayList<>(); //10 wordt aantal items uit de database
+    }
+
+    private void getOrderInformationFromDb() {
+        //get results from database. resultset contains all results from query.
+        DbConn dbConn = new DbConn();
+        dbConn.dbConnect();
+        ResultSet rs = dbConn.getResultSetFromDb("select status, customerid from orders where orderid = " + orderNr);
+
+        try {
+            this.status = rs.getString(0);
+            this.customer = new Customer(rs.getInt(1));
+        } catch (SQLException sqle) {
+
+        }
+
+
+        dbConn.killStatement();
+
+
+    }
+
+    private void getArticlesFromDb() {
+
     }
 
     public String getStatus() {
