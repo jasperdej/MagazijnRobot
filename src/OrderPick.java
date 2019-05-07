@@ -1,7 +1,3 @@
-package magazijnrobot;
-
-
-
 public class OrderPick extends Robot{
     private CoordinatePoint currentLocation;
     private int amountOfArticlesPicked;

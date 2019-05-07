@@ -1,14 +1,8 @@
-package magazijnrobot;
-
-import com.mysql.cj.protocol.Resultset;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.SQLSyntaxErrorException;
 
 public class TestScreen extends JFrame implements ActionListener {
 

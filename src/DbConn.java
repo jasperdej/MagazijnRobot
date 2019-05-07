@@ -1,5 +1,3 @@
-package magazijnrobot;
-
 import java.sql.*;
 
 public class DbConn {

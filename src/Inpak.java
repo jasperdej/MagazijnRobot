@@ -1,5 +1,3 @@
-package magazijnrobot;
-
 import java.awt.*;
 
 public class Inpak extends Robot {
