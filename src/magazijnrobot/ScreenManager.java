@@ -8,6 +8,7 @@ public class ScreenManager extends Thread {
     private OrderScreen orderScreen;
     private InventoryScreen inventoryScreen;
     private JFrame currentScreen;
+    private DbScreens dbScreens;
 
     public void run() {
         robotScreen.updateOp(new OrderPick(new Order(15)));
@@ -17,12 +18,11 @@ public class ScreenManager extends Thread {
         robotDraw.setVisible(true);
         currentScreen = robotScreen;
 
-        Thread orderScreenThread = new Thread(orderScreen);
-        orderScreenThread.start();
+        dbScreens = new DbScreens();
+        dbScreens.setScreenManager(this);
 
-        Thread inventoryScreenThread = new Thread(inventoryScreen);
-        inventoryScreenThread.start();
-
+        Thread thread = new Thread(dbScreens);
+        thread.start();
     }
 
     public void setRobotScreen(RobotScreen robotScreen) {
@@ -42,21 +42,24 @@ public class ScreenManager extends Thread {
     }
 
     public void buttonPressed(String nameOfScreen) {
-        System.out.println(nameOfScreen);
         if (nameOfScreen.equals("RobotScreen")) {
-//            if (currentScreen != robotScreen) {
-                currentScreen.setVisible(false);
+            if (currentScreen != robotScreen) {
                 robotScreen.setVisible(true);
-//            }
-        } else if (nameOfScreen.equals("OrderScreen")) {
-            if (currentScreen != orderScreen && orderScreen.isReady()) {
+                robotDraw.setVisible(true);
                 currentScreen.setVisible(false);
-                orderScreen.setVisible(true);
+                currentScreen = robotScreen;
             }
-        } else if (nameOfScreen.equals("InventoryScreen")) {
-            if (currentScreen != inventoryScreen && inventoryScreen.isReady()) {
+        } else if (nameOfScreen.equals("OrderScreen") && orderScreen != null) {
+            if (currentScreen != orderScreen) {
+                orderScreen.setVisible(true);
                 currentScreen.setVisible(false);
+                currentScreen = orderScreen;
+            }
+        } else if (nameOfScreen.equals("InventoryScreen") && inventoryScreen != null) {
+            if (currentScreen != inventoryScreen) {
                 inventoryScreen.setVisible(true);
+                currentScreen.setVisible(false);
+                currentScreen = inventoryScreen;
             }
         }
     }

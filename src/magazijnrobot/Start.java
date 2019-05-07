@@ -25,12 +25,12 @@ public class Start {
 //
         RobotDraw robotDraw = new RobotDraw(screenManager);
         RobotScreen robotScreen = new RobotScreen(screenManager, robotDraw);
-        OrderScreen orderScreen = new OrderScreen();
-        InventoryScreen inventoryScreen = new InventoryScreen();
+//        OrderScreen orderScreen = new OrderScreen();
+//        InventoryScreen inventoryScreen = new InventoryScreen();
         screenManager.setRobotDraw(robotDraw);
         screenManager.setRobotScreen(robotScreen);
-        screenManager.setOrderScreen(orderScreen);
-        screenManager.setInventoryScreen(inventoryScreen);
+//        screenManager.setOrderScreen(orderScreen);
+//        screenManager.setInventoryScreen(inventoryScreen);
         screenManager.start();
 
 
