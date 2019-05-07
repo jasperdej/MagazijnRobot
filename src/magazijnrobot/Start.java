@@ -21,17 +21,19 @@ public class Start {
 //        Bin bin3 = new Bin(order, 17,17);
 //        OrderPick orderPick = new OrderPick(order);
 //        Inpak inpak = new Inpak(order, bin1, bin2, bin3);
-        ScreenManager screenManager = new ScreenManager();
+//        ScreenManager screenManager = new ScreenManager();
 //
-        RobotDraw robotDraw = new RobotDraw(screenManager);
-        RobotScreen robotScreen = new RobotScreen(screenManager, robotDraw);
-        OrderScreen orderScreen = new OrderScreen();
-        InventoryScreen inventoryScreen = new InventoryScreen();
-        screenManager.setRobotDraw(robotDraw);
-        screenManager.setRobotScreen(robotScreen);
-        screenManager.setOrderScreen(orderScreen);
-        screenManager.setInventoryScreen(inventoryScreen);
-        screenManager.start();
+//        RobotDraw robotDraw = new RobotDraw(screenManager);
+//        RobotScreen robotScreen = new RobotScreen(screenManager, robotDraw);
+//        OrderScreen orderScreen = new OrderScreen();
+//        InventoryScreen inventoryScreen = new InventoryScreen();
+//        screenManager.setRobotDraw(robotDraw);
+//        screenManager.setRobotScreen(robotScreen);
+//        screenManager.setOrderScreen(orderScreen);
+//        screenManager.setInventoryScreen(inventoryScreen);
+//        screenManager.start();
+
+        TestScreen testScreen = new TestScreen();
 
 
 //        RobotScreen robotScreen = new RobotScreen();
