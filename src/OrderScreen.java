@@ -69,7 +69,7 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
         add(buttonPanel, c);
 
         c.fill = BOTH;
-        c.insets = new Insets(-350, 0, 0, 0);
+        c.insets = new Insets((int) Math.round(-0.4050925925925926 * screenSize.height), 0, 0, 0);
         c.gridy = 1;
 
         //jtable contains results from database.
