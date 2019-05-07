@@ -34,26 +34,23 @@ public class RobotDraw extends JPanel{
         g2 = (Graphics2D) graphics;
         g2.setStroke(new BasicStroke(8));
 
-        //left side
+        //left side of screen. draws warehouse.
         for (int i = 0; i <= 5; i++) {
             g2.draw(new Line2D.Float((screenSize.width/2)*i/5, 0, screenSize.width/2*i/5, screenSize.height/2)); // draws vertical lines
             g2.draw(new Line2D.Float(0, screenSize.height * i/11+4, screenSize.width/2, screenSize.height * i/11+4));
         }
+        //adds coordinates to all locations in warehouse.
         for (int i = 1; i <=5 ; i++){
             for (int n = 1; n <= 5; n++) {
                 graphics.drawString(i + " - " + n, widthDiffLeft * i - widthDiffLeft/2 - 8, (5 *(heightDiffLeft-8) ) - n*(heightDiffLeft -8) + heightDiffLeft - (heightDiffLeft-8)/2+4);
             }
         }
 
-        //right side
+        //right side of screen. draws conveyor belt and bins.
         g2.draw(new Rectangle.Float(width/2 + width/50, heightDiffRight, width/3, heightDiffRight - 40));
         for (int i = 1; i <= 3; i++){
             g2.draw(new Rectangle.Float(width - widthDiffRight - width/50,  (heightDiffRight) * i - heightDiffRight + 80 - 40 * i, widthDiffRight, heightDiffRight - 40));
         }
 
-    }
-
-    public void changeVisible(boolean bool) {
-        setVisible(bool);
     }
 }

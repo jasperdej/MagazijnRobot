@@ -21,30 +21,38 @@ public class InventoryScreen extends JFrame implements ActionListener {
     private JButton robotScreen = new JButton("Robot overzicht");
     private JButton orderScreen = new JButton("Order overzicht");
     private JButton inventoryScreen = new JButton("Voorraad overzicht");
+
     public InventoryScreen() {
         createScreen();
         System.out.println("InventoryScreen ready!");
     }
 
     private void createScreen() {
+        //fills array with articles from database.
         fillAllArticles();
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        //gridbaglayout for buttons and JTable.
         setLayout(new GridBagLayout());
 
         //sets screensize to fullscreen.
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
+        //makes the frame completely fullscreen.
+        setUndecorated(true);
 
+        //buttonpanel for buttons. is set to top of screen.
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         buttonPanel.setMinimumSize(new Dimension(screenSize.width, 35));
         buttonPanel.setMaximumSize(new Dimension(screenSize.width, 35));
         buttonPanel.setPreferredSize(new Dimension(screenSize.width, 35));
 
+        //adds buttons to panel.
         buttonPanel.add(robotScreen);
         buttonPanel.add(orderScreen);
         buttonPanel.add(inventoryScreen);
 
+        //gridbagconstraints place buttons on top left of screen.
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 0;
@@ -58,31 +66,30 @@ public class InventoryScreen extends JFrame implements ActionListener {
         c.insets = new Insets(-350, 0, 0, 0);
         c.gridy = 1;
 
-        //makes the frame completely fullscreen.
-        setUndecorated(true);
 
+        //JTable with results from database.
         jTable = new JTable(allArticles, columnNames);
         jTable.setMinimumSize(new Dimension(screenSize.width, screenSize.height - 35));
         jTable.setMaximumSize(new Dimension(screenSize.width, screenSize.height - 35));
         jTable.setPreferredSize(new Dimension(screenSize.width, screenSize.height - 35));
-        //ik weet niet wat dit doet, voorbeeld van internet overgenomen.
-        //jTable.setBounds(30, 40, 200, 300);
 
+        //adds JTable to screen.
         add(jTable, c);
+
+        //scrollpane adds scroll functionality to jtable. adds scrollpane with jtable to screen.
         JScrollPane sp = new JScrollPane(jTable);
         add(sp, c);
 
+        //adds actionlisteners for buttons.
         robotScreen.addActionListener(this);
         orderScreen.addActionListener(this);
         inventoryScreen.addActionListener(this);
-
-        refreshInventoryScreen();
     }
 
-    //put all articles from database in allArticles.
 
+    //put all articles from database in allArticles.
     private void fillAllArticles() {
-        //get results from database.
+        //get results from database. resultset contains all results from query.
         DbConn dbConn = new DbConn();
         dbConn.dbConnect(); //"select si.StockItemName, si.StockItemID, si.TypicalWeightPerUnit, (SELECT sum(QuantityOnHand) FROM stockitemholdings sih WHERE sih.StockItemID = si.StockItemID), sum(ol.Quantity) from stockitems si join Orderlines ol on ol.Stockitemid = si.Stockitemid  group by ol.Stockitemid;"
         ResultSet rs = dbConn.getResultSetFromDb("select si.StockItemName, si.StockItemID, si.TypicalWeightPerUnit, (SELECT sum(QuantityOnHand) FROM stockitemholdings sih WHERE sih.StockItemID = si.StockItemID), sum(ol.Quantity) from stockitems si join Orderlines ol on ol.Stockitemid = si.Stockitemid  group by ol.Stockitemid;");
@@ -90,7 +97,6 @@ public class InventoryScreen extends JFrame implements ActionListener {
         //int for measuring the amount of rows in the resultset.
         int amountOfRows = 0;
 
-        //add results to two-dimensional array;
         try{
             if (rs != null) {
                 rs.last();
@@ -119,6 +125,8 @@ public class InventoryScreen extends JFrame implements ActionListener {
         }
 
     }
+
+    //gets results from database and updates current values on screen.
     public void refreshInventoryScreen() {
         fillAllArticles();
         jTable = new JTable(allArticles, columnNames);
@@ -130,7 +138,7 @@ public class InventoryScreen extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println("e");
+        //buttons for switching between screens.
         if (e.getSource() == robotScreen) {
             System.out.println("robot");
             screenManager.buttonPressed("RobotScreen");

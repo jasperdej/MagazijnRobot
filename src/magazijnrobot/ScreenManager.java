@@ -14,7 +14,6 @@ public class ScreenManager extends Thread {
         robotScreen.updateOp(new OrderPick(new Order(15)));
         robotScreen.updateIp(new Inpak(new Order(16), new Bin(new Order(15), 15, 15), new Bin(new Order(15), 15, 15), new Bin(new Order(15), 15, 15)));
         robotScreen.createScreen();
-        robotScreen.setVisible(true);
         robotDraw.setVisible(true);
         currentScreen = robotScreen;
 
@@ -23,22 +22,6 @@ public class ScreenManager extends Thread {
 
         Thread thread = new Thread(dbScreens);
         thread.start();
-    }
-
-    public void setRobotScreen(RobotScreen robotScreen) {
-        this.robotScreen = robotScreen;
-    }
-
-    public void setRobotDraw(RobotDraw robotDraw) {
-        this.robotDraw = robotDraw;
-    }
-
-    public void setOrderScreen(OrderScreen orderScreen) {
-        this.orderScreen = orderScreen;
-    }
-
-    public void setInventoryScreen(InventoryScreen inventoryScreen) {
-        this.inventoryScreen = inventoryScreen;
     }
 
     public void buttonPressed(String nameOfScreen) {
@@ -64,4 +47,19 @@ public class ScreenManager extends Thread {
         }
     }
 
+    public void setRobotScreen(RobotScreen robotScreen) {
+        this.robotScreen = robotScreen;
+    }
+
+    public void setRobotDraw(RobotDraw robotDraw) {
+        this.robotDraw = robotDraw;
+    }
+
+    public void setOrderScreen(OrderScreen orderScreen) {
+        this.orderScreen = orderScreen;
+    }
+
+    public void setInventoryScreen(InventoryScreen inventoryScreen) {
+        this.inventoryScreen = inventoryScreen;
+    }
 }
