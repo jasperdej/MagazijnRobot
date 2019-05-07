@@ -162,7 +162,6 @@ public class RobotScreen extends JFrame implements ActionListener {
         buttonPanel.add(orderScreen, c_Buttons);
         c_Buttons.gridx++;
         buttonPanel.add(inventoryScreen, c_Buttons);
-        c_Buttons.gridx++;
 
         //filler. ain't beautiful, but it works...
         buttonPanel.add(new JLabel("                                                          "), c_Buttons);
@@ -199,8 +198,10 @@ public class RobotScreen extends JFrame implements ActionListener {
 
         //sets screensize to fullscreen.
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-//        setUndecorated(true);//makes the screen truly fullscreen. close button does not appear.
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //delete this line when done with project.
+
+        //makes the screen truly fullscreen. close button does not appear.
+        setUndecorated(true);
+
         //gridlayout for splitting the screen horizontally.
         setLayout(new GridLayout(2 , 1));
 
