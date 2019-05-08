@@ -9,8 +9,8 @@ public class ScreenManager extends Thread {
     private DbScreens dbScreens;
 
     public void run() {
-        robotScreen.updateOp(new OrderPick(new Order(15)));
-        robotScreen.updateIp(new Inpak(new Order(16), new Bin(new Order(15), 15, 15), new Bin(new Order(15), 15, 15), new Bin(new Order(15), 15, 15)));
+        robotScreen.updateOp(new OrderPick(new Order()));
+        robotScreen.updateIp(new Inpak(new Order(), new Bin(new Order(), 15, 15), new Bin(new Order(), 15, 15), new Bin(new Order(), 15, 15)));
         robotScreen.createScreen();
         robotDraw.setVisible(true);
         currentScreen = robotScreen;

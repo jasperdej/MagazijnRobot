@@ -1,45 +1,50 @@
 public class Article {
 
     private int id;
-    private String name;
-    private Double weight;
-    private int amountAvailable;
-    private int amountReserved;
     private CoordinatePoint location;
+    private Double weight;
+    private String name;
+    private int amountPicked;
+    private int amountReserved;
 
-    public Article(int id, CoordinatePoint location, double weight/*weight = temporary*/) {
+    //vergeet niet de getters terug te zetten. rick 8-5 10:15; sorry dat ik het ben vergeten wietske :).
+    public Article(int id, int binLlocation, double weight, String name, int amountReserved) {
         this.id = id;
-        this.location = location;
-        //aangevuld uit de database
-        this.weight = weight;//temporary
+
+        //splits two digit number from database into two separate digits. x coordinate is first digit, y coordinate is second digit.
+        this.location = new CoordinatePoint(Integer.parseInt(Integer.toString(binLlocation).substring(0, 1)), Integer.parseInt(Integer.toString(binLlocation).substring(0, 2)) - Integer.parseInt(Integer.toString(binLlocation).substring(0, 1)) * 10);
+        this.weight = weight;
+        this.name = name;
+        this.amountPicked = 0;
+        this.amountReserved = amountReserved;
     }
+
 
     public int getId() {
         return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Double getWeight() {
-        return weight;
-    }
-
-    public int getAmountAvailable() {
-        return amountAvailable;
-    }
-
-    public int getAmountReserved() {
-        return amountReserved;
     }
 
     public CoordinatePoint getLocation() {
         return location;
     }
 
+    public Double getWeight() {
+        return weight;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getAmountPicked() {
+        return amountPicked;
+    }
+
+    public int getAmountReserved() {
+        return amountReserved;
+    }
+
     public void printWeight() {
         System.out.println(weight);
     }
-
 }
