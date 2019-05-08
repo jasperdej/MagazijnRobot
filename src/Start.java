@@ -1,13 +1,15 @@
+
 import java.awt.*;
 
 public class Start {
 
     public static void main(String[] args) {
-//        TestScreen testScreen = new TestScreen();
+        TestScreen testScreen = new TestScreen();
 
         //gets screens up and running. it might take a while for orderscreen and inventoryscreen to load.
         //screenmanager starts a new thread. runs parallel to main program.
         //screens which get their information from database run on a seperate thread so screens remain operational and up-to-date.
+
         Dimension screenSize2 = Toolkit.getDefaultToolkit().getScreenSize();
         System.out.println(screenSize2.height);
         ScreenManager screenManager = new ScreenManager();
@@ -28,4 +30,3 @@ public class Start {
     }
 
 }
-

@@ -44,6 +44,8 @@ Thumbs.db
 *.iml
 *.ipr
 .idea/
+*.xml
+libraries/*.*
 
 ### NetBeans ###
 nbproject/private/
