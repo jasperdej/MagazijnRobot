@@ -5,18 +5,19 @@ import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class EditPersonDialog<Voornaam> extends JDialog implements ActionListener {
+public class EditPersonDialog extends JDialog implements ActionListener {
 
     private int personId;
     private boolean personExists = true;
     private JTextField jtfVoornaam, jtfTussenvoegsel, jtfAchternaam, jtfEmailadres, jtfAdres, jtfWoonplaats,jtfPostcode;
     private JButton jbBevestigen, jbAnnuleren;
     private JPasswordField jpfWachtwoord;
-    private String Voornaam;
+    private String voornaam, tussenvoegsel, achternaam, emailadres, wachtwoord, adres, woonplaats, postcode;
 
     public EditPersonDialog(JFrame jFrame, int personId){
         super(jFrame,true);
         this.personId = personId;
+        setPerson();
         createDialog();
     }
 
@@ -47,25 +48,25 @@ public class EditPersonDialog<Voornaam> extends JDialog implements ActionListene
         JLabel jlVoornaam = new JLabel("Voornaam: *");
         jlVoornaam.setBorder(BorderFactory.createEmptyBorder(0,50,0,0));
         middlePanel.add(jlVoornaam);
-        jtfVoornaam = new JTextField(25);
+        jtfVoornaam = new JTextField(voornaam,25);
         middlePanel.add(jtfVoornaam);
 
         JLabel jlTussenvoegsel = new JLabel("Tussenvoegsel: ");
         jlTussenvoegsel.setBorder(BorderFactory.createEmptyBorder(0,50,0,0));
         middlePanel.add(jlTussenvoegsel);
-        jtfTussenvoegsel = new JTextField(25);
+        jtfTussenvoegsel = new JTextField(tussenvoegsel,25);
         middlePanel.add(jtfTussenvoegsel);
 
         JLabel jlAchternaam = new JLabel("Achternaam: * ");
         jlAchternaam.setBorder(BorderFactory.createEmptyBorder(0,50,0,0));
         middlePanel.add(jlAchternaam);
-        jtfAchternaam = new JTextField(25);
+        jtfAchternaam = new JTextField(achternaam,25);
         middlePanel.add(jtfAchternaam);
 
         JLabel jlEmailadres = new JLabel("Email adres: * ");
         jlEmailadres.setBorder(BorderFactory.createEmptyBorder(0,50,0,0));
         middlePanel.add(jlEmailadres);
-        jtfEmailadres = new JTextField(25);
+        jtfEmailadres = new JTextField(emailadres,25);
         middlePanel.add(jtfEmailadres);
 
         JLabel jlWachtwoord = new JLabel("Wachtwoord: * ");
@@ -77,19 +78,19 @@ public class EditPersonDialog<Voornaam> extends JDialog implements ActionListene
         JLabel jlAdres = new JLabel("Adres: * ");
         jlAdres.setBorder(BorderFactory.createEmptyBorder(0,50,0,0));
         middlePanel.add(jlAdres);
-        jtfAdres = new JTextField(25);
+        jtfAdres = new JTextField(adres,25);
         middlePanel.add(jtfAdres);
 
         JLabel jlWoonplaats = new JLabel("Woonplaats: * ");
         jlWoonplaats.setBorder(BorderFactory.createEmptyBorder(0,50,0,0));
         middlePanel.add(jlWoonplaats);
-        jtfWoonplaats = new JTextField(25);
+        jtfWoonplaats = new JTextField(woonplaats,25);
         middlePanel.add(jtfWoonplaats);
 
         JLabel jlPostcode = new JLabel("Postcode: * ");
         jlPostcode.setBorder(BorderFactory.createEmptyBorder(0,50,0,0));
         middlePanel.add(jlPostcode);
-        jtfPostcode = new JTextField(25);
+        jtfPostcode = new JTextField(postcode,25);
         middlePanel.add(jtfPostcode);
 
         JLabel jlVerplicht = new JLabel("Velden met een sterretje* zijn verplicht");
@@ -120,8 +121,45 @@ public class EditPersonDialog<Voornaam> extends JDialog implements ActionListene
     }
 
     public void setPerson(){
+        DbConn dbConn = new DbConn();
+        DbConn.dbConnect();
+        ResultSet rs = dbConn.getResultSetFromDb("SELECT UserFirstName, UserPrefix, UserLastName, UserEmail, UserPassword, UserAddress, UserResidence, UserPostalCode FROM Users WHERE UserID = " + personId);
 
+        try{
+            rs.first();
+
+            voornaam = rs.getString("UserFirstName");
+            //System.out.println(voornaam);
+            if(rs.getString("UserPrefix")!= null){
+                tussenvoegsel = rs.getString("UserPrefix");
+            } else {
+                tussenvoegsel = "";
+            }
+            achternaam = rs.getString("UserLastName");
+            if(rs.getString("UserEmail") != null){
+                emailadres = rs.getString("UserEmail");
+            } else {
+                emailadres = "";
+            }
+            if(rs.getString("UserPassword") != null){
+                wachtwoord = rs.getString("UserPassword");
+            } else {
+                wachtwoord = "";
+            }
+            adres = rs.getString("Useraddress");
+            woonplaats = rs.getString("UserResidence");
+            postcode = rs.getString("UserPostalcode");
+
+
+        } catch (SQLException e) {
+            System.out.println(e);
+
+        } finally {
+            dbConn.killStatement();
+        }
     }
+
+
 
 
 
