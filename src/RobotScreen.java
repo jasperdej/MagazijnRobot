@@ -84,9 +84,12 @@ public class RobotScreen extends JFrame implements ActionListener {
         //gridbaglayout for displaying labels Correctly.
         opLabelPanel.setLayout(new GridBagLayout());
         ipLabelPanel.setLayout(new GridBagLayout());
-        buttonPanel.setLayout(new GridBagLayout());
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-
+        //adds buttons to buttonpanel.
+        buttonPanel.add(robotScreen);
+        buttonPanel.add(orderScreen);
+        buttonPanel.add(inventoryScreen);
 
         //gridbagconstraints for Displaying labels correctly and within their padding.
         GridBagConstraints c_START = new GridBagConstraints();
@@ -99,22 +102,6 @@ public class RobotScreen extends JFrame implements ActionListener {
         c_END.gridx = c_START.gridx + 1;
         c_END.gridy = c_START.gridy;
         c_END.anchor = LINE_END;
-
-        GridBagConstraints c_Buttons = new GridBagConstraints();
-        c_Buttons.gridx = 0;
-        c_Buttons.gridy = 0;
-        c_Buttons.anchor = NORTHWEST;
-        c_Buttons.insets = new Insets(0, 0, 40, 0);
-
-        buttonPanel.add(robotScreen, c_Buttons);
-        c_Buttons.gridx++;
-        buttonPanel.add(orderScreen, c_Buttons);
-        c_Buttons.gridx++;
-        buttonPanel.add(inventoryScreen, c_Buttons);
-
-        //filler. ain't beautiful, but it works...
-//        buttonPanel.add(new JLabel("                                                          "), c_Buttons);
-
 
         for (int i = 0; i < opLabels1.length; i++) {
             opLabelPanel.add(opLabels1[i], c_START);
@@ -155,13 +142,12 @@ public class RobotScreen extends JFrame implements ActionListener {
         setLayout(new GridLayout(2 , 1));
 
         //gridlayout for splitting the screen vertically.
-        topPanel.setLayout(new GridLayout(1, 2));
+        topPanel.setLayout(new BorderLayout());
 
         //adds both information JPanels to topPanel.
-        topPanel.add(opDevider);
-        opDevider.add(buttonPanel, BorderLayout.PAGE_START);
-        opDevider.add(opLabelPanel, BorderLayout.CENTER);
-        topPanel.add(ipLabelPanel);
+        topPanel.add(buttonPanel, BorderLayout.PAGE_START);
+        topPanel.add(opLabelPanel, BorderLayout.LINE_START);
+        topPanel.add(ipLabelPanel, BorderLayout.LINE_END);
 
         //add topPanel to screen. fills the upper part of the screen.
         add(topPanel);
