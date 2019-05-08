@@ -8,6 +8,7 @@ public class Start {
         //gets screens up and running. it might take a while for orderscreen and inventoryscreen to load.
         //screenmanager starts a new thread. runs parallel to main program.
         //screens which get their information from database run on a seperate thread so screens remain operational and up-to-date.
+
         ScreenManager screenManager = new ScreenManager();
         RobotDraw robotDraw = new RobotDraw(screenManager);
         RobotScreen robotScreen = new RobotScreen(screenManager, robotDraw);
