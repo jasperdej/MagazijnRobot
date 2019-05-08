@@ -12,11 +12,10 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
 
     //variables for JTable.
     private Object[][] allOrders;
-    private String[] columnNames = {"Ordernummer","Aantal","Gewicht","Klantnummer","Status"};
+    private String[] columnNames = {"OrderID","Aantal","Gewicht (in kg)","Klantnummer","Status"};
     private JTable jTable;
 
     //variables for correctly displaying information on screen.
-    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private ScreenManager screenManager;
 
     //buttons for swithing between screens.
@@ -38,7 +37,7 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
         setTitle("Order overzicht");
 
         //gridbaglayout for correctly displaying buttons and jtable.
-        setLayout(new GridBagLayout());
+        setLayout(new BorderLayout());
 
         //sets screensize to fullscreen.
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -49,46 +48,32 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
         //buttonpanel to which buttons are added. is set to display at top of screen.
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        buttonPanel.setMinimumSize(new Dimension(screenSize.width, 35));
-        buttonPanel.setMaximumSize(new Dimension(screenSize.width, 35));
-        buttonPanel.setPreferredSize(new Dimension(screenSize.width, 35));
 
         //adds buttons to buttonpanel.
         buttonPanel.add(robotScreen);
         buttonPanel.add(orderScreen);
         buttonPanel.add(inventoryScreen);
 
-        //gridbagconstraints display buttonpanel and jtable correctly.
-        GridBagConstraints c = new GridBagConstraints();
-        c.gridx = 0;
-        c.gridy = 0;
-        c.weightx = 1;
-        c.weighty = 1;
-        c.fill = HORIZONTAL;
-        c.anchor = NORTH;
-        add(buttonPanel, c);
-
-        c.fill = BOTH;
-        c.insets = new Insets((int) Math.round(-0.4050925925925926 * screenSize.height), 0, 0, 0);
-        c.gridy = 1;
+        add(buttonPanel,BorderLayout.PAGE_START);
 
         //jtable contains results from database.
-        jTable = new JTable(allOrders, columnNames);
-        jTable.setMinimumSize(new Dimension(screenSize.width, screenSize.height - 35));
-        jTable.setMaximumSize(new Dimension(screenSize.width, screenSize.height - 35));
-        jTable.setPreferredSize(new Dimension(screenSize.width, screenSize.height - 35));
+        jTable = new JTable(allOrders, columnNames){
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
         //adds mouselistener for opening extra information dialog.
         jTable.addMouseListener(this);
 
         //adds jtable.
-        add(jTable, c);
+        add(jTable);
 
         //jtable is added to scrollpane. scrollpane is responsible for being able to scroll trough jtable.
         JScrollPane sp = new JScrollPane(jTable);
 
         //adds scrollpane.
-        add(sp, c);
+        add(sp);
 
         //adds actionlistener for buttons.
         robotScreen.addActionListener(this);
