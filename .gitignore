@@ -46,6 +46,7 @@ Thumbs.db
 .idea/
 *.xml
 libraries/*.*
+MagazijnRobot.iml
 .idea/misc.xml
 misc.xml
 
