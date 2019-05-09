@@ -45,6 +45,10 @@ public class Bin {
         return articles;
     }
 
+    public ArrayList<Article> getArticles() {
+        return articles;
+    }
+
     public void addItem(Article article) {
         articles.add(article);
     }

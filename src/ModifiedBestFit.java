@@ -69,6 +69,16 @@ public class ModifiedBestFit {
         }
     }
 
+    public ArrayList<Article> getArticleList() {
+        ArrayList<Article> articles = new ArrayList<>();
+        for (Bin b : bins) {
+            for (Article a : b.getArticles()) {
+                articles.add(a);
+            }
+        }
+        return articles;
+    }
+
     public ArrayList<Bin> getBinList() {
         return this.bins;
     }

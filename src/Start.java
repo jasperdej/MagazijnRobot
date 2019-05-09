@@ -1,10 +1,11 @@
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Start {
 
     public static void main(String[] args) {
-        TestScreen testScreen = new TestScreen();
+//        TestScreen testScreen = new TestScreen();
 
         //gets screens up and running. it might take a while for orderscreen and inventoryscreen to load.
         //screenmanager starts a new thread. runs parallel to main program.
@@ -19,16 +20,24 @@ public class Start {
 
         Order order = new Order();
         ModifiedBestFit bestFit;
+        ArrayList<Article> articles;
 
         while (true) {
             //get new order from database.
-           order.getNewOrderIdFromDb();
+            order.getNewOrderIdFromDb();
 
 
             //send both algorithms to work.
-           bestFit = new ModifiedBestFit(order);
+            bestFit = new ModifiedBestFit(order);
 
-            //BPP algorithm gives a two-dimensinal arraylist. bins filled with article objects
+            //BPP algorithm gives a arraylist with bin objects. bin objects have an arraylist filled with article objects.
+            //articles contains all articles of current order in bin order.
+            articles = new ArrayList<>(bestFit.getArticleList());
+            for (int i = 0; i < articles.size(); i++) {
+                
+            }
+
+
             //get Articles for next run.
 
 
