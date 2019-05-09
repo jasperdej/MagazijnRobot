@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class TSP_Algorithm {
     private double totaleAfstand;
     private CoordinatePoint nulpunt = new CoordinatePoint(0, 0);
@@ -5,11 +7,16 @@ public class TSP_Algorithm {
     private CoordinatePoint[] CoordinatePoint = new CoordinatePoint[3];
     private CoordinatePoint temp1;
     private CoordinatePoint temp2;
+    private ArrayList<Article> articles;
 
-    public TSP_Algorithm(CoordinatePoint c_0, CoordinatePoint c_1, CoordinatePoint c_2) {
-        CoordinatePoint[0] = c_0;
-        CoordinatePoint[1] = c_1;
-        CoordinatePoint[2] = c_2;
+    public TSP_Algorithm(Article a1, Article a2, Article a3) {
+        articles.add(a1);
+        articles.add(a2);
+        articles.add(a3);
+
+        CoordinatePoint[0] = a1.getLocation();
+        CoordinatePoint[1] = a2.getLocation();
+        CoordinatePoint[2] = a3.getLocation();
         zetInVolgorde();
     }
 
@@ -20,11 +27,6 @@ public class TSP_Algorithm {
             shuffleArray();
             berekenRouteAfstand();
         }
-    }
-
-
-    public double getTotaleAfstand() {
-        return totaleAfstand;
     }
 
     private void berekenRouteAfstand () {
@@ -83,6 +85,18 @@ public class TSP_Algorithm {
         CoordinatePoint[1] = temp1;
         CoordinatePoint[2] = temp2;
 
+    }
+
+    public ArrayList<Article> getArticles() {
+        ArrayList<Article> returnArticles = new ArrayList<>();
+        for (CoordinatePoint c : volgorde) {
+            for (Article a : articles) {
+                if (c.getX() == a.getLocation().getX() && c.getY() == a.getLocation().getY()) {
+                    returnArticles.add(a);
+                }
+            }
+        }
+        return returnArticles;
     }
 
 
