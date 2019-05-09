@@ -25,7 +25,7 @@ public class ModifiedBestFit {
             }
         });
         Collections.reverse(list);
-        printList();
+
         for (Article l : list) {
             Collections.sort(bins, new Comparator<Bin>() {
                 @Override
