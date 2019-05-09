@@ -35,9 +35,9 @@ public class Order {
         } catch (SQLException sqle) {
             System.out.println(sqle);
             System.out.println("Er is een SQL fout opgetreden in Order.java in methode getArticlesFromDb");
-        } finally {
-            dbConn.killStatement();
         }
+        dbConn.killStatement();
+        DbConn.dbKill();
     }
 
     //gets new orderId from database. is often the next id.
@@ -65,7 +65,7 @@ public class Order {
             lowestOrderId++;
         }
         dbConn.killStatement();
-
+        DbConn.dbKill();
         getArticlesFromDb();
     }
 
@@ -84,6 +84,8 @@ public class Order {
             System.out.println("Er is een SQL fout opgetreden in Order.java in methode getHighestOrderIdFromDb");
             System.out.println(sqle);
         }
+        dbConn.killStatement();
+        DbConn.dbKill();
         return highestOrderId;
     }
 
@@ -102,6 +104,8 @@ public class Order {
             System.out.println("Er is een SQL fout opgetreden in Order.java in methode getLowestOrderIdFromDb");
             System.out.println(sqle);
         }
+        dbConn.killStatement();
+        DbConn.dbKill();
         return lowestOrderId;
     }
 

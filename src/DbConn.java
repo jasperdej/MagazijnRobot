@@ -10,7 +10,8 @@ public class DbConn {
                         Class.forName("com.mysql.cj.jdbc.Driver");
                         con = DriverManager.getConnection("jdbc:mysql://localhost:3306/wideworldimporters?useTimezone=true&serverTimezone=UTC", "root", "");
                 } catch (Exception e) {
-                        System.out.println("zet je XAMPP aan idioot ;)");
+                        System.out.println("Error in connectie met database.");
+                        System.out.println(e);
                 }
         }
 
