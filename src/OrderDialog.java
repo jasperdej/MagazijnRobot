@@ -2,15 +2,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class OrderDialog extends JDialog implements ActionListener {
 
     private int orderId;
-    private double totalWeight = 0;
+    private BigDecimal totalWeight = new BigDecimal(0);
     private Object[][] allOrderLines;
-    private String[] columnNames = {"Item Id:","Aantal:","Gewicht:"};
+    private String[] columnNames = {"Item Id","Aantal","Gewicht (in kg)"};
 
     public OrderDialog(JFrame jFrame, int orderId) {
         super(jFrame);
@@ -29,7 +30,7 @@ public class OrderDialog extends JDialog implements ActionListener {
         JScrollPane sp = new JScrollPane(jTable);
 
         totalWeight = getTotalWeight();
-        JLabel jlWeight = new JLabel("Totaal gewicht: " + totalWeight);
+        JLabel jlWeight = new JLabel("Totaal gewicht: " + totalWeight + " kg");
         jlWeight.setHorizontalAlignment(JLabel.CENTER);
         jlWeight.setVerticalAlignment(JLabel.BOTTOM);
 
@@ -57,9 +58,9 @@ public class OrderDialog extends JDialog implements ActionListener {
             allOrderLines = new Object[amountOfRows][3];
 
             for(int i = 0; i < amountOfRows; i++){
-                allOrderLines[i][0] = rs.getString("ol.StockItemID");
-                allOrderLines[i][1] = rs.getString("ol.Quantity");
-                allOrderLines[i][2] = rs.getString("si.TypicalWeightPerUnit");
+                allOrderLines[i][0] = rs.getInt("ol.StockItemID");
+                allOrderLines[i][1] = rs.getInt("ol.Quantity");
+                allOrderLines[i][2] = rs.getBigDecimal("si.TypicalWeightPerUnit");
                 rs.next();
             }
 
@@ -70,21 +71,23 @@ public class OrderDialog extends JDialog implements ActionListener {
         }
     }
 
-    public double getTotalWeight(){
-        double weight;
-        double count;
+    public BigDecimal getTotalWeight(){
+        BigDecimal weight;
+        BigDecimal count;
         for(int y = 0; y < allOrderLines.length; y++){
             try {
-                weight = Double.parseDouble((String)allOrderLines[y][2]);
-            } catch (ClassCastException ex){
-                weight = 0.0;
+                weight = (BigDecimal)allOrderLines[y][2];
+                System.out.println("weight " + weight);
+            } catch (ClassCastException cce){
+                weight = new BigDecimal(0);
             }
             try {
-                count = Double.parseDouble((String)allOrderLines[y][1]);
-            } catch (ClassCastException ex) {
-                count = 0.0;
+                count = new BigDecimal((int)allOrderLines[y][1]);
+                System.out.println("count " + count);
+            } catch (ClassCastException cce) {
+                count = new BigDecimal(0);
             }
-            totalWeight += weight * count;
+            totalWeight = totalWeight.add(count.multiply(weight));
         }
         return totalWeight;
     }
