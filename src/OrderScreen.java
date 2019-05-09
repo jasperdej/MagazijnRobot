@@ -23,6 +23,8 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
     private JButton orderScreen = new JButton("Order overzicht");
     private JButton inventoryScreen = new JButton("Voorraad overzicht");
 
+    private JButton addOrder = new JButton("Order toevoegen");
+    private JButton editOrder = new JButton("Order bewerken");
 
     //creates screen. setVisible is false. prints Orderscreen Ready! when screenbuilding is complete. might take some time because of database.
     public OrderScreen() {
@@ -46,15 +48,25 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
         setUndecorated(true);
 
         //buttonpanel to which buttons are added. is set to display at top of screen.
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        JPanel headerPanel = new JPanel();
+        headerPanel.setLayout(new GridLayout(1,2));
+        JPanel buttonPanel1 = new JPanel();
+        buttonPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
+        JPanel buttonPanel2 = new JPanel();
+        buttonPanel2.setLayout(new FlowLayout(FlowLayout.RIGHT));
 
         //adds buttons to buttonpanel.
-        buttonPanel.add(robotScreen);
-        buttonPanel.add(orderScreen);
-        buttonPanel.add(inventoryScreen);
+        buttonPanel1.add(robotScreen);
+        buttonPanel1.add(orderScreen);
+        buttonPanel1.add(inventoryScreen);
 
-        add(buttonPanel,BorderLayout.PAGE_START);
+        buttonPanel2.add(addOrder);
+        buttonPanel2.add(editOrder);
+
+        headerPanel.add(buttonPanel1);
+        headerPanel.add(buttonPanel2);
+
+        add(headerPanel,BorderLayout.PAGE_START);
 
         //jtable contains results from database.
         jTable = new JTable(allOrders, columnNames){
@@ -104,7 +116,7 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
                 allOrders = new Object[amountOfRows][5];
 
                 //adding results form resultset to two-dimensional array for JTable.
-                for (int i = 0; i < amountOfRows - 1; i++) {
+                for (int i = 0; i < amountOfRows ; i++) {
                     allOrders[i][0] = rs.getString("o.OrderId");
                     allOrders[i][1] = rs.getString("SUM(ol.quantity)");
                     allOrders[i][2] = rs.getString("SUM(ol.quantity * s.TypicalWeightPerUnit)");
