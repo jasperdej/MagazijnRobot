@@ -7,7 +7,6 @@ public class Article {
     private int amountPicked;
     private int amountReserved;
 
-    //vergeet niet de getters terug te zetten. rick 8-5 10:15; sorry dat ik het ben vergeten wietske :).
     public Article(int id, int binLlocation, double weight, String name, int amountReserved) {
         this.id = id;
 

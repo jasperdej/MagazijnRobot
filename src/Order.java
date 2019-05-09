@@ -21,12 +21,10 @@ public class Order {
 
         try{
             rs.first();
-            if (rs.getInt(1) != -1) {
-                orderNr = rs.getInt(1);
-            }
+            orderNr = rs.getInt(1);
+
         } catch (SQLException sqle) {
-            System.out.println(sqle);
-            System.out.println("Er is een SQL fout opgetreden in Order.java in methode getNewOrderIdFromDb");
+            //empty resultset returned. method keeps returning until a new order is found.
         }
         dbConn.killStatement();
         DbConn.dbKill();
@@ -46,12 +44,9 @@ public class Order {
         ResultSet rs = dbConn.getResultSetFromDb("select ol.orderlineid, sih.binlocation, si.typicalWeightperunit, si.stockitemname, ol.quantity from orderlines ol join stockitems si on ol.stockitemid = si.stockitemid join stockitemholdings sih on ol.stockitemid = sih.stockitemid where orderid = " + orderNr);
 
         try{
-            if (rs != null) {
                 rs.last();
                 amountOfArticles = rs.getRow();
                 rs.first();
-            }
-
             for (int i = 0; i < amountOfArticles; i++) {
                 articles.add(new Article(rs.getInt(1), rs.getInt(2), rs.getDouble(3), rs.getString(4), rs.getInt(5)));
                 rs.next();
