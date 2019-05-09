@@ -88,7 +88,7 @@ public class InventoryScreen extends JFrame implements ActionListener {
                 amountOfRows = rs1.getRow();
                 rs1.first();
             }
-            rs2.first();
+//            rs2.first();
 
             //initiating two-dimensional array with correct amount of rows.
             //the amount of rows is dependant on the amount of results returned from the database.
@@ -103,12 +103,12 @@ public class InventoryScreen extends JFrame implements ActionListener {
                 int id = rs1.getInt("si.StockItemID");
                 boolean foundRelevantRecords = false;
                 int quantityOnHand = 0;
-                while(!foundRelevantRecords) {
+                while(!foundRelevantRecords && rs2.next()) {
                     if(rs2.getInt("StockItemID") < id){
-                        rs2.next();
+//                        rs2.next();
                     } else if(rs2.getInt("StockItemID") == id){
                         quantityOnHand += rs2.getInt("Quantity");
-                        rs2.next();
+//                        rs2.next();
                     } else {
                         foundRelevantRecords = true;
                     }

@@ -3,7 +3,6 @@ import java.sql.*;
 public class DbConn {
         private static Connection con;
         private Statement stmt;
-        private ResultSet rs;
 
         public static void dbConnect() {
                 try {
@@ -35,10 +34,11 @@ public class DbConn {
         public ResultSet getResultSetFromDb(String sql) {
                 try {
                         stmt = con.createStatement();
-                        rs = stmt.executeQuery(sql);
+                        ResultSet rs = stmt.executeQuery(sql);
                         return rs;
                 } catch (Exception e) {
                         System.out.println(e);
+                        System.out.println("Error in DBconn");
                         return null;
                 }
         }

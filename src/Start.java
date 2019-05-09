@@ -15,7 +15,7 @@ public class Start {
         RobotScreen robotScreen = new RobotScreen(screenManager, robotDraw);
         screenManager.setRobotDraw(robotDraw);
         screenManager.setRobotScreen(robotScreen);
-        screenManager.start();
+//        screenManager.start();
 
         Order order = new Order();
         ModifiedBestFit bestFit;
@@ -38,7 +38,7 @@ public class Start {
             //keep updating robotscreen and keep sending coordinates to robots.
             /*updaten we robotscherm in een andere thread of in deze?*/
             try {
-                Thread.sleep(1000);
+//                Thread.sleep(1000);
             } catch (Exception e) {
                 System.out.println(e + " - in start klasse.");
             }

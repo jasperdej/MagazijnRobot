@@ -14,13 +14,10 @@ public class ModifiedBestFit {
         this.order = order;
         list = order.getArticles();
         bins = new ArrayList<>();
+//        packItems();
     }
 
-    public void addItem(Article article) {
-        list.add(article);
-    }
-
-    public void packItems() {
+    private void packItems() {
         Collections.sort(list, new Comparator<Article>() {
             @Override
             public int compare(Article a, Article b) {
@@ -68,6 +65,10 @@ public class ModifiedBestFit {
                 bins.get(bins.size() - 1).addToTotalWeight(l.getWeight());
             }
         }
+    }
+
+    public ArrayList<Bin> getBinList() {
+        return this.bins;
     }
 
     public void printPackedItems() {

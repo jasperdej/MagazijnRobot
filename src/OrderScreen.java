@@ -94,25 +94,26 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
 
         //add results to two-dimensional array.
         try{
-            if (rs != null){
+            if (rs != null && rs.next()){
                 rs.last();
                 amountOfRows = rs.getRow();
                 rs.first();
+
+                //initiating two-dimensional array with correct amount of rows.
+                //the amount of rows is dependant on the amount of results returned from the database.
+                allOrders = new Object[amountOfRows][5];
+
+                //adding results form resultset to two-dimensional array for JTable.
+                for (int i = 0; i < amountOfRows - 1; i++) {
+                    allOrders[i][0] = rs.getString("o.OrderId");
+                    allOrders[i][1] = rs.getString("SUM(ol.quantity)");
+                    allOrders[i][2] = rs.getString("SUM(ol.quantity * s.TypicalWeightPerUnit)");
+                    allOrders[i][3] = rs.getString("o.CustomerId");
+                    allOrders[i][4] = rs.getString("o.status");
+                    rs.next();
+                }
             }
 
-            //initiating two-dimensional array with correct amount of rows.
-            //the amount of rows is dependant on the amount of results returned from the database.
-            allOrders = new Object[amountOfRows][5];
-
-            //adding results form resultset to two-dimensional array for JTable.
-            for (int i = 0; i < amountOfRows - 1; i++) {
-                allOrders[i][0] = rs.getString("o.OrderId");
-                allOrders[i][1] = rs.getString("SUM(ol.quantity)");
-                allOrders[i][2] = rs.getString("SUM(ol.quantity * s.TypicalWeightPerUnit)");
-                allOrders[i][3] = rs.getString("o.CustomerId");
-                allOrders[i][4] = rs.getString("o.status");
-                rs.next();
-            }
         } catch (SQLException sqle) {
             System.out.println(sqle);
         } finally {
