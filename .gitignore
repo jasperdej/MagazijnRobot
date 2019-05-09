@@ -47,6 +47,8 @@ Thumbs.db
 *.xml
 libraries/*.*
 MagazijnRobot.iml
+.idea/misc.xml
+misc.xml
 
 ### NetBeans ###
 nbproject/private/

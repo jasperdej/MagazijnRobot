@@ -4,7 +4,7 @@ import java.awt.*;
 public class Start {
 
     public static void main(String[] args) {
-//        TestScreen testScreen = new TestScreen();
+        TestScreen testScreen = new TestScreen();
 
         //gets screens up and running. it might take a while for orderscreen and inventoryscreen to load.
         //screenmanager starts a new thread. runs parallel to main program.
@@ -22,11 +22,11 @@ public class Start {
 
         while (true) {
             //get new order from database.
-            order.getNewOrderIdFromDb();
+           order.getNewOrderIdFromDb();
 
 
             //send both algorithms to work.
-            bestFit = new ModifiedBestFit(order);
+           bestFit = new ModifiedBestFit(order);
 
             //BPP algorithm gives a two-dimensinal arraylist. bins filled with article objects
             //get Articles for next run.
@@ -37,11 +37,7 @@ public class Start {
             //send correct information to robotscreen.
             //keep updating robotscreen and keep sending coordinates to robots.
             /*updaten we robotscherm in een andere thread of in deze?*/
-            try {
-//                Thread.sleep(1000);
-            } catch (Exception e) {
-                System.out.println(e + " - in start klasse.");
-            }
+
         }
     }
 

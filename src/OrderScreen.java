@@ -18,7 +18,7 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
     //variables for correctly displaying information on screen.
     private ScreenManager screenManager;
 
-    //buttons for swithing between screens.
+    //buttons for switching between screens.
     private JButton robotScreen = new JButton("Robot overzicht");
     private JButton orderScreen = new JButton("Order overzicht");
     private JButton inventoryScreen = new JButton("Voorraad overzicht");

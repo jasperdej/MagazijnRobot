@@ -42,6 +42,15 @@ public class DbConn {
                         return null;
                 }
         }
+
+        public void updateDb(String sql){
+                try {
+                        stmt = con.createStatement();
+                        stmt.executeUpdate(sql);
+                } catch (Exception e) {
+                        System.out.println(e);
+                }
+        }
 }
 
 
