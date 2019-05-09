@@ -16,7 +16,7 @@ public class OrderDialog extends JDialog {
     public OrderDialog(JFrame jFrame, int orderId) {
         super(jFrame,true);
         this.orderId = orderId;
-        fillOrderDetails(orderId);
+        fillOrderDetails();
         setSize(450,400);
         setTitle("Order overzicht extra informatie");
         setLayout(new BorderLayout());
@@ -45,7 +45,7 @@ public class OrderDialog extends JDialog {
         setVisible(true);
     }
 
-    public void fillOrderDetails(int orderId){
+    public void fillOrderDetails(){
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();
         ResultSet rs = dbConn.getResultSetFromDb("SELECT ol.StockItemId, ol.Quantity, si.TypicalWeightPerUnit FROM OrderLines ol JOIN StockItems si ON ol.StockItemID = si.StockItemID WHERE ol.OrderID = " + orderId);
@@ -81,13 +81,11 @@ public class OrderDialog extends JDialog {
         for(int y = 0; y < allOrderLines.length; y++){
             try {
                 weight = (BigDecimal)allOrderLines[y][2];
-                System.out.println("weight " + weight);
             } catch (ClassCastException cce){
                 weight = new BigDecimal(0);
             }
             try {
                 count = new BigDecimal((int)allOrderLines[y][1]);
-                System.out.println("count " + count);
             } catch (ClassCastException cce) {
                 count = new BigDecimal(0);
             }
