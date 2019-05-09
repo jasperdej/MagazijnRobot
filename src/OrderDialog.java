@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class OrderDialog extends JDialog implements ActionListener {
+public class OrderDialog extends JDialog {
 
     private int orderId;
     private BigDecimal totalWeight = new BigDecimal(0);
@@ -14,7 +14,7 @@ public class OrderDialog extends JDialog implements ActionListener {
     private String[] columnNames = {"Item Id","Aantal","Gewicht (in kg)"};
 
     public OrderDialog(JFrame jFrame, int orderId) {
-        super(jFrame);
+        super(jFrame,true);
         this.orderId = orderId;
         fillOrderDetails(orderId);
         setSize(450,400);
@@ -26,7 +26,11 @@ public class OrderDialog extends JDialog implements ActionListener {
         jlOrderId.setHorizontalAlignment(JLabel.CENTER);
         jlOrderId.setFont(new Font("Ariel", Font.BOLD, 40));
 
-        JTable jTable = new JTable(allOrderLines,columnNames);
+        JTable jTable = new JTable(allOrderLines,columnNames){
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         JScrollPane sp = new JScrollPane(jTable);
 
         totalWeight = getTotalWeight();
@@ -90,10 +94,5 @@ public class OrderDialog extends JDialog implements ActionListener {
             totalWeight = totalWeight.add(count.multiply(weight));
         }
         return totalWeight;
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
     }
 }
