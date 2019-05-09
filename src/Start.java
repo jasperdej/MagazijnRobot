@@ -4,7 +4,7 @@ import java.awt.*;
 public class Start {
 
     public static void main(String[] args) {
-        TestScreen testScreen = new TestScreen();
+//        TestScreen testScreen = new TestScreen();
 
         //gets screens up and running. it might take a while for orderscreen and inventoryscreen to load.
         //screenmanager starts a new thread. runs parallel to main program.
