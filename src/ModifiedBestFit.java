@@ -14,7 +14,7 @@ public class ModifiedBestFit {
         this.order = order;
         list = order.getArticles();
         bins = new ArrayList<>();
-//        packItems();
+        packItems();
     }
 
     private void packItems() {
@@ -43,10 +43,12 @@ public class ModifiedBestFit {
                     double reservedWeight = 0; //sets reserved weight for extra stuff at 0
                     for (int i = 1; i < freeSpace; i++) { //adds to reserved weight for every free space he finds -1
                         int listIndex = list.size() - i - reservedLast; //finds the weight it has to substract
-                        if (list.get(listIndex).getWeight() < l.getWeight()) { //checks if the item just found is still below the item in the list
-                            if (reservedWeight + list.get(listIndex).getWeight() > 0) { //checks if the last item even fits in the bin
-                                reservedWeight += list.get(listIndex).getWeight(); //adds reserved item to reservedWeight
-                                reservedLast++; //adds 1 to reserved last index
+                        if(listIndex >= 0){ //makes sure the item it's gonna compare with isn't below 0
+                            if (list.get(listIndex).getWeight() < l.getWeight()) { //checks if the item just found is still below the item in the list
+                                if (reservedWeight + list.get(listIndex).getWeight() > 0) { //checks if the last item even fits in the bin
+                                    reservedWeight += list.get(listIndex).getWeight(); //adds reserved item to reservedWeight
+                                    reservedLast++; //adds 1 to reserved last index
+                                }
                             }
                         }
                     }
