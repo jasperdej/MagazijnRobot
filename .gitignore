@@ -46,6 +46,8 @@ Thumbs.db
 .idea/
 *.xml
 libraries/*.*
+.idea/misc.xml
+misc.xml
 
 ### NetBeans ###
 nbproject/private/
