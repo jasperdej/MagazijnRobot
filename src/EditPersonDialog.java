@@ -55,7 +55,7 @@ public class EditPersonDialog extends JDialog implements ActionListener {
         JLabel jlTussenvoegsel = new JLabel("Tussenvoegsel: ");
         jlTussenvoegsel.setBorder(BorderFactory.createEmptyBorder(0,50,0,0));
         middlePanel.add(jlTussenvoegsel);
-        if(!tussenvoegsel.equals(null)){
+        if(tussenvoegsel != null){
             jtfTussenvoegsel = new JTextField(tussenvoegsel,25);
         } else {
             jtfTussenvoegsel = new JTextField(25);
@@ -115,25 +115,16 @@ public class EditPersonDialog extends JDialog implements ActionListener {
         setVisible(true);
     }
 
-    public void  editPerson(){
-
-    }
-
-    public void addPerson(){
-
-    }
-
     public void addToDb(){
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();
-        //"UPDATE Users (UserFirstName, UserPrefix, UserLastName, UserEmail, UserAddress, UserResidence, UserPostalCode) VALUES (" + voornaam + ", " + tussenvoegsel + ", " + achternaam + ", " + emailadres + ", " + adres + ", " + woonplaats + ", " + postcode + ") WHERE UserID = " + personId
-
+        dbConn.updateDb("INSERT INTO Users (UserID, UserFirstName, UserPrefix, UserLastName, UserEmail, UserAddress, UserResidence, UserPostalCode) VALUES (" + personId + ", '" + voornaam + "', " + tussenvoegsel + ", '" + achternaam + "', " + emailadres + ", '" + adres + "', '" + woonplaats + "', '" + postcode + "')");
     }
 
     public void editDb(){
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();
-        dbConn.updateDb("UPDATE Users SET UserFirstName = '" + voornaam + "', UserPrefix = '" + tussenvoegsel + "', UserLastName = '" + achternaam + "', UserEmail = '" + emailadres + "', UserAddress = '" + adres + "', UserResidence = '" + woonplaats + "', UserPostalCode = '" + postcode + "' WHERE UserID = " + personId);
+        dbConn.updateDb("UPDATE Users SET UserFirstName = '" + voornaam + "', UserPrefix = " + tussenvoegsel + ", UserLastName = '" + achternaam + "', UserEmail = " + emailadres + ", UserAddress = '" + adres + "', UserResidence = '" + woonplaats + "', UserPostalCode = '" + postcode + "' WHERE UserID = " + personId);
     }
 
 
@@ -197,11 +188,11 @@ public class EditPersonDialog extends JDialog implements ActionListener {
         } else if (e.getSource() == jbBevestigen) {
             voornaam = jtfVoornaam.getText();
             if(!jtfTussenvoegsel.getText().equals("")){
-                tussenvoegsel = jtfTussenvoegsel.getText();
+                tussenvoegsel = "'" + jtfTussenvoegsel.getText() + "'";
             }
             achternaam = jtfAchternaam.getText();
             if(!jtfEmailadres.getText().equals("")){
-                emailadres = jtfEmailadres.getText();
+                emailadres = "'" + jtfEmailadres.getText() + "'";
             }
             adres = jtfAdres.getText();
             woonplaats = jtfWoonplaats.getText();
@@ -213,7 +204,7 @@ public class EditPersonDialog extends JDialog implements ActionListener {
                 if(personExists == true){
                     editDb();
                 } else {
-                    //persoon aanmaken
+                    addToDb();
                 }
             }
 
