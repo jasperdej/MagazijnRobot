@@ -1,4 +1,4 @@
-public class Route {
+public class TSP_Algorithm {
     private double totaleAfstand;
     private CoordinatePoint nulpunt = new CoordinatePoint(0, 0);
     private CoordinatePoint[] volgorde = new CoordinatePoint[3];
@@ -6,7 +6,7 @@ public class Route {
     private CoordinatePoint temp1;
     private CoordinatePoint temp2;
 
-    public Route (CoordinatePoint c_0, CoordinatePoint c_1, CoordinatePoint c_2) {
+    public TSP_Algorithm(CoordinatePoint c_0, CoordinatePoint c_1, CoordinatePoint c_2) {
         CoordinatePoint[0] = c_0;
         CoordinatePoint[1] = c_1;
         CoordinatePoint[2] = c_2;

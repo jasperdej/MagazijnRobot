@@ -7,15 +7,13 @@ public class ModifiedBestFit {
     private Order order;
     private ArrayList<Article> list;
     private ArrayList<Bin> bins;
-    private double binCapacity;
-    private int binMaxItems;
+    private double binCapacity = 1.5;
+    private int binMaxItems = 10;
 
-    public ModifiedBestFit(Order order, double binCapacity, int binMaxItems) {
+    public ModifiedBestFit(Order order) {
         this.order = order;
         list = order.getArticles();
         bins = new ArrayList<>();
-        this.binCapacity = binCapacity;
-        this.binMaxItems = binMaxItems;
     }
 
     public void addItem(Article article) {
