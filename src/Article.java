@@ -1,3 +1,5 @@
+import java.awt.*;
+
 public class Article {
 
     private int id;
@@ -6,6 +8,7 @@ public class Article {
     private String name;
     private int amountPicked;
     private int amountReserved;
+
 
     public Article(int id, int binLocation, double weight, String name, int amountReserved) {
         this.id = id;
@@ -16,6 +19,18 @@ public class Article {
         this.name = name;
         this.amountPicked = 0;
         this.amountReserved = amountReserved;
+    }
+
+    public void paintCoordinates(Graphics graphics) {
+        //adds id to all articles in warehouse.
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int width = screenSize.width;
+        int height = screenSize.height;
+        int widthDiffLeft = width/2/5;
+        int heightDiffLeft = height/2/5;
+
+        graphics.drawString(Integer.toString(id), widthDiffLeft * location.getX() - widthDiffLeft/2 - 8, (5 *(heightDiffLeft-8) ) - location.getY() *(heightDiffLeft -8) + heightDiffLeft - (heightDiffLeft-8)/2+4 + 10);
+
     }
 
 

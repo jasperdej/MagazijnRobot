@@ -9,8 +9,8 @@ public class ScreenManager extends Thread {
     private DbScreens dbScreens;
 
     public void run() {
-        robotScreen.updateOp(new OrderPick());
-        robotScreen.updateIp(new Inpak());
+        robotScreen.setUpOp(new OrderPick());
+        robotScreen.setUpIp(new Inpak());
         robotScreen.createScreen();
         robotDraw.setVisible(true);
         currentScreen = robotScreen;
@@ -19,9 +19,16 @@ public class ScreenManager extends Thread {
         dbScreens.setScreenManager(this);
     }
 
-    public void startDbScreens() {
+    public DbScreens startDbScreens() {
         Thread thread = new Thread(dbScreens);
         thread.start();
+        return this.dbScreens;
+    }
+
+    public void updateRobotScreen(OrderPick orderPick, Inpak inpak) {
+        robotScreen.updateOp(orderPick);
+        robotScreen.updateIp(inpak);
+        robotDraw.repaint();
     }
 
     public void buttonPressed(String nameOfScreen) {

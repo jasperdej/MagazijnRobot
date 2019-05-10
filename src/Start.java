@@ -13,11 +13,10 @@ public class Start {
         //screens which get their information from database run on a seperate thread so screens remain operational and up-to-date.
         ScreenManager screenManager = new ScreenManager();
         Main mainAlgorithm = new Main(screenManager);
-        RobotDraw robotDraw = new RobotDraw(screenManager);
+        RobotDraw robotDraw = new RobotDraw(screenManager, mainAlgorithm);
         RobotScreen robotScreen = new RobotScreen(screenManager, robotDraw, mainAlgorithm);
         screenManager.setRobotDraw(robotDraw);
         screenManager.setRobotScreen(robotScreen);
-        screenManager.start();
 
         //has to be last thing done in start class, it is an endless loop.
         mainAlgorithm.runMainAlgorithm();

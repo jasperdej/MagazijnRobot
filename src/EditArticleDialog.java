@@ -103,13 +103,16 @@ public class EditArticleDialog extends JDialog implements ActionListener {
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();
         dbConn.updateDb("INSERT INTO StockItems (StockItemID , StockItemName, QuantityPerOuter, UnitPrice, TypicalWeightPerUnit, SearchDetails, SupplierID, UnitPackageID, OuterPackageID, LeadTimeDays, IsChillerStock, TaxRate, LastEditedBy, ValidFrom, ValidTo) VALUES (" + articleId + ", '" + productnaam + "', '" + productaantal + "', " + productprijs + ", " + productgewicht + ", '" + productbeschrijving + "', 1, 1, 1, 14, 0, 15, 1, '" + getDate() + "' , '9999-12-31 23:59:59' )");
-
+        dbConn.killStatement();
+        DbConn.dbKill();
     }
 
     public void editDb(){
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();
         dbConn.updateDb("UPDATE StockItems SET StockItemName = '" + productnaam + "', QuantityPerOuter = " + productaantal + ", UnitPrice = " + productprijs + ", TypicalWeightPerUnit = " + productgewicht + ", SearchDetails = '" + productbeschrijving + "' WHERE StockItemID = " + articleId);
+        dbConn.killStatement();
+        DbConn.dbKill();
     }
 
     public void setArticle(){

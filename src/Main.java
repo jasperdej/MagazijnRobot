@@ -2,8 +2,9 @@ import java.util.ArrayList;
 
 public class Main {
     private ScreenManager screenManager;
-    private boolean isFirstTime = true;
+    private boolean dbScreensUp = true;
     private Order order = new Order();
+
     private OrderPick orderPick = new OrderPick();
     private Inpak inpak = new Inpak();
 
@@ -17,22 +18,25 @@ public class Main {
         this.screenManager = screenManager;
     }
 
-    private int i = 0;
 
     public void runMainAlgorithm() {
         while (true) {
-            i++;
-            orderPick.setStatus("wachten op Coördinaten.");
-            inpak.setStatus("wachten op Coördinaten." + i);
+            orderPick.setStatus("aan het picken");
+            inpak.setStatus("wachten op OP");
             TSP_List = new ArrayList<>();
 
             //get new order from database.
             order.getNewOrderIdFromDb();
+            //update robot screen to current order.
 
             //starts orderScreen and inventoryScreen. they have a slight delay because of database issues when executing queries simultaneously.
-            if (isFirstTime) {
-                screenManager.startDbScreens();
-                isFirstTime = false;
+            if (dbScreensUp) {
+                if (screenManager.startDbScreens() != null) {
+                    dbScreensUp = false;
+                } else {
+                    screenManager.startDbScreens();
+                    screenManager.start();
+                }
             }
 
             //send both algorithms to work.
@@ -60,14 +64,18 @@ public class Main {
 //            inpak.sendCoordinatesToArduino(bestFit.getBinList(), TSP_List);
 
 
+
             //to-do list.
             //get information from robots.
             //send correct information to robotScreen.
             //keep updating robotScreen and keep sending coordinates to robots.
             try {
-                Thread.sleep(20000);
+                Thread.sleep(10000);
             } catch (Exception e) {
                 System.out.println(e);
+            } finally {
+                screenManager.updateRobotScreen(orderPick, inpak);
+
             }
 
             }
