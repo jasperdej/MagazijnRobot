@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class Start {
 
-
     public static boolean dbScreensDoneLoading = true;
 
     public static void main(String[] args) {
@@ -20,6 +19,7 @@ public class Start {
 
         //has to be last thing done in start class, it is an endless loop.
         mainAlgorithm.runMainAlgorithm();
+
     }
 
 }

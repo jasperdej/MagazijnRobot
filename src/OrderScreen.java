@@ -25,6 +25,8 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
 
     private JButton addOrder = new JButton("Order toevoegen");
     private JButton editOrder = new JButton("Order bewerken");
+    private JButton addPersoon = new JButton("Persoon toevoegen");
+    private JButton editPersoon = new JButton("Persoon bewerken");
 
     //creates screen. setVisible is false. prints Orderscreen Ready! when screenbuilding is complete. might take some time because of database.
     public OrderScreen() {
@@ -60,8 +62,11 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
         buttonPanel1.add(orderScreen);
         buttonPanel1.add(inventoryScreen);
 
+        buttonPanel2.add(addPersoon);
+        buttonPanel2.add(editPersoon);
         buttonPanel2.add(addOrder);
         buttonPanel2.add(editOrder);
+
 
         headerPanel.add(buttonPanel1);
         headerPanel.add(buttonPanel2);
@@ -91,6 +96,10 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
         robotScreen.addActionListener(this);
         orderScreen.addActionListener(this);
         inventoryScreen.addActionListener(this);
+        addOrder.addActionListener(this);
+        editOrder.addActionListener(this);
+        addPersoon.addActionListener(this);
+        editPersoon.addActionListener(this);
 
     }
 
@@ -168,6 +177,23 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
         OrderDialog dialog = new OrderDialog(this,orderId);
     }
 
+    public boolean checkID(String query, String id){
+        DbConn dbConn = new DbConn();
+        DbConn.dbConnect();
+        ResultSet rs = dbConn.getResultSetFromDb(query + id);
+
+        try {
+            if(rs.next()){
+                return true;
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            dbConn.killStatement();
+        }
+        return false;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         //buttons for switching between screens.
@@ -177,6 +203,30 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
             screenManager.buttonPressed("OrderScreen");
         } else if (e.getSource() == inventoryScreen) {
             screenManager.buttonPressed("InventoryScreen");
+        }
+        else if (e.getSource() == addOrder) {
+            EditOrderDialog createOrderDialog = new EditOrderDialog(this);
+        } else if (e.getSource() == editOrder) {
+            String orderid = JOptionPane.showInputDialog(this,"Voer order nummer in: ");
+            if(!orderid.equals(null)){
+            if (checkID("SELECT OrderID FROM Orders WHERE OrderID = ", orderid)) {
+                EditOrderDialog editOrderDialog = new EditOrderDialog(this, Integer.parseInt(orderid));
+            } else {
+                JOptionPane.showMessageDialog(this, "Deze order bestaat niet.");
+            }
+            }
+        }
+        else if (e.getSource() == addPersoon) {
+            EditPersonDialog createPersonDialog = new EditPersonDialog(this);
+        } else if (e.getSource() == editPersoon) {
+            String persoonid = JOptionPane.showInputDialog(this, "Voer klant nummer in: ");
+            if(!persoonid.equals(null)) {
+                if (checkID("SELECT UserID FROM USERS WHERE UserID = ", persoonid)) {
+                    EditPersonDialog editPersonDialog = new EditPersonDialog(this, Integer.parseInt(persoonid));
+                } else {
+                    JOptionPane.showMessageDialog(this, "Deze klant bestaat niet.");
+                }
+            }
         }
     }
 
