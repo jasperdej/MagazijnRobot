@@ -31,6 +31,7 @@ public class EditPersonDialog extends JDialog implements ActionListener {
 
     public void createDialog(){
         setSize(480,400);
+        setResizable(false);
         setTitle("Persoon ID: " + personId);
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);
@@ -40,20 +41,24 @@ public class EditPersonDialog extends JDialog implements ActionListener {
 
         JPanel middlePanel = new JPanel();
         middlePanel.setLayout(new GridLayout(10,2));
-        middlePanel.setBorder(BorderFactory.createEmptyBorder(0,50,0,0));
+        middlePanel.setBorder(BorderFactory.createEmptyBorder(0,30,0,30));
 
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new BorderLayout());
-
+      
+        JLabel jlTitelNew = new JLabel("Persoon aanmaken");
+        jlTitelNew.setFont(new Font("Arial",Font.BOLD,30));
+        JLabel jlTitelEdit = new JLabel("Gegevens wijzigen");
+        jlTitelEdit.setFont(new Font("Arial",Font.BOLD,30));
         if(personExists){
-            topPanel.add(new JLabel("Wijzig persoons gegevens."));
+          topPanel.add(jlTitelEdit);
         } else {
-            topPanel.add(new JLabel("Maak een nieuw persoon aan."));
+          topPanel.add(jlTitelNew);
         }
 
         JLabel jlVoornaam = new JLabel("Voornaam: *");
         middlePanel.add(jlVoornaam);
-        jtfVoornaam = new JTextField(voornaam,25);
+        jtfVoornaam = new JTextField(voornaam,10);
         middlePanel.add(jtfVoornaam);
 
         JLabel jlTussenvoegsel = new JLabel("Tussenvoegsel: ");
