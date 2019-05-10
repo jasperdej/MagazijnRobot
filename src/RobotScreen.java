@@ -8,6 +8,7 @@ import static java.awt.GridBagConstraints.*;
 public class RobotScreen extends JFrame implements ActionListener {
     //screenmanager is responsible for showing the right screen.
     private ScreenManager screenManager;
+    private Main main;
 
     //panels for screenlayout.
     private JPanel opLabelPanel = new JPanel();
@@ -60,9 +61,10 @@ public class RobotScreen extends JFrame implements ActionListener {
     private JButton ipResetButton = new JButton("Reset");
 
     //constructor initiates robotdraw and screenmanager.
-    public RobotScreen (ScreenManager screenManager, RobotDraw robotDraw) {
+    public RobotScreen (ScreenManager screenManager, RobotDraw robotDraw, Main main) {
         this.robotDraw = robotDraw;
         this.screenManager = screenManager;
+        this.main = main;
     }
 
     public void createScreen() {
@@ -191,8 +193,8 @@ public class RobotScreen extends JFrame implements ActionListener {
     public void updateOp(OrderPick orderPickRobot) {
         JLabel opFiller = new JLabel("");
         JLabel opStatus2 = new JLabel(orderPickRobot.status);
-        JLabel opOrderNr2 = new JLabel(Integer.toString(orderPickRobot.getOrder().getOrderNr()));
-        JLabel opTotalAmountOfArticles2 = new JLabel(Integer.toString(orderPickRobot.getOrder().getAmountOfArticles()));
+        JLabel opOrderNr2 = new JLabel(Integer.toString(main.getCurrentOrder().getOrderNr()));
+        JLabel opTotalAmountOfArticles2 = new JLabel(Integer.toString(main.getCurrentOrder().getAmountOfArticles()));
         JLabel opAmountOfArticlesPicked2 = new JLabel(Integer.toString(orderPickRobot.getAmountOfArticlesPicked()));
         JLabel opCoordinate2 = new JLabel(orderPickRobot.getCurrentLocation().toString());
 
@@ -206,10 +208,10 @@ public class RobotScreen extends JFrame implements ActionListener {
     public void updateIp(Inpak inpakRobot){
         JLabel ipFiller = new JLabel("");
         JLabel ipStatus2 = new JLabel(inpakRobot.status);
-        JLabel ipOrderNr2 = new JLabel(Integer.toString(inpakRobot.order.getOrderNr()));
-        JLabel ipTotalArticlesInOrder2 = new JLabel(Integer.toString(inpakRobot.order.getAmountOfArticles()));
+        JLabel ipOrderNr2 = new JLabel(Integer.toString(main.getCurrentOrder().getOrderNr()));
+        JLabel ipTotalArticlesInOrder2 = new JLabel(Integer.toString(main.getCurrentOrder().getAmountOfArticles()));
         JLabel ipAmountOfArticlesPacked2 = new JLabel(Integer.toString(inpakRobot.getAmountOfArticlesPacked()));
-        JLabel ipBinId2 = new JLabel(Integer.toString(inpakRobot.getCurrentBin().getBinNumber()));
+        JLabel ipBinId2 = new JLabel(Integer.toString(1));
 
         //adds labels to opLabels which makes it easier to display.
         ipLabels2 = new JLabel[]{ipFiller, ipStatus2, ipOrderNr2, ipTotalArticlesInOrder2,ipAmountOfArticlesPacked2, ipBinId2};

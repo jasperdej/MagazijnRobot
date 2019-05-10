@@ -85,6 +85,17 @@ public class InventoryScreen extends JFrame implements ActionListener {
     //put all articles from database in allArticles.
     private void fillAllArticles() {
         //get results from database. resultset contains all results from query.
+        if (!Start.dbScreensDoneLoading) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ie) {
+                System.out.println(ie);
+            }
+            fillAllArticles();
+        }  else {
+            Start.dbScreensDoneLoading = false;
+        }
+
         DbConn dbConn = new DbConn();
         dbConn.dbConnect(); //"select si.StockItemName, si.StockItemID, si.TypicalWeightPerUnit, (SELECT sum(QuantityOnHand) FROM stockitemholdings sih WHERE sih.StockItemID = si.StockItemID), sum(ol.Quantity) from stockitems si join Orderlines ol on ol.Stockitemid = si.Stockitemid  group by ol.Stockitemid;"
 
@@ -96,12 +107,10 @@ public class InventoryScreen extends JFrame implements ActionListener {
         int amountOfRows = 0;
 
         try{
-            if (rs1 != null) {
-                rs1.last();
-                amountOfRows = rs1.getRow();
-                rs1.first();
-            }
-//            rs2.first();
+              rs1.last();
+              amountOfRows = rs1.getRow();
+              rs1.first();
+              rs2.first();
 
             //initiating two-dimensional array with correct amount of rows.
             //the amount of rows is dependant on the amount of results returned from the database.
@@ -134,6 +143,7 @@ public class InventoryScreen extends JFrame implements ActionListener {
             System.out.println(sqle);
         } finally {
             dbConn.killStatement();
+            Start.dbScreensDoneLoading = true;
         }
 
     }

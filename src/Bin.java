@@ -17,10 +17,10 @@ public class Bin {
     //needs adjusting
     public Bin(Order order, double maximumWeight, int maximumQuantity) {
         this.order = order;
-        binCount++;
         binNumber = binCount;
         totalWeight = 0.0;
         articles = new ArrayList<>();
+        binCount++;
     }
 
     public int getBinNumber() {
@@ -51,5 +51,9 @@ public class Bin {
 
     public void addItem(Article article) {
         articles.add(article);
+    }
+
+    public static void setBinCount(int binCount) {
+        Bin.binCount = binCount;
     }
 }

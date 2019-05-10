@@ -11,6 +11,7 @@ public class ModifiedBestFit {
     private int binMaxItems = 10;
 
     public ModifiedBestFit(Order order) {
+        Bin.setBinCount(0);
         this.order = order;
         list = order.getArticles();
         bins = new ArrayList<>();
