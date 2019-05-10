@@ -31,6 +31,7 @@ public class EditPersonDialog extends JDialog implements ActionListener {
 
     public void createDialog(){
         setSize(480,400);
+        setResizable(false);
         setTitle("Persoon ID: " + personId);
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);
@@ -40,20 +41,20 @@ public class EditPersonDialog extends JDialog implements ActionListener {
 
         JPanel middlePanel = new JPanel();
         middlePanel.setLayout(new GridLayout(10,2));
+        middlePanel.setBorder(BorderFactory.createEmptyBorder(0,30,0,30));
 
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new BorderLayout());
-
-        topPanel.add(new JLabel("Maak een nieuw persoon aan."));
+        JLabel jlTitel = new JLabel("Persoon aanmaken");
+        jlTitel.setFont(new Font("Arial",Font.BOLD,30));
+        topPanel.add(jlTitel);
 
         JLabel jlVoornaam = new JLabel("Voornaam: *");
-        jlVoornaam.setBorder(BorderFactory.createEmptyBorder(0,50,0,0));
         middlePanel.add(jlVoornaam);
-        jtfVoornaam = new JTextField(voornaam,25);
+        jtfVoornaam = new JTextField(voornaam,10);
         middlePanel.add(jtfVoornaam);
 
         JLabel jlTussenvoegsel = new JLabel("Tussenvoegsel: ");
-        jlTussenvoegsel.setBorder(BorderFactory.createEmptyBorder(0,50,0,0));
         middlePanel.add(jlTussenvoegsel);
         if(tussenvoegsel != null){
             jtfTussenvoegsel = new JTextField(tussenvoegsel,25);
@@ -63,13 +64,11 @@ public class EditPersonDialog extends JDialog implements ActionListener {
         middlePanel.add(jtfTussenvoegsel);
 
         JLabel jlAchternaam = new JLabel("Achternaam: * ");
-        jlAchternaam.setBorder(BorderFactory.createEmptyBorder(0,50,0,0));
         middlePanel.add(jlAchternaam);
         jtfAchternaam = new JTextField(achternaam,25);
         middlePanel.add(jtfAchternaam);
 
         JLabel jlEmailadres = new JLabel("Email adres: ");
-        jlEmailadres.setBorder(BorderFactory.createEmptyBorder(0,50,0,0));
         middlePanel.add(jlEmailadres);
         if(emailadres != null) {
             jtfEmailadres = new JTextField(emailadres, 25);
@@ -79,19 +78,16 @@ public class EditPersonDialog extends JDialog implements ActionListener {
         middlePanel.add(jtfEmailadres);
 
         JLabel jlAdres = new JLabel("Adres: * ");
-        jlAdres.setBorder(BorderFactory.createEmptyBorder(0,50,0,0));
         middlePanel.add(jlAdres);
         jtfAdres = new JTextField(adres,25);
         middlePanel.add(jtfAdres);
 
         JLabel jlWoonplaats = new JLabel("Woonplaats: * ");
-        jlWoonplaats.setBorder(BorderFactory.createEmptyBorder(0,50,0,0));
         middlePanel.add(jlWoonplaats);
         jtfWoonplaats = new JTextField(woonplaats,25);
         middlePanel.add(jtfWoonplaats);
 
         JLabel jlPostcode = new JLabel("Postcode: * ");
-        jlPostcode.setBorder(BorderFactory.createEmptyBorder(0,50,0,0));
         middlePanel.add(jlPostcode);
         jtfPostcode = new JTextField(postcode,25);
         middlePanel.add(jtfPostcode);
