@@ -21,6 +21,8 @@ public class InventoryScreen extends JFrame implements ActionListener {
 
     private JButton addArticle = new JButton("Artikel toevoegen");
     private JButton editArticle = new JButton("Artikel bewerken");
+    private JButton addOrder = new JButton("Order toevoegen");
+    private JButton editOrder = new JButton("Order bewerken");
 
     public InventoryScreen() {
         createScreen();
@@ -79,6 +81,8 @@ public class InventoryScreen extends JFrame implements ActionListener {
         robotScreen.addActionListener(this);
         orderScreen.addActionListener(this);
         inventoryScreen.addActionListener(this);
+        addArticle.addActionListener(this);
+        editArticle.addActionListener(this);
     }
 
 
@@ -148,6 +152,23 @@ public class InventoryScreen extends JFrame implements ActionListener {
 
     }
 
+    public boolean checkID(String query, String id){
+        DbConn dbConn = new DbConn();
+        DbConn.dbConnect();
+        ResultSet rs = dbConn.getResultSetFromDb(query + id);
+
+        try {
+            if(rs.next()){
+                return true;
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            dbConn.killStatement();
+        }
+        return false;
+    }
+
     //gets results from database and updates current values on screen.
     public void refreshInventoryScreen() {
         fillAllArticles();
@@ -168,6 +189,25 @@ public class InventoryScreen extends JFrame implements ActionListener {
             screenManager.buttonPressed("OrderScreen");
         } else if (e.getSource() == inventoryScreen) {
             screenManager.buttonPressed("InventoryScreen");
+
+        } else if (e.getSource() == addArticle){
+            EditArticleDialog createArticleDialog = new EditArticleDialog(this);
+        } else if (e.getSource() == editArticle){
+            String artikelid = JOptionPane.showInputDialog(this,"Voer artikel nummer in: ");
+            if(checkID("SELECT StockItemID FROM StockItems WHERE StockItemID = ", artikelid)) {
+                EditArticleDialog editArticleDialog = new EditArticleDialog(this, Integer.parseInt(artikelid));
+            } else {
+                JOptionPane.showMessageDialog(this,"Dit artikel bestaat niet.");
+            }
+        } else if (e.getSource() == addOrder) {
+              EditOrderDialog createOrderDialog = new EditOrderDialog(this);
+        } else if (e.getSource() == editOrder) {
+            String orderid = JOptionPane.showInputDialog(this,"Voer artikel nummer in: ");
+            if (checkID("SELECT OrderID FROM Orders WHERE OrderID = ", orderid)) {
+                EditOrderDialog editOrderDialog = new EditOrderDialog(this, Integer.parseInt(orderid));
+            } else {
+                JOptionPane.showMessageDialog(this, "Deze order bestaat niet.");
+            }
         }
     }
 }
