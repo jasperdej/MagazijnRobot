@@ -36,19 +36,25 @@ public class EditPersonDialog extends JDialog implements ActionListener {
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);
 
+        JPanel panel = (JPanel)this.getContentPane();
+        panel.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
+
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout());
+        topPanel.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
 
         JPanel middlePanel = new JPanel();
         middlePanel.setLayout(new GridLayout(10,2));
-        middlePanel.setBorder(BorderFactory.createEmptyBorder(0,30,0,30));
 
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new BorderLayout());
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridLayout(1,2));
       
         JLabel jlTitelNew = new JLabel("Persoon aanmaken");
         jlTitelNew.setFont(new Font("Arial",Font.BOLD,30));
-        JLabel jlTitelEdit = new JLabel("Gegevens wijzigen");
+        JLabel jlTitelEdit = new JLabel("Persoonsgegevens wijzigen");
         jlTitelEdit.setFont(new Font("Arial",Font.BOLD,30));
         if(personExists){
           topPanel.add(jlTitelEdit);
@@ -100,16 +106,20 @@ public class EditPersonDialog extends JDialog implements ActionListener {
         middlePanel.add(jtfPostcode);
 
         JLabel jlVerplicht = new JLabel("Velden met een sterretje* zijn verplicht");
-        jlVerplicht.setHorizontalAlignment(JLabel.CENTER);
+        jlVerplicht.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
         bottomPanel.add(jlVerplicht, BorderLayout.PAGE_START);
+
+
 
         jbBevestigen = new JButton("Bevestigen");
         jbBevestigen.addActionListener(this);
-        bottomPanel.add(jbBevestigen, BorderLayout.LINE_END);
+        buttonPanel.add(jbBevestigen);
 
         jbAnnuleren = new JButton("Annuleren");
         jbAnnuleren.addActionListener(this);
-        bottomPanel.add(jbAnnuleren, BorderLayout.LINE_START);
+        buttonPanel.add(jbAnnuleren);
+
+        bottomPanel.add(buttonPanel, BorderLayout.PAGE_END);
 
         add(topPanel, BorderLayout.PAGE_START);
         add(middlePanel);
@@ -203,7 +213,7 @@ public class EditPersonDialog extends JDialog implements ActionListener {
             postcode = jtfPostcode.getText();
 
             if(voornaam.equals("") || achternaam.equals("") || adres.equals("") || woonplaats.equals("") || postcode.equals("")){
-                JOptionPane.showMessageDialog(this,"Velden met een sterretje* moet u invullen.");
+                JOptionPane.showMessageDialog(this,"Niet alle verplichte velden zijn ingevuld.");
             } else {
                 if (personExists == true) {
                     int keuze = JOptionPane.showConfirmDialog(this, "Weet u zeker dat u deze gegevens wilt wijzigen?", "Wijzigen gegevens", JOptionPane.YES_NO_OPTION);
