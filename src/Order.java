@@ -1,3 +1,4 @@
+import java.security.spec.ECField;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -8,27 +9,40 @@ public class Order {
     private int amountOfArticles;
     private double totalWeight;
 
-    public Order() {
-        articles = new ArrayList<>();
-    }
-
     //looks for new orderid from database. if new orderid is found, the arraylist with articles is filled with it's articles.
     public void getNewOrderIdFromDb() {
+        if (!Start.dbScreensDoneLoading) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ie) {
+                System.out.println(ie);
+            }
+            getNewOrderIdFromDb();
+        } else {
+            Start.dbScreensDoneLoading = false;
+        }
+
         orderNr = -1;
+
         DbConn dbConn = new DbConn();
         dbConn.dbConnect();
         ResultSet rs = dbConn.getResultSetFromDb("select min(orderid) from orders where status = 'wachten op actie';");
 
         try{
             rs.first();
-            orderNr = rs.getInt(1);
+            orderNr = rs.getInt("min(orderid)");
 
         } catch (SQLException sqle) {
             //empty resultset returned. method keeps returning until a new order is found.
+        } catch (Exception e) {
+            getNewOrderIdFromDb();
         }
+
         dbConn.killStatement();
         DbConn.dbKill();
+        Start.dbScreensDoneLoading = true;
 
+        System.out.println(orderNr);
         if (orderNr == -1) {
             getNewOrderIdFromDb();
         } else {
@@ -38,7 +52,18 @@ public class Order {
 
     //gets articles from current order from database.
     public void getArticlesFromDb() {
+        if (!Start.dbScreensDoneLoading) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ie) {
+                System.out.println(ie);
+            }
+            getArticlesFromDb();
+        } else {
+            Start.dbScreensDoneLoading = false;
+        }
         //get articles from curront order from database. resultset contains results from query.
+        articles = new ArrayList<>();
         DbConn dbConn = new DbConn();
         dbConn.dbConnect();
         ResultSet rs = dbConn.getResultSetFromDb("select ol.orderlineid, sih.binlocation, si.typicalWeightperunit, si.stockitemname, ol.quantity from orderlines ol join stockitems si on ol.stockitemid = si.stockitemid join stockitemholdings sih on ol.stockitemid = sih.stockitemid where orderid = " + orderNr);
@@ -55,9 +80,13 @@ public class Order {
         } catch (SQLException sqle) {
             System.out.println(sqle);
             System.out.println("Er is een SQL fout opgetreden in Order.java in methode getArticlesFromDb");
+        } catch (Exception e) {
+            getArticlesFromDb();
         }
         dbConn.killStatement();
         DbConn.dbKill();
+
+        Start.dbScreensDoneLoading = true;
     }
 
 

@@ -1,27 +1,33 @@
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Inpak extends Robot {
     private int amountOfArticlesPacked = 1;
-    private Bin[] bins;
-    private Bin currentBin;
-    private Graphics graphics;
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private int article = 2;
+    private String toCoords;
 
-    public Inpak(Order order, Bin bin1, Bin bin2, Bin bin3) {//, Graphics graphics
-        super(order);
-        this.graphics = graphics;
-        bins = new Bin[]{bin1, bin2, bin3};
-        currentBin = bins[1];
+    public Inpak() {//, Graphics graphics
         status = "a";
+    }
+
+    //binlist is created by bpp algorithm. articles is created by tsp algorithm.
+    public void sendCoordinatesToArduino(ArrayList<Bin> binList, ArrayList<Article> articleList){
+        toCoords = "";
+        for (Article a: articleList) {
+            for (Bin b: binList) {
+                for (Article ab: b.getArticles()) {
+                    if (ab.getLocation().getX() == a.getLocation().getX() && ab.getLocation().getY() == a.getLocation().getY()) {
+                        toCoords += Integer.toString(b.getBinNumber());
+                    }
+                }
+            }
+        }
+        sendToCoords(toCoords);
     }
 
     public int getAmountOfArticlesPacked() {
         return this.amountOfArticlesPacked;
-    }
-
-    public Bin getCurrentBin() {
-        return this.currentBin;
     }
 
     public void setArticle(int article) {

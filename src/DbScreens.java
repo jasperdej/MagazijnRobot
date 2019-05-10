@@ -12,6 +12,7 @@ public class DbScreens extends Thread{
         inventoryScreen = new InventoryScreen();
         screenManager.setInventoryScreen(inventoryScreen);
         inventoryScreen.setScreenManager(screenManager);
+        return;
     }
 
     public void setScreenManager(ScreenManager screenManager) {
