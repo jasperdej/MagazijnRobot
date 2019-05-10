@@ -45,9 +45,16 @@ public class EditPersonDialog extends JDialog implements ActionListener {
 
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new BorderLayout());
-        JLabel jlTitel = new JLabel("Persoon aanmaken");
-        jlTitel.setFont(new Font("Arial",Font.BOLD,30));
-        topPanel.add(jlTitel);
+      
+        JLabel jlTitelNew = new JLabel("Persoon aanmaken");
+        jlTitelNew.setFont(new Font("Arial",Font.BOLD,30));
+        JLabel jlTitelEdit = new JLabel("Gegevens wijzigen");
+        jlTitelEdit.setFont(new Font("Arial",Font.BOLD,30));
+        if(personExists){
+          topPanel.add(jlTitelEdit);
+        } else {
+          topPanel.add(jlTitelNew);
+        }
 
         JLabel jlVoornaam = new JLabel("Voornaam: *");
         middlePanel.add(jlVoornaam);
@@ -123,8 +130,6 @@ public class EditPersonDialog extends JDialog implements ActionListener {
         dbConn.updateDb("UPDATE Users SET UserFirstName = '" + voornaam + "', UserPrefix = " + tussenvoegsel + ", UserLastName = '" + achternaam + "', UserEmail = " + emailadres + ", UserAddress = '" + adres + "', UserResidence = '" + woonplaats + "', UserPostalCode = '" + postcode + "' WHERE UserID = " + personId);
     }
 
-
-
     public void setPerson(){
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();
@@ -134,7 +139,6 @@ public class EditPersonDialog extends JDialog implements ActionListener {
             rs.first();
 
             voornaam = rs.getString("UserFirstName");
-            //System.out.println(voornaam);
             if(rs.getString("UserPrefix")!= null){
                 tussenvoegsel = rs.getString("UserPrefix");
             } else {
@@ -185,10 +189,14 @@ public class EditPersonDialog extends JDialog implements ActionListener {
             voornaam = jtfVoornaam.getText();
             if(!jtfTussenvoegsel.getText().equals("")){
                 tussenvoegsel = "'" + jtfTussenvoegsel.getText() + "'";
+            } else {
+                tussenvoegsel = null;
             }
             achternaam = jtfAchternaam.getText();
             if(!jtfEmailadres.getText().equals("")){
                 emailadres = "'" + jtfEmailadres.getText() + "'";
+            } else {
+                emailadres = null;
             }
             adres = jtfAdres.getText();
             woonplaats = jtfWoonplaats.getText();
@@ -197,13 +205,20 @@ public class EditPersonDialog extends JDialog implements ActionListener {
             if(voornaam.equals("") || achternaam.equals("") || adres.equals("") || woonplaats.equals("") || postcode.equals("")){
                 JOptionPane.showMessageDialog(this,"Velden met een sterretje* moet u invullen.");
             } else {
-                if(personExists == true){
-                    editDb();
+                if (personExists == true) {
+                    int keuze = JOptionPane.showConfirmDialog(this, "Weet u zeker dat u deze gegevens wilt wijzigen?", "Wijzigen gegevens", JOptionPane.YES_NO_OPTION);
+                    if (keuze == JOptionPane.YES_OPTION) {
+                        editDb();
+                        dispose();
+                    }
                 } else {
-                    addToDb();
+                    int keuze = JOptionPane.showConfirmDialog(this, "Weet u zeker dat u deze persoon wilt toevoegen?", "Toevoegen persoon", JOptionPane.YES_NO_OPTION);
+                    if (keuze == JOptionPane.YES_OPTION) {
+                        addToDb();
+                        dispose();
+                    }
                 }
             }
-
 
         }
 
