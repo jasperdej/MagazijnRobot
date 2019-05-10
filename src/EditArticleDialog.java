@@ -14,9 +14,7 @@ public class EditArticleDialog extends JDialog implements ActionListener {
     private boolean articleExists = true;
     private JButton jbBevestigen, jbAnnuleren;
     private JTextField jtfProductNaam, jtfProductAantal, jtfProductPrijs, jtfProductGewicht, jtfProductBeschrijving;
-    private String productnaam, productbeschrijving;
-    private double productprijs, productgewicht;
-    private int productaantal;
+    private String productnaam, productbeschrijving, productprijs, productgewicht, productaantal;
     private boolean valseInvoer = false;
 
     public EditArticleDialog(JFrame jFrame, int articleId){
@@ -35,62 +33,87 @@ public class EditArticleDialog extends JDialog implements ActionListener {
 
     public void createDialog(){
         setSize(480,400);
-        setTitle("Artikel " + articleId);
+        setResizable(false);
+        setTitle("Artikel ID: " + articleId);
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);
 
+        JPanel panel =(JPanel)this.getContentPane();
+        panel.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
+
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout());
+        topPanel.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
 
         JPanel middlePanel = new JPanel();
-        middlePanel.setLayout(new GridLayout(0,2));
-        middlePanel.setBorder(BorderFactory.createEmptyBorder(0,30,0,30));
+        middlePanel.setLayout(new BorderLayout());
+
+        JPanel topMiddlePanel = new JPanel();
+        topMiddlePanel.setLayout(new GridLayout(0,2,0,5));
+
+        JPanel bottomMiddlePanel = new JPanel();
+        bottomMiddlePanel.setLayout(new GridLayout(1,1));
+        bottomMiddlePanel.setBorder(BorderFactory.createEmptyBorder(2,0,0,0));
 
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new BorderLayout());
 
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridLayout(1,2));
+
+        JLabel jlTitelNew = new JLabel("Artikel aanmaken");
+        jlTitelNew.setFont(new Font("Arial",Font.BOLD,30));
+        JLabel jlTitelEdit = new JLabel("Artikel gegevens wijzigen");
+        jlTitelEdit.setFont(new Font("Arial",Font.BOLD,30));
+
         if(articleExists){
-            topPanel.add(new JLabel("Wijzig product."));
+            topPanel.add(jlTitelEdit);
         } else {
-            topPanel.add(new JLabel("Maak een nieuw product."));
+            topPanel.add(jlTitelNew);
         }
 
         JLabel jlProductNaam = new JLabel("Product naam: *");
-        middlePanel.add(jlProductNaam);
+        topMiddlePanel.add(jlProductNaam);
         jtfProductNaam = new JTextField(productnaam, 25);
-        middlePanel.add(jtfProductNaam);
+        topMiddlePanel.add(jtfProductNaam);
 
         JLabel jlProductAantal = new JLabel("Product aantal: *");
-        middlePanel.add(jlProductAantal);
-        jtfProductAantal = new JTextField(String.valueOf(productaantal), 25);
-        middlePanel.add(jtfProductAantal);
+        topMiddlePanel.add(jlProductAantal);
+        jtfProductAantal = new JTextField(productaantal, 25);
+        topMiddlePanel.add(jtfProductAantal);
 
         JLabel jlProductPrijs = new JLabel("Product prijs: *");
-        middlePanel.add(jlProductPrijs);
-        jtfProductPrijs = new JTextField(String.valueOf(productprijs),25);
-        middlePanel.add(jtfProductPrijs);
+        topMiddlePanel.add(jlProductPrijs);
+        jtfProductPrijs = new JTextField(productprijs,25);
+        topMiddlePanel.add(jtfProductPrijs);
 
         JLabel jlProductGewicht = new JLabel("Product gewicht: *");
-        middlePanel.add(jlProductGewicht);
-        jtfProductGewicht = new JTextField(String.valueOf(productgewicht), 25);
-        middlePanel.add(jtfProductGewicht);
+        topMiddlePanel.add(jlProductGewicht);
+        jtfProductGewicht = new JTextField(productgewicht, 25);
+        topMiddlePanel.add(jtfProductGewicht);
 
         JLabel jlProductBeschrijving = new JLabel("Product beschrijving: *");
-        middlePanel.add(jlProductBeschrijving);
+        topMiddlePanel.add(jlProductBeschrijving);
         jtfProductBeschrijving = new JTextField(productbeschrijving);
-        middlePanel.add(jtfProductBeschrijving);
+        bottomMiddlePanel.add(jtfProductBeschrijving);
+
+
+        middlePanel.add(topMiddlePanel,BorderLayout.PAGE_START);
+        middlePanel.add(bottomMiddlePanel);
 
         JLabel jlVerplicht = new JLabel("Velden met een sterretje* zijn verplicht");
-        jlVerplicht.setHorizontalAlignment(JLabel.CENTER);
+        jlVerplicht.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
         bottomPanel.add(jlVerplicht, BorderLayout.PAGE_START);
 
         jbBevestigen = new JButton("Bevestigen");
         jbBevestigen.addActionListener(this);
-        bottomPanel.add(jbBevestigen, BorderLayout.LINE_END);
+        buttonPanel.add(jbBevestigen);
 
         jbAnnuleren = new JButton("Annuleren");
         jbAnnuleren.addActionListener(this);
-        bottomPanel.add(jbAnnuleren, BorderLayout.LINE_START);
+        buttonPanel.add(jbAnnuleren);
+
+        bottomPanel.add(buttonPanel, BorderLayout.PAGE_END);
 
         add(topPanel, BorderLayout.PAGE_START);
         add(middlePanel);
@@ -102,14 +125,14 @@ public class EditArticleDialog extends JDialog implements ActionListener {
     public void addToDb(){
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();
-        dbConn.updateDb("INSERT INTO StockItems (StockItemID , StockItemName, QuantityPerOuter, UnitPrice, TypicalWeightPerUnit, SearchDetails, SupplierID, UnitPackageID, OuterPackageID, LeadTimeDays, IsChillerStock, TaxRate, LastEditedBy, ValidFrom, ValidTo) VALUES (" + articleId + ", '" + productnaam + "', '" + productaantal + "', " + productprijs + ", " + productgewicht + ", '" + productbeschrijving + "', 1, 1, 1, 14, 0, 15, 1, '" + getDate() + "' , '9999-12-31 23:59:59' )");
+        dbConn.updateDb("INSERT INTO StockItems (StockItemID , StockItemName, QuantityPerOuter, UnitPrice, TypicalWeightPerUnit, SearchDetails, SupplierID, UnitPackageID, OuterPackageID, LeadTimeDays, IsChillerStock, TaxRate, LastEditedBy, ValidFrom, ValidTo) VALUES (" + articleId + ", '" + productnaam + "', " + Integer.parseInt(productaantal) + ", " + Double.parseDouble(productprijs) + ", " + Double.parseDouble(productgewicht) + ", '" + productbeschrijving + "', 1, 1, 1, 14, 0, 15, 1, '" + getDate() + "' , '9999-12-31 23:59:59' )");
 
     }
 
     public void editDb(){
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();
-        dbConn.updateDb("UPDATE StockItems SET StockItemName = '" + productnaam + "', QuantityPerOuter = " + productaantal + ", UnitPrice = " + productprijs + ", TypicalWeightPerUnit = " + productgewicht + ", SearchDetails = '" + productbeschrijving + "' WHERE StockItemID = " + articleId);
+        dbConn.updateDb("UPDATE StockItems SET StockItemName = '" + productnaam + "', QuantityPerOuter = " + Integer.parseInt(productaantal) + ", UnitPrice = " + Double.parseDouble(productprijs) + ", TypicalWeightPerUnit = " + Double.parseDouble(productgewicht) + ", SearchDetails = '" + productbeschrijving + "' WHERE StockItemID = " + articleId);
     }
 
     public void setArticle(){
@@ -122,9 +145,9 @@ public class EditArticleDialog extends JDialog implements ActionListener {
             rs.first();
 
             productnaam = rs.getString("StockItemName");
-            productaantal = rs.getInt("QuantityPerOuter");
-            productprijs = rs.getDouble("UnitPrice");
-            productgewicht = rs.getDouble("TypicalWeightPerUnit");
+            productaantal = rs.getString("QuantityPerOuter");
+            productprijs = rs.getString("UnitPrice");
+            productgewicht = rs.getString("TypicalWeightPerUnit");
             productbeschrijving = rs.getString("SearchDetails");
 
         } catch (SQLException e){
@@ -159,6 +182,24 @@ public class EditArticleDialog extends JDialog implements ActionListener {
         return dateFormat.format(date);
     }
 
+    public boolean isInt(String input){
+        try{
+            Integer.parseInt(input);
+            return true;
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+    }
+
+    public boolean isDouble(String input){
+        try{
+            Double.parseDouble(input);
+            return true;
+        } catch (NumberFormatException nfe){
+            return false;
+        }
+    }
+
     public void actionPerformed(ActionEvent e){
         valseInvoer = false;
         if(e.getSource() == jbAnnuleren) {
@@ -166,24 +207,15 @@ public class EditArticleDialog extends JDialog implements ActionListener {
         } else if (e.getSource() == jbBevestigen) {
             productnaam = jtfProductNaam.getText();
             productbeschrijving = jtfProductBeschrijving.getText();
-            try {
-                productaantal = Integer.parseInt(jtfProductAantal.getText());
-                productprijs = Double.parseDouble(jtfProductPrijs.getText());
-                productgewicht = Double.parseDouble(jtfProductGewicht.getText());
-            } catch (NumberFormatException nfe){
-                JOptionPane.showMessageDialog(this,"Ongeldige invoer.");
-                valseInvoer = true;
-            }
+            productaantal = jtfProductAantal.getText();
+            productprijs = jtfProductPrijs.getText();
+            productgewicht = jtfProductGewicht.getText();
 
-
-            // int productaantal, double productprijs en double productgewicht mogen niet null zijn
-            // nog even naar kijken Wietske? :)?
-
-
-
-            if (!valseInvoer) {
-                if (productnaam.equals("") || productbeschrijving.equals("") || productaantal == 0 || productprijs == 0 || productgewicht == 0) {
-                    JOptionPane.showMessageDialog(this, "Velden met een sterretje* moet u invullen.");
+            if (productnaam.equals("") || productbeschrijving.equals("") || productaantal.equals("") || productprijs.equals("") || productgewicht.equals("")) {
+                JOptionPane.showMessageDialog(this, "Niet alle verplichte velden zijn ingevuld.");
+            } else {
+                if(!isInt(productaantal) || !isDouble(productprijs) || !isDouble(productgewicht)){
+                    JOptionPane.showMessageDialog(this,"Ongeldige invoer.");
                 } else {
                     if (articleExists == true) {
                         int keuze = JOptionPane.showConfirmDialog(this, "Weet u zeker dat u dit product wijzigen?", "Wijzigen product", JOptionPane.YES_NO_OPTION);
@@ -200,7 +232,6 @@ public class EditArticleDialog extends JDialog implements ActionListener {
                     }
                 }
             }
-
         }
     }
 }
