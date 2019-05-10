@@ -40,7 +40,7 @@ public class RobotDraw extends JPanel{
         //adds coordinates to all locations in warehouse.
         for (int i = 1; i <=5 ; i++){
             for (int n = 1; n <= 5; n++) {
-                graphics.drawString(i + " - " + n, widthDiffLeft * i - widthDiffLeft/2 - 8, (5 *(heightDiffLeft-8) ) - n*(heightDiffLeft -8) + heightDiffLeft - (heightDiffLeft-8)/2+4);
+                graphics.drawString(i + " - " + n, widthDiffLeft * i - widthDiffLeft/2 - 8, (5 *(heightDiffLeft-8) ) - n*(heightDiffLeft -8) + heightDiffLeft - (heightDiffLeft-8)/2+4 - 20);
             }
         }
 

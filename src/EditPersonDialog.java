@@ -44,7 +44,10 @@ public class EditPersonDialog extends JDialog implements ActionListener {
         topPanel.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
 
         JPanel middlePanel = new JPanel();
-        middlePanel.setLayout(new GridLayout(10,2));
+        middlePanel.setLayout(new BorderLayout());
+
+        JPanel topMiddlePanel = new JPanel();
+        topMiddlePanel.setLayout(new GridLayout(0,2,0,5));
 
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new BorderLayout());
@@ -63,53 +66,53 @@ public class EditPersonDialog extends JDialog implements ActionListener {
         }
 
         JLabel jlVoornaam = new JLabel("Voornaam: *");
-        middlePanel.add(jlVoornaam);
+        topMiddlePanel.add(jlVoornaam);
         jtfVoornaam = new JTextField(voornaam,10);
-        middlePanel.add(jtfVoornaam);
+        topMiddlePanel.add(jtfVoornaam);
 
         JLabel jlTussenvoegsel = new JLabel("Tussenvoegsel: ");
-        middlePanel.add(jlTussenvoegsel);
+        topMiddlePanel.add(jlTussenvoegsel);
         if(tussenvoegsel != null){
             jtfTussenvoegsel = new JTextField(tussenvoegsel,25);
         } else {
             jtfTussenvoegsel = new JTextField(25);
         }
-        middlePanel.add(jtfTussenvoegsel);
+        topMiddlePanel.add(jtfTussenvoegsel);
 
         JLabel jlAchternaam = new JLabel("Achternaam: * ");
-        middlePanel.add(jlAchternaam);
+        topMiddlePanel.add(jlAchternaam);
         jtfAchternaam = new JTextField(achternaam,25);
-        middlePanel.add(jtfAchternaam);
+        topMiddlePanel.add(jtfAchternaam);
 
         JLabel jlEmailadres = new JLabel("Email adres: ");
-        middlePanel.add(jlEmailadres);
+        topMiddlePanel.add(jlEmailadres);
         if(emailadres != null) {
             jtfEmailadres = new JTextField(emailadres, 25);
         } else {
             jtfEmailadres = new JTextField(25);
         }
-        middlePanel.add(jtfEmailadres);
+        topMiddlePanel.add(jtfEmailadres);
 
         JLabel jlAdres = new JLabel("Adres: * ");
-        middlePanel.add(jlAdres);
+        topMiddlePanel.add(jlAdres);
         jtfAdres = new JTextField(adres,25);
-        middlePanel.add(jtfAdres);
+        topMiddlePanel.add(jtfAdres);
 
         JLabel jlWoonplaats = new JLabel("Woonplaats: * ");
-        middlePanel.add(jlWoonplaats);
+        topMiddlePanel.add(jlWoonplaats);
         jtfWoonplaats = new JTextField(woonplaats,25);
-        middlePanel.add(jtfWoonplaats);
+        topMiddlePanel.add(jtfWoonplaats);
 
         JLabel jlPostcode = new JLabel("Postcode: * ");
-        middlePanel.add(jlPostcode);
+        topMiddlePanel.add(jlPostcode);
         jtfPostcode = new JTextField(postcode,25);
-        middlePanel.add(jtfPostcode);
+        topMiddlePanel.add(jtfPostcode);
+
+        middlePanel.add(topMiddlePanel,BorderLayout.PAGE_START);
 
         JLabel jlVerplicht = new JLabel("Velden met een sterretje* zijn verplicht");
         jlVerplicht.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
         bottomPanel.add(jlVerplicht, BorderLayout.PAGE_START);
-
-
 
         jbBevestigen = new JButton("Bevestigen");
         jbBevestigen.addActionListener(this);

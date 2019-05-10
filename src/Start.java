@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class Start {
 
-
     public static boolean dbScreensDoneLoading = true;
 
     public static void main(String[] args) {
@@ -17,10 +16,12 @@ public class Start {
         RobotScreen robotScreen = new RobotScreen(screenManager, robotDraw, mainAlgorithm);
         screenManager.setRobotDraw(robotDraw);
         screenManager.setRobotScreen(robotScreen);
+
         screenManager.start();
 
         //has to be last thing done in start class, it is an endless loop.
         mainAlgorithm.runMainAlgorithm();
+
     }
 
 }
