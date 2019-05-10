@@ -10,6 +10,7 @@ public class TSP_Algorithm {
     private ArrayList<Article> articles;
 
     public TSP_Algorithm(Article a1, Article a2, Article a3) {
+        articles = new ArrayList<>();
         articles.add(a1);
         articles.add(a2);
         articles.add(a3);

@@ -96,6 +96,17 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
 
     //fills two-dimensional array with results from database.
     private void fillAllOrders() {
+        if (!Start.dbScreensDoneLoading) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ie) {
+                System.out.println(ie);
+            }
+            fillAllOrders();
+        } else {
+            Start.dbScreensDoneLoading = false;
+        }
+
         //get results from database.
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();
@@ -105,31 +116,32 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
         int amountOfRows = 0;
 
         //add results to two-dimensional array.
-        try{
-            if (rs != null && rs.next()){
-                rs.last();
-                amountOfRows = rs.getRow();
-                rs.first();
+        try {
+            rs.last();
+            amountOfRows = rs.getRow();
+            rs.first();
 
-                //initiating two-dimensional array with correct amount of rows.
-                //the amount of rows is dependant on the amount of results returned from the database.
-                allOrders = new Object[amountOfRows][5];
+            //initiating two-dimensional array with correct amount of rows.
+            //the amount of rows is dependant on the amount of results returned from the database.
+            allOrders = new Object[amountOfRows][5];
 
-                //adding results form resultset to two-dimensional array for JTable.
-                for (int i = 0; i < amountOfRows ; i++) {
-                    allOrders[i][0] = rs.getString("o.OrderId");
-                    allOrders[i][1] = rs.getString("SUM(ol.quantity)");
-                    allOrders[i][2] = rs.getString("SUM(ol.quantity * s.TypicalWeightPerUnit)");
-                    allOrders[i][3] = rs.getString("o.CustomerId");
-                    allOrders[i][4] = rs.getString("o.status");
-                    rs.next();
-                }
+            //adding results form resultset to two-dimensional array for JTable.
+            for (int i = 0; i < amountOfRows; i++) {
+                allOrders[i][0] = rs.getString("o.OrderId");
+                allOrders[i][1] = rs.getString("SUM(ol.quantity)");
+                allOrders[i][2] = rs.getString("SUM(ol.quantity * s.TypicalWeightPerUnit)");
+                allOrders[i][3] = rs.getString("o.CustomerId");
+                allOrders[i][4] = rs.getString("o.status");
+                rs.next();
             }
-
         } catch (SQLException sqle) {
             System.out.println(sqle);
+        } catch (Exception e) {
+            fillAllOrders();
         } finally {
             dbConn.killStatement();
+            DbConn.dbKill();
+            Start.dbScreensDoneLoading = true;
         }
     }
 
