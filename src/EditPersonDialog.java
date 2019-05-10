@@ -157,7 +157,6 @@ public class EditPersonDialog extends JDialog implements ActionListener {
 
         } catch (SQLException e) {
             System.out.println(e);
-
         } finally {
             dbConn.killStatement();
         }
