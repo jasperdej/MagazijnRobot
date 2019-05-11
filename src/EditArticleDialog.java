@@ -126,7 +126,6 @@ public class EditArticleDialog extends JDialog implements ActionListener {
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();
         dbConn.updateDb("INSERT INTO StockItems (StockItemID , StockItemName, QuantityPerOuter, UnitPrice, TypicalWeightPerUnit, SearchDetails, SupplierID, UnitPackageID, OuterPackageID, LeadTimeDays, IsChillerStock, TaxRate, LastEditedBy, ValidFrom, ValidTo) VALUES (" + articleId + ", '" + productnaam + "', " + Integer.parseInt(productaantal) + ", " + Double.parseDouble(productprijs) + ", " + Double.parseDouble(productgewicht) + ", '" + productbeschrijving + "', 1, 1, 1, 14, 0, 15, 1, '" + getDate() + "' , '9999-12-31 23:59:59' )");
-
     }
 
     public void editDb(){

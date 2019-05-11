@@ -132,12 +132,16 @@ public class EditOrderDialog extends JDialog implements ActionListener {
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();
         dbConn.updateDb("INSERT INTO Users (UserID, UserFirstName, UserPrefix, UserLastName, UserEmail, UserAddress, UserResidence, UserPostalCode) VALUES (" + orderId + ", '" + voornaam + "', " + tussenvoegsel + ", '" + achternaam + "', " + emailadres + ", '" + adres + "', '" + woonplaats + "', '" + postcode + "')");
+        dbConn.killStatement();
+        DbConn.dbKill();
     }
 
     public void editDb(){
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();
         dbConn.updateDb("UPDATE Users SET UserFirstName = '" + voornaam + "', UserPrefix = " + tussenvoegsel + ", UserLastName = '" + achternaam + "', UserEmail = " + emailadres + ", UserAddress = '" + adres + "', UserResidence = '" + woonplaats + "', UserPostalCode = '" + postcode + "' WHERE UserID = " + orderId);
+        dbConn.killStatement();
+        DbConn.dbKill();
     }
 
     public void setOrder(){
