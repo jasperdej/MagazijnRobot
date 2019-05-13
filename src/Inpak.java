@@ -30,6 +30,10 @@ public class Inpak extends Robot {
 
     }
 
+    public void sendToArduino(String string) {
+        sendToCoords(string);
+    }
+
     public int binPercentageFilled(int binId) {
         int amountPacked = 0;
         int totalInBin = 0;

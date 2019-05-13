@@ -25,6 +25,10 @@ public class OrderPick extends Robot{
         sendToCoords(toCoords);
     }
 
+    public void sendToArduino(String string) {
+        sendToCoords(string);
+    }
+
     public CoordinatePoint getCurrentLocation() {
         return currentLocation;
     }
