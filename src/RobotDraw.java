@@ -5,12 +5,11 @@ import java.awt.geom.Line2D;
 public class RobotDraw extends JPanel{
     private ScreenManager screenManager;
     private Main main;
-    private Bin bin1;
-    private Bin bin2;
-    private Bin bin3;
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private Graphics2D g2;
     private Graphics graphics;
+    private Inpak inpak;
+    private int beltPosition = 0;
 
     public  RobotDraw(ScreenManager screenManager, Main main) {
         this.screenManager = screenManager;
@@ -18,7 +17,6 @@ public class RobotDraw extends JPanel{
 
         setLayout(new GridLayout(0, 1));
         setPreferredSize(new Dimension());
-        setBackground(Color.GRAY);
     }
 
     protected void paintComponent(Graphics graphics) {
@@ -50,6 +48,16 @@ public class RobotDraw extends JPanel{
         //right side of screen. draws conveyor belt and bins.
         g2.draw(new Rectangle.Float(width/2 + width/50, heightDiffRight, width/3, heightDiffRight - 40));
         for (int i = 1; i <= 3; i++){
+            if (inpak.binPercentageFilled(i) == 0) {
+                graphics.setColor(Color.green);
+            } else if (inpak.binPercentageFilled(i) > 0 && inpak.binPercentageFilled(i) < 100) {
+                graphics.setColor(Color.yellow);
+            } else if (inpak.binPercentageFilled(i) == 100) {
+                graphics.setColor(Color.RED);
+            }
+            graphics.fillRect(width - widthDiffRight - width/50,  (heightDiffRight) * i - heightDiffRight + 80 - 40 * i, widthDiffRight, heightDiffRight - 40);
+            graphics.setColor(Color.BLACK);
+
             g2.draw(new Rectangle.Float(width - widthDiffRight - width/50,  (heightDiffRight) * i - heightDiffRight + 80 - 40 * i, widthDiffRight, heightDiffRight - 40));
         }
 
@@ -57,6 +65,53 @@ public class RobotDraw extends JPanel{
             a.paintCoordinates(graphics);
         }
 
+        //draws article on conveyor belt.
+        if (inpak.getStatus().equals("aan het inpakken")) {
+            graphics.fillRect((screenSize.width/2 + screenSize.width/50 + 7) + beltPosition * screenSize.width/10 +  beltPosition * screenSize.width/50, screenSize.width/8-40, screenSize.height/10 + 2, screenSize.height/10 + 2);
+            if (beltPosition == 2) {
+                beltPosition = 0;
+            } else {
+                beltPosition++;
+            }
+        }
 
+        if (inpak.getCurrentBinBin() == 1) {
+            graphics.drawString("3", width - widthDiffRight - width/50 + widthDiffRight/2, (heightDiffRight) - heightDiffRight + 80 - 40 + (heightDiffRight - 40)/2 - 10);
+            graphics.drawString(inpak.binPercentageFilled(3) + "%", width - widthDiffRight - width/50 + widthDiffRight/2,(heightDiffRight) - heightDiffRight + 80 - 40 + (heightDiffRight - 40)/2 + 10);
+
+            graphics.drawString("1", width - widthDiffRight - width/50 + widthDiffRight/2, (heightDiffRight) * 2 - heightDiffRight + 80 - 40 * 2 + (heightDiffRight - 40)/2 - 10);
+            graphics.drawString(inpak.binPercentageFilled(2) + "%", width - widthDiffRight - width/50 + widthDiffRight/2, (heightDiffRight) * 2 - heightDiffRight + 80 - 40 * 2 + (heightDiffRight - 40)/2 + 10);
+
+            graphics.drawString("2", width - widthDiffRight - width/50 + widthDiffRight/2, (heightDiffRight) * 3 - heightDiffRight + 80 - 40 * 3 + (heightDiffRight - 40)/2 - 10);
+            graphics.drawString(inpak.binPercentageFilled(3) + "%", width - widthDiffRight - width/50 + widthDiffRight/2, (heightDiffRight) * 3 - heightDiffRight + 80 - 40 * 3 + (heightDiffRight - 40)/2 + 10);
+
+
+        } else if (inpak.getCurrentBinBin() == 2) {
+            graphics.drawString("1", width - widthDiffRight - width/50 + widthDiffRight/2, (heightDiffRight) - heightDiffRight + 80 - 40 + (heightDiffRight - 40)/2 - 10);
+            graphics.drawString(inpak.binPercentageFilled(3) + "%", width - widthDiffRight - width/50 + widthDiffRight/2,(heightDiffRight) - heightDiffRight + 80 - 40 + (heightDiffRight - 40)/2 + 10);
+
+            graphics.drawString("2", width - widthDiffRight - width/50 + widthDiffRight/2, (heightDiffRight) * 2 - heightDiffRight + 80 - 40 * 2 + (heightDiffRight - 40)/2 - 10);
+            graphics.drawString(inpak.binPercentageFilled(2) + "%", width - widthDiffRight - width/50 + widthDiffRight/2, (heightDiffRight) * 2 - heightDiffRight + 80 - 40 * 2 + (heightDiffRight - 40)/2 + 10);
+
+            graphics.drawString("3", width - widthDiffRight - width/50 + widthDiffRight/2, (heightDiffRight) * 3 - heightDiffRight + 80 - 40 * 3 + (heightDiffRight - 40)/2 - 10);
+            graphics.drawString(inpak.binPercentageFilled(3) + "%", width - widthDiffRight - width/50 + widthDiffRight/2, (heightDiffRight) * 3 - heightDiffRight + 80 - 40 * 3 + (heightDiffRight - 40)/2 + 10);
+
+
+        } else {
+            graphics.drawString("2", width - widthDiffRight - width/50 + widthDiffRight/2, (heightDiffRight) - heightDiffRight + 80 - 40 + (heightDiffRight - 40)/2 - 10);
+            graphics.drawString(inpak.binPercentageFilled(3) + "%", width - widthDiffRight - width/50 + widthDiffRight/2,(heightDiffRight) - heightDiffRight + 80 - 40 + (heightDiffRight - 40)/2 + 10);
+
+            graphics.drawString("3", width - widthDiffRight - width/50 + widthDiffRight/2, (heightDiffRight) * 2 - heightDiffRight + 80 - 40 * 2 + (heightDiffRight - 40)/2 - 10);
+            graphics.drawString(inpak.binPercentageFilled(2) + "%", width - widthDiffRight - width/50 + widthDiffRight/2, (heightDiffRight) * 2 - heightDiffRight + 80 - 40 * 2 + (heightDiffRight - 40)/2 + 10);
+
+            graphics.drawString("1", width - widthDiffRight - width/50 + widthDiffRight/2, (heightDiffRight) * 3 - heightDiffRight + 80 - 40 * 3 + (heightDiffRight - 40)/2 - 10);
+            graphics.drawString(inpak.binPercentageFilled(3) + "%", width - widthDiffRight - width/50 + widthDiffRight/2, (heightDiffRight) * 3 - heightDiffRight + 80 - 40 * 3 + (heightDiffRight - 40)/2 + 10);
+
+        }
+
+    }
+
+    public void setInpak(Inpak inpak) {
+        this.inpak = inpak;
     }
 }

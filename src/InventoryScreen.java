@@ -5,8 +5,6 @@ import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static java.awt.GridBagConstraints.*;
-
 public class InventoryScreen extends JFrame implements ActionListener {
     private Object[][] allArticles;
     private String[] columnNames = {"Naam", "ItemID", "Gewicht (in kg)", "Aantal", "Gereserveerd"};
@@ -88,7 +86,7 @@ public class InventoryScreen extends JFrame implements ActionListener {
     //put all articles from database in allArticles.
     private void fillAllArticles() {
         //get results from database. resultset contains all results from query.
-        if (!Start.dbScreensDoneLoading) {
+        if (!Start.dbDoneLoading) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException ie) {
@@ -96,7 +94,7 @@ public class InventoryScreen extends JFrame implements ActionListener {
             }
             fillAllArticles();
         }  else {
-            Start.dbScreensDoneLoading = false;
+            Start.dbDoneLoading = false;
         }
 
         DbConn dbConn = new DbConn();
@@ -146,7 +144,7 @@ public class InventoryScreen extends JFrame implements ActionListener {
             System.out.println(sqle);
         } finally {
             dbConn.killStatement();
-            Start.dbScreensDoneLoading = true;
+            Start.dbDoneLoading = true;
         }
 
     }

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Start {
 
-    public static boolean dbScreensDoneLoading = true;
+    public static boolean dbDoneLoading = true;
 
     public static void main(String[] args) {
         //gets screens up and running. it might take a while for orderscreen and inventoryscreen to load.

@@ -1,4 +1,3 @@
-import java.security.spec.ECField;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -11,7 +10,7 @@ public class Order {
 
     //looks for new orderid from database. if new orderid is found, the arraylist with articles is filled with it's articles.
     public void getNewOrderIdFromDb() {
-        if (!Start.dbScreensDoneLoading) {
+        if (!Start.dbDoneLoading) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException ie) {
@@ -19,7 +18,7 @@ public class Order {
             }
             getNewOrderIdFromDb();
         } else {
-            Start.dbScreensDoneLoading = false;
+            Start.dbDoneLoading = false;
         }
 
         orderNr = -1;
@@ -40,9 +39,9 @@ public class Order {
 
         dbConn.killStatement();
         DbConn.dbKill();
-        Start.dbScreensDoneLoading = true;
+        Start.dbDoneLoading = true;
 
-        System.out.println(orderNr);
+
         if (orderNr == -1) {
             getNewOrderIdFromDb();
         } else {
@@ -52,7 +51,7 @@ public class Order {
 
     //gets articles from current order from database.
     public void getArticlesFromDb() {
-        if (!Start.dbScreensDoneLoading) {
+        if (!Start.dbDoneLoading) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException ie) {
@@ -60,18 +59,18 @@ public class Order {
             }
             getArticlesFromDb();
         } else {
-            Start.dbScreensDoneLoading = false;
+            Start.dbDoneLoading = false;
         }
         //get articles from curront order from database. resultset contains results from query.
         articles = new ArrayList<>();
         DbConn dbConn = new DbConn();
         dbConn.dbConnect();
-        ResultSet rs = dbConn.getResultSetFromDb("select ol.orderlineid, sih.binlocation, si.typicalWeightperunit, si.stockitemname, ol.quantity from orderlines ol join stockitems si on ol.stockitemid = si.stockitemid join stockitemholdings sih on ol.stockitemid = sih.stockitemid where orderid = " + orderNr);
+        ResultSet rs = dbConn.getResultSetFromDb("select ol.stockitemid, sih.binlocation, si.typicalWeightperunit, si.stockitemname, ol.quantity from orderlines ol join stockitems si on ol.stockitemid = si.stockitemid join stockitemholdings sih on ol.stockitemid = sih.stockitemid where orderid = " + orderNr);
 
         try{
-                rs.last();
-                amountOfArticles = rs.getRow();
-                rs.first();
+            rs.last();
+            amountOfArticles = rs.getRow();
+            rs.first();
             for (int i = 0; i < amountOfArticles; i++) {
                 articles.add(new Article(rs.getInt(1), rs.getInt(2), rs.getDouble(3), rs.getString(4), rs.getInt(5)));
                 rs.next();
@@ -86,7 +85,7 @@ public class Order {
         dbConn.killStatement();
         DbConn.dbKill();
 
-        Start.dbScreensDoneLoading = true;
+        Start.dbDoneLoading = true;
     }
 
 

@@ -21,5 +21,8 @@ public abstract class Robot {
 
     public void setStatus(String status) {
         this.status = status;
+        if (status.equals("aan het inpakken")) {
+//            Thread thread = new Thread()
+        }
     }
 }

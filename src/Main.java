@@ -1,4 +1,6 @@
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.concurrent.TransferQueue;
 
 public class Main {
     private ScreenManager screenManager;
@@ -20,10 +22,13 @@ public class Main {
 
 
     public void runMainAlgorithm() {
+        screenManager.getRobotDraw().setInpak(inpak);
         while (true) {
             orderPick.setStatus("aan het picken");
             inpak.setStatus("wachten op OP");
-            TSP_List = new ArrayList<>();
+            if (TSP_List != null) {
+                TSP_List.clear();
+            }
 
             //get new order from database.
             order.getNewOrderIdFromDb();
@@ -47,13 +52,15 @@ public class Main {
             BPP_List = bestFit.getArticleList();
 
             //sets Articles in fastest order for orderPick robot.
-            if (BPP_List.size() > 3) {
-                for (int i = 0; i < BPP_List.size() - BPP_List.size() % 3; i = i + 3) {
-                    tsp_algorithm = new TSP_Algorithm(BPP_List.get(i), BPP_List.get(i + 1), BPP_List.get(i + 2));
+            if (BPP_List.size() >= 3) {
+                for (int i = 1; i <= BPP_List.size() - BPP_List.size() % 3; i = i + 3) {
+                    tsp_algorithm = new TSP_Algorithm(BPP_List.get(i - 1), BPP_List.get(i), BPP_List.get(i + 1));
                     for (Article a: tsp_algorithm.getArticles()) {
                         TSP_List.add(a);
                     }
                 }
+            } else {
+                TSP_List = BPP_List;
             }
 
             //send algorithm outcomes to robots.
@@ -61,7 +68,7 @@ public class Main {
 //            orderPick.sendCoordinatesToArduino(TSP_List);
 
             //Inpak robot wants a string with coordinates. coordinate x: 3 is send as 3.
-//            inpak.sendCoordinatesToArduino(bestFit.getBinList(), TSP_List);
+            inpak.sendCoordinatesToArduino(bestFit.getBinList(), TSP_List);
 
 
 
@@ -75,7 +82,6 @@ public class Main {
                 System.out.println(e);
             } finally {
                 screenManager.updateRobotScreen(orderPick, inpak);
-
             }
 
             }

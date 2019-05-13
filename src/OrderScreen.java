@@ -6,7 +6,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import static java.awt.GridBagConstraints.*;
 
 public class OrderScreen extends JFrame implements MouseListener, ActionListener {
 
@@ -105,7 +104,7 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
 
     //fills two-dimensional array with results from database.
     private void fillAllOrders() {
-        if (!Start.dbScreensDoneLoading) {
+        if (!Start.dbDoneLoading) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException ie) {
@@ -113,7 +112,7 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
             }
             fillAllOrders();
         } else {
-            Start.dbScreensDoneLoading = false;
+            Start.dbDoneLoading = false;
         }
 
         //get results from database.
@@ -150,7 +149,7 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
         } finally {
             dbConn.killStatement();
             DbConn.dbKill();
-            Start.dbScreensDoneLoading = true;
+            Start.dbDoneLoading = true;
         }
     }
 
