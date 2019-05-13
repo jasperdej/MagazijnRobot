@@ -17,6 +17,14 @@ public class ScreenManager extends Thread {
 
         dbScreens = new DbScreens();
         dbScreens.setScreenManager(this);
+        while (true) {
+            robotDraw.repaint();
+            try {
+                Thread.sleep(750);
+            } catch (InterruptedException ie) {
+                System.out.println(ie);
+            }
+        }
     }
 
     public DbScreens startDbScreens() {
@@ -54,6 +62,7 @@ public class ScreenManager extends Thread {
         }
     }
 
+
     public void setRobotScreen(RobotScreen robotScreen) {
         this.robotScreen = robotScreen;
     }
@@ -68,5 +77,9 @@ public class ScreenManager extends Thread {
 
     public void setInventoryScreen(InventoryScreen inventoryScreen) {
         this.inventoryScreen = inventoryScreen;
+    }
+
+    public RobotDraw getRobotDraw() {
+        return robotDraw;
     }
 }

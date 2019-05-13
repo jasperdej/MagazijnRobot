@@ -16,11 +16,11 @@ public class Bin {
 
     //needs adjusting
     public Bin(Order order, double maximumWeight, int maximumQuantity) {
+        binCount++;
         this.order = order;
         binNumber = binCount;
         totalWeight = 0.0;
         articles = new ArrayList<>();
-        binCount++;
     }
 
     public int getBinNumber() {

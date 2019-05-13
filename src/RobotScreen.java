@@ -172,6 +172,8 @@ public class RobotScreen extends JFrame implements ActionListener {
 
         //add robotDraw to screen. fills the bottom part of the screen.
         add(robotDraw);
+//        add(conveyorBeltAnimation);
+
 
         //adds actionlistener for all buttons.
         opOnOffButton.addActionListener(this);
