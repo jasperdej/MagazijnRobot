@@ -13,7 +13,9 @@ public class EditArticleDialog extends JDialog implements ActionListener {
     private int articleId;
     private boolean articleExists = true;
     private JButton jbBevestigen, jbAnnuleren;
-    private JTextField jtfProductNaam, jtfProductAantal, jtfProductPrijs, jtfProductGewicht, jtfProductBeschrijving;
+    private JLabel jlTitelNew, jlTitelEdit, jlProductNaam, jlProductAantal, jlProductPrijs, jlProductGewicht, jlProductBeschrijving, jlVerplicht;
+    private JTextField jtfProductNaam, jtfProductAantal, jtfProductPrijs, jtfProductGewicht;
+    private JTextArea jtaProductBeschrijving;
     private String productnaam, productbeschrijving, productprijs, productgewicht, productaantal;
     private boolean valseInvoer = false;
 
@@ -61,9 +63,9 @@ public class EditArticleDialog extends JDialog implements ActionListener {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(1,2));
 
-        JLabel jlTitelNew = new JLabel("Artikel aanmaken");
+        jlTitelNew = new JLabel("Artikel aanmaken");
         jlTitelNew.setFont(new Font("Arial",Font.BOLD,30));
-        JLabel jlTitelEdit = new JLabel("Artikel gegevens wijzigen");
+        jlTitelEdit = new JLabel("Artikel gegevens wijzigen");
         jlTitelEdit.setFont(new Font("Arial",Font.BOLD,30));
 
         if(articleExists){
@@ -72,36 +74,36 @@ public class EditArticleDialog extends JDialog implements ActionListener {
             topPanel.add(jlTitelNew);
         }
 
-        JLabel jlProductNaam = new JLabel("Product naam: *");
+        jlProductNaam = new JLabel("Product naam: *");
         topMiddlePanel.add(jlProductNaam);
         jtfProductNaam = new JTextField(productnaam, 25);
         topMiddlePanel.add(jtfProductNaam);
 
-        JLabel jlProductAantal = new JLabel("Product aantal: *");
+        jlProductAantal = new JLabel("Aantal per bestelling: *");
         topMiddlePanel.add(jlProductAantal);
         jtfProductAantal = new JTextField(productaantal, 25);
         topMiddlePanel.add(jtfProductAantal);
 
-        JLabel jlProductPrijs = new JLabel("Product prijs: *");
+        jlProductPrijs = new JLabel("Prijs: *");
         topMiddlePanel.add(jlProductPrijs);
         jtfProductPrijs = new JTextField(productprijs,25);
         topMiddlePanel.add(jtfProductPrijs);
 
-        JLabel jlProductGewicht = new JLabel("Product gewicht: *");
+        jlProductGewicht = new JLabel("Gewicht: *");
         topMiddlePanel.add(jlProductGewicht);
         jtfProductGewicht = new JTextField(productgewicht, 25);
         topMiddlePanel.add(jtfProductGewicht);
 
-        JLabel jlProductBeschrijving = new JLabel("Product beschrijving: *");
+        jlProductBeschrijving = new JLabel("Beschrijving: *");
         topMiddlePanel.add(jlProductBeschrijving);
-        jtfProductBeschrijving = new JTextField(productbeschrijving);
-        bottomMiddlePanel.add(jtfProductBeschrijving);
+        jtaProductBeschrijving = new JTextArea(productbeschrijving);
+        bottomMiddlePanel.add(jtaProductBeschrijving);
 
 
         middlePanel.add(topMiddlePanel,BorderLayout.PAGE_START);
         middlePanel.add(bottomMiddlePanel);
 
-        JLabel jlVerplicht = new JLabel("Velden met een sterretje* zijn verplicht");
+        jlVerplicht = new JLabel("Velden met een sterretje* zijn verplicht");
         jlVerplicht.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
         bottomPanel.add(jlVerplicht, BorderLayout.PAGE_START);
 
@@ -205,7 +207,7 @@ public class EditArticleDialog extends JDialog implements ActionListener {
             dispose();
         } else if (e.getSource() == jbBevestigen) {
             productnaam = jtfProductNaam.getText();
-            productbeschrijving = jtfProductBeschrijving.getText();
+            productbeschrijving = jtaProductBeschrijving.getText();
             productaantal = jtfProductAantal.getText();
             productprijs = jtfProductPrijs.getText();
             productgewicht = jtfProductGewicht.getText();

@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,14 +12,10 @@ public class RobotScreen extends JFrame implements ActionListener {
     private Main main;
 
     //panels for screenlayout.
-    private JPanel opLabelPanel = new JPanel();
-    private JPanel ipLabelPanel = new JPanel();
+    private JPanel labelPanel = new JPanel();
 
     //JPanel to which all labels are added. this panel fills the upperscreen en devides it into two columns.
     private JPanel topPanel = new JPanel();
-
-    //devides buttons from labels.
-    private JPanel opDevider = new JPanel();
 
     //contains buttonns for switching between screens.
     private JPanel buttonPanel = new JPanel();
@@ -44,12 +41,7 @@ public class RobotScreen extends JFrame implements ActionListener {
     private JLabel[] opLabels1 = new JLabel[]{opName, opStatus1, opOrderNr1, opTotalAmountOfArticles1, opAmountOfArticlesPicked1, opCoordinate1};
 
     //labels for variables orderpick robot.
-    private JLabel opFiller;
-    private JLabel opStatus2;
-    private JLabel opOrderNr2;
-    private JLabel opTotalAmountOfArticles2;
-    private JLabel opAmountOfArticlesPicked2;
-    private JLabel opCoordinate2;
+    private JLabel opFiller, opStatus2, opOrderNr2, opTotalAmountOfArticles2,opAmountOfArticlesPicked2,opCoordinate2;
 
     //buttons for OrderPick robot.
     private JButton opOnOffButton = new JButton("ON/OFF");
@@ -65,12 +57,7 @@ public class RobotScreen extends JFrame implements ActionListener {
     private JLabel[] ipLabels1 = new JLabel[]{ipName, ipStatus1, ipOrderNr1, ipTotalArticlesInOrder1, ipAmountOfArticlesPacked1, ipBinId1};
 
     //labels for variabels Inpak robot.
-    private JLabel ipFiller;
-    private JLabel ipStatus2;
-    private JLabel ipOrderNr2;
-    private JLabel ipTotalArticlesInOrder2;
-    private JLabel ipAmountOfArticlesPacked2;
-    private JLabel ipBinId2;
+    private JLabel ipFiller, ipStatus2, ipOrderNr2, ipTotalArticlesInOrder2, ipAmountOfArticlesPacked2, ipBinId2;
 
     //buttons for Inpak robot.
     private JButton ipOnOffButton = new JButton("ON/OFF");
@@ -100,8 +87,8 @@ public class RobotScreen extends JFrame implements ActionListener {
         }
 
         //gridbaglayout for displaying labels Correctly.
-        opLabelPanel.setLayout(new GridBagLayout());
-        ipLabelPanel.setLayout(new GridBagLayout());
+        labelPanel.setLayout(new GridLayout(6,2,25,0));
+        labelPanel.setBorder(BorderFactory.createEmptyBorder(0,15,0,15));
         buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
         //adds buttons to buttonpanel.
@@ -109,46 +96,39 @@ public class RobotScreen extends JFrame implements ActionListener {
         buttonPanel.add(orderScreen);
         buttonPanel.add(inventoryScreen);
 
-        //gridbagconstraints for Displaying labels correctly and within their padding.
-        GridBagConstraints c_START = new GridBagConstraints();
-        c_START.gridx = 0;
-        c_START.gridy = 1;
-        c_START.anchor = LINE_START;
-        c_START.insets = new Insets(0, 0, 0, 100);
-
-        GridBagConstraints c_END = new GridBagConstraints();
-        c_END.gridx = c_START.gridx + 1;
-        c_END.gridy = c_START.gridy;
-        c_END.anchor = LINE_END;
-
+        //adds labels/buttons for OP and IP status
         for (int i = 0; i < opLabels1.length; i++) {
-            opLabelPanel.add(opLabels1[i], c_START);
-            opLabelPanel.add(opLabels2[i], c_END);
-            if (i == 0) {
-                opLabelPanel.add(opOnOffButton, c_END);
-                c_END.gridx++;
-                opLabelPanel.add(opResetButton, c_END);
-                c_END.gridx--;
+            JPanel opLabelPanel = new JPanel();
+            opLabelPanel.setLayout(new BorderLayout());
+            JPanel ipLabelPanel = new JPanel();
+            ipLabelPanel.setLayout(new BorderLayout());
+
+            if(i == 0){
+                JPanel opButtonPanel = new JPanel();
+                opButtonPanel.setLayout(new GridLayout(1,2));
+                opButtonPanel.setBorder(BorderFactory.createEmptyBorder(15,0,5,0));
+                JPanel ipButtonPanel = new JPanel();
+                ipButtonPanel.setLayout(new GridLayout(1,2));
+                ipButtonPanel.setBorder(BorderFactory.createEmptyBorder(15,0,5,0));
+
+                opButtonPanel.add(opOnOffButton);
+                opButtonPanel.add(opResetButton);
+                ipButtonPanel.add(ipOnOffButton);
+                ipButtonPanel.add(ipResetButton);
+
+                opLabelPanel.add(opLabels1[i],BorderLayout.LINE_START);
+                opLabelPanel.add(opButtonPanel, BorderLayout.LINE_END);
+                ipLabelPanel.add(ipLabels1[i], BorderLayout.LINE_START);
+                ipLabelPanel.add(ipButtonPanel,BorderLayout.LINE_END);
+            } else {
+                opLabelPanel.add(opLabels1[i],BorderLayout.LINE_START);
+                opLabelPanel.add(opLabels2[i],BorderLayout.LINE_END);
+                ipLabelPanel.add(ipLabels1[i],BorderLayout.LINE_START);
+                ipLabelPanel.add(ipLabels2[i],BorderLayout.LINE_END);
             }
-            c_START.gridy++;
-            c_END.gridy = c_START.gridy;
+            labelPanel.add(opLabelPanel);
+            labelPanel.add(ipLabelPanel);
         }
-
-        c_START.gridx = 1;
-
-        for (int i = 0; i < ipLabels1.length; i++) {
-            ipLabelPanel.add(ipLabels1[i], c_START);
-            ipLabelPanel.add(ipLabels2[i], c_END);
-            if (i == 0) {
-                ipLabelPanel.add(ipOnOffButton, c_END);
-                c_END.gridx++;
-                ipLabelPanel.add(ipResetButton, c_END);
-                c_END.gridx--;
-            }
-            c_START.gridy++;
-            c_END.gridy = c_START.gridy;
-        }
-
 
         //sets screensize to fullscreen.
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -164,8 +144,9 @@ public class RobotScreen extends JFrame implements ActionListener {
 
         //adds both information JPanels to topPanel.
         topPanel.add(buttonPanel, BorderLayout.PAGE_START);
-        topPanel.add(opLabelPanel, BorderLayout.LINE_START);
-        topPanel.add(ipLabelPanel, BorderLayout.LINE_END);
+//        topPanel.add(opLabelPanel, BorderLayout.LINE_START);
+//        topPanel.add(ipLabelPanel, BorderLayout.LINE_END);
+        topPanel.add(labelPanel,BorderLayout.CENTER);
 
         //add topPanel to screen. fills the upper part of the screen.
         add(topPanel);
