@@ -11,6 +11,9 @@ public class RobotScreen extends JFrame implements ActionListener {
     private ScreenManager screenManager;
     private Main main;
 
+    private boolean isOpOn = false;
+    private boolean isIpOn = false;
+
     //panels for screenlayout.
     private JPanel labelPanel = new JPanel();
 
@@ -178,13 +181,23 @@ public class RobotScreen extends JFrame implements ActionListener {
         } else if (e.getSource() == inventoryScreen) {
             screenManager.buttonPressed("InventoryScreen");
         } else if (e.getSource() == opOnOffButton) {
-
+            if (isOpOn) {
+                main.getOrderPick().sendToArduino("off");
+            } else {
+                main.getOrderPick().sendToArduino("on");
+            }
+            isOpOn = !isOpOn;
         } else if (e.getSource() == opResetButton) {
-
+            main.getOrderPick().sendToArduino("reset");
         } else if (e.getSource() == ipOnOffButton) {
-
+            if (isIpOn) {
+                main.getInpak().sendToArduino("off");
+            } else {
+                main.getInpak().sendToArduino("on");
+            }
+            isIpOn = !isIpOn;
         } else if (e.getSource() == ipResetButton) {
-
+            main.getInpak().sendToArduino("reset");
         }
     }
 

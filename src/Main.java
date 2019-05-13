@@ -23,6 +23,7 @@ public class Main {
 
     public void runMainAlgorithm() {
         screenManager.getRobotDraw().setInpak(inpak);
+
         while (true) {
             orderPick.setStatus("aan het picken");
             inpak.setStatus("wachten op OP");
@@ -89,5 +90,13 @@ public class Main {
 
     public Order getCurrentOrder() {
         return this.order;
+    }
+
+    public Inpak getInpak() {
+        return inpak;
+    }
+
+    public OrderPick getOrderPick() {
+        return orderPick;
     }
 }

@@ -34,7 +34,7 @@ public class ArduinoConn {
                         System.out.println(arduino);
                         if(arduino.contains("Orderpick")){
                             isPickArduino = true;
-                            System.out.println("Ah yes, the port you were looking for");
+                            System.out.println("Ah yes, the port you were looking for...");
                             arduinoPickRobot.serialWrite("aan");
                         }else{
                             System.out.println("Close, but not close enough");
