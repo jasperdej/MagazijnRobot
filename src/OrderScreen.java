@@ -208,19 +208,18 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
             EditOrderDialog createOrderDialog = new EditOrderDialog(this);
         } else if (e.getSource() == editOrder) {
             String orderid = JOptionPane.showInputDialog(this,"Voer order nummer in: ");
-            if(!orderid.equals(null)){
-            if (checkID("SELECT OrderID FROM Orders WHERE OrderID = ", orderid)) {
-                EditOrderDialog editOrderDialog = new EditOrderDialog(this, Integer.parseInt(orderid));
-            } else {
-                JOptionPane.showMessageDialog(this, "Deze order bestaat niet.");
+            if(orderid != null){
+                if (checkID("SELECT OrderID FROM Orders WHERE OrderID = ", orderid)) {
+                    EditOrderDialog editOrderDialog = new EditOrderDialog(this, Integer.parseInt(orderid));
+                } else {
+                    JOptionPane.showMessageDialog(this, "Deze order bestaat niet.");
+                }
             }
-            }
-        }
-        else if (e.getSource() == addPersoon) {
+        } else if (e.getSource() == addPersoon) {
             EditPersonDialog createPersonDialog = new EditPersonDialog(this);
         } else if (e.getSource() == editPersoon) {
             String persoonid = JOptionPane.showInputDialog(this, "Voer klant nummer in: ");
-            if(!persoonid.equals(null)) {
+            if(persoonid != null) {
                 if (checkID("SELECT UserID FROM USERS WHERE UserID = ", persoonid)) {
                     EditPersonDialog editPersonDialog = new EditPersonDialog(this, Integer.parseInt(persoonid));
                 } else {
