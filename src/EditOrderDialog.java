@@ -4,30 +4,34 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.swing.ScrollPaneConstants;
-
-import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
+import java.util.ArrayList;
 
 public class EditOrderDialog extends JDialog implements ActionListener {
 
     private int orderId;
     private boolean orderExists = true;
-    private JLabel jlTitelNew, jlTitelEdit, jlCustomerId, jlVerplicht, jlArticleId, jlArticleAmount;
+    private JLabel jlTitelNew, jlTitelEdit, jlCustomerId, jlArticleId, jlArticleAmount;
     private JTextField jtfCustomerId;
+    private JPanel panel, topPanel, middlePanel, topMiddlePanel, bottomMiddlePanel, jpOrderLinesLeft, jpOrderLinesRight, jpOrderLinesRightLine, bottomPanel, buttonPanel;
     private JButton jbAddArticle, jbBevestigen, jbAnnuleren;
     private String customerId;
-    private JTextField[] jtfOrderLines;
-    private JComboBox[] jcOrderLines;
-    private JButton[] jbOrderLines;
-    private String[][] orderLines;
+    private ArrayList<JTextField> jtfOrderLines;
+    private ArrayList<JComboBox> jcOrderLines;
+    private ArrayList<JButton> jbOrderLines;
+    private ArrayList<String> orderLines;
     private String[] articles;
-    int rows = 7;
+    private int rows = 7;
+    private JScrollPane sp;
 
     public EditOrderDialog(JFrame jFrame, int orderId){
         super(jFrame,true);
         this.orderId = orderId;
         setOrder();
         setArticleList();
+        jcOrderLines = new ArrayList<>();
+        jtfOrderLines = new ArrayList<>();
+        jbOrderLines = new ArrayList<>();
+        orderLines = new ArrayList<>();
         fillOrderLines();
         createDialog();
     }
@@ -36,45 +40,41 @@ public class EditOrderDialog extends JDialog implements ActionListener {
         super(jFrame,true);
         setNewOrderId();
         setArticleList();
-        jcOrderLines = new JComboBox[1];
-        jcOrderLines[0] = new JComboBox<>(articles);
-        jtfOrderLines = new JTextField[1];
-        jtfOrderLines[0] = new JTextField(3);
-        jbOrderLines = new JButton[1];
-        jbOrderLines[0] = new JButton("Verwijder");
-
         orderExists = false;
+        jcOrderLines = new ArrayList<>();
+        jtfOrderLines = new ArrayList<>();
+        jbOrderLines = new ArrayList<>();
+        orderLines = new ArrayList<>();
+        jcOrderLines.add(new JComboBox<>(articles));
+        jtfOrderLines.add(new JTextField(3));
+        jbOrderLines.add(new JButton("Verwijder"));
         createDialog();
     }
 
     public void createDialog(){
-
         setSize(800,400);
         setResizable(false);
         setTitle("Order ID: " + orderId);
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);
 
-        JPanel panel = (JPanel)this.getContentPane();
+        panel = (JPanel)this.getContentPane();
         panel.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
 
-        JPanel topPanel = new JPanel();
+        topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout());
         topPanel.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
 
-        JPanel middlePanel = new JPanel();
+        middlePanel = new JPanel();
         middlePanel.setLayout(new BorderLayout());
 
-        JPanel topMiddlePanel = new JPanel();
+        topMiddlePanel = new JPanel();
         topMiddlePanel.setLayout(new GridLayout(0,2));
 
-        JPanel bottomMiddlePanel = new JPanel();
-        bottomMiddlePanel.setLayout(new BorderLayout());
-
-        JPanel bottomPanel = new JPanel();
+        bottomPanel = new JPanel();
         bottomPanel.setLayout(new BorderLayout());
 
-        JPanel buttonPanel = new JPanel();
+        buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(1,2));
 
         jlTitelNew = new JLabel("Order aanmaken");
@@ -97,34 +97,14 @@ public class EditOrderDialog extends JDialog implements ActionListener {
         jlArticleAmount = new JLabel("Aantal: ");
         topMiddlePanel.add(jlArticleAmount);
 
-        JPanel jpOrderLinesLeft = new JPanel();
-        jpOrderLinesLeft.setLayout(new GridLayout(rows,1));
-        JPanel jpOrderLinesRight = new JPanel();
-        jpOrderLinesRight.setLayout(new GridLayout(rows,1));
-
-        for(int i = 0; i < jtfOrderLines.length; i++){
-            if(orderExists){
-                jcOrderLines[i].setSelectedIndex(Integer.parseInt(orderLines[i][0])-1);
-            }
-            jpOrderLinesLeft.add(jcOrderLines[i]);
-            JPanel jpOrderLinesRightLine = new JPanel();
-            jpOrderLinesRightLine.setLayout(new BorderLayout());
-            jpOrderLinesRightLine.add(jtfOrderLines[i],BorderLayout.CENTER);
-            jpOrderLinesRightLine.add(jbOrderLines[i],BorderLayout.LINE_END);
-            jpOrderLinesRight.add(jpOrderLinesRightLine);
-
-        }
-        bottomMiddlePanel.add(jpOrderLinesLeft,BorderLayout.CENTER);
-        bottomMiddlePanel.add(jpOrderLinesRight,BorderLayout.LINE_END);
-
-        JScrollPane sp = new JScrollPane(bottomMiddlePanel);
+        showOrderLines();
 
         middlePanel.add(topMiddlePanel,BorderLayout.PAGE_START);
         middlePanel.add(sp,BorderLayout.CENTER);
 
-        jlVerplicht = new JLabel("Velden met een sterretje* zijn verplicht");
-        jlVerplicht.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
-        bottomPanel.add(jlVerplicht, BorderLayout.PAGE_START);
+        jbAddArticle = new JButton("Artikel toevoegen");
+        jbAddArticle.addActionListener(this);
+        bottomPanel.add(jbAddArticle, BorderLayout.PAGE_START);
 
         jbBevestigen = new JButton("Bevestigen");
         jbBevestigen.addActionListener(this);
@@ -141,6 +121,33 @@ public class EditOrderDialog extends JDialog implements ActionListener {
         add(bottomPanel, BorderLayout.PAGE_END);
 
         setVisible(true);
+    }
+
+    public void showOrderLines(){
+        bottomMiddlePanel = new JPanel();
+        bottomMiddlePanel.setLayout(new BorderLayout());
+
+        jpOrderLinesLeft = new JPanel();
+        jpOrderLinesLeft.setLayout(new GridLayout(rows,1));
+        jpOrderLinesRight = new JPanel();
+        jpOrderLinesRight.setLayout(new GridLayout(rows,1));
+
+        for(int i = 0; i < jtfOrderLines.size(); i++){
+            if(orderExists){
+                jcOrderLines.get(i).setSelectedIndex(Integer.parseInt(orderLines.get(i)));
+            }
+            jpOrderLinesLeft.add(jcOrderLines.get(i));
+            jpOrderLinesRightLine = new JPanel();
+            jpOrderLinesRightLine.setLayout(new BorderLayout());
+            jpOrderLinesRightLine.add(jtfOrderLines.get(i),BorderLayout.CENTER);
+            jpOrderLinesRightLine.add(jbOrderLines.get(i),BorderLayout.LINE_END);
+            jpOrderLinesRight.add(jpOrderLinesRightLine);
+        }
+
+        bottomMiddlePanel.add(jpOrderLinesLeft,BorderLayout.CENTER);
+        bottomMiddlePanel.add(jpOrderLinesRight,BorderLayout.LINE_END);
+
+        sp = new JScrollPane(bottomMiddlePanel);
     }
 
     public void addToDb(){
@@ -208,19 +215,12 @@ public class EditOrderDialog extends JDialog implements ActionListener {
             }
             rs.first();
 
-            jtfOrderLines = new JTextField[amountOfRows];
-            orderLines = new String[amountOfRows][3];
-            jcOrderLines = new JComboBox[amountOfRows];
-            jbOrderLines = new JButton[amountOfRows];
-
             for(int i = 0; i < amountOfRows; i++){
-                orderLines[i][0] = rs.getString("ol.StockItemID");
-                orderLines[i][1] = rs.getString("si.StockItemName");
-                orderLines[i][2] = rs.getString("ol.Quantity");
-                jcOrderLines[i] = new JComboBox<>(articles);
-                jtfOrderLines[i] = new JTextField(orderLines[i][2],3);
-                jbOrderLines[i] = new JButton("Verwijder");
-
+                orderLines.add(rs.getString("ol.StockItemID"));
+                jcOrderLines.add(new JComboBox<>(articles));
+                jtfOrderLines.add(new JTextField(rs.getString("ol.Quantity"),3));
+                jbOrderLines.add(new JButton("Verwijder"));
+                jbOrderLines.get(i).addActionListener(this);
                 rs.next();
             }
         } catch(SQLException sqle){
@@ -276,7 +276,24 @@ public class EditOrderDialog extends JDialog implements ActionListener {
                 }
             }
 
+        } else {
+            int sourceButton = -1;
+            for(int i = 0; i < jbOrderLines.size(); i++){
+                if(e.getSource() == jbOrderLines.get(i)){
+                    sourceButton = i;
+                }
+            }
+            if(sourceButton != -1){
+                orderLines.remove(sourceButton);
+                jcOrderLines.remove(sourceButton);
+                jtfOrderLines.remove(sourceButton);
+                jbOrderLines.remove(sourceButton);
+            }
+            middlePanel.remove(sp);
+            showOrderLines();
+            middlePanel.add(sp);
+            revalidate();
+            repaint();
         }
-
     }
 }
