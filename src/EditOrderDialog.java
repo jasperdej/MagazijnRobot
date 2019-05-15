@@ -125,6 +125,7 @@ public class EditOrderDialog extends JDialog implements ActionListener {
     public void setLists(){
         setCustomerList();
         setArticleList();
+        setMaxOrderLineId();
         panels = new ArrayList<>();
         if(orderExists){
             getOrderLinesFromDb();
@@ -156,80 +157,89 @@ public class EditOrderDialog extends JDialog implements ActionListener {
     }
 
     public void addToDb(){
-        int orderLineId = getMaxOrderLineId();
-        if (orderLineId == 0){
-            JOptionPane.showMessageDialog(this,"Error, order niet toegevoegd.");
-        } else {
-            DbConn dbConn = new DbConn();
-            DbConn.dbConnect();
-            dbConn.updateDb("INSERT INTO Orders (OrderID, CustomerID, SalespersonPersonID, ContactPersonID, OrderDate, ExpectedDeliveryDate, IsUndersupplyBackordered, LastEditedBy, LastEditedWhen, Status) VALUES (" + orderId + ", " + jcbCustomerId.getSelectedItem() + ", 1, 1, '" + getDate() + "', '" + getDate() + "', 0, 1, '" + getDateTime() + "', 'wachten op actie')");
-
-            for(int i = 0; i < panels.size(); i++){
-                orderLineId++;
-                dbConn.updateDb("INSERT INTO OrderLines (OrderLineID, OrderID, StockItemID, Description, PackageTypeID, Quantity, TaxRate, PickedQuantity, LastEditedBy, LastEditedWhen) VALUES (" + orderLineId + ", " + orderId + ", " + panels.get(i).getJcbOrderLine().getSelectedIndex() + ", '-', 1," + Integer.parseInt(panels.get(i).getJtfOrderLine().getText()) + ", 15.0, 0, 1, '" + getDateTime() + "')");
-                orderLineId++;
+        if (!Start.dbDoneLoading){
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ie) {
+                System.out.println(ie);
             }
-            dbConn.killStatement();
-            DbConn.dbKill();
+            addToDb();
+        } else {
+            Start.dbDoneLoading = false;
         }
+        DbConn dbConn = new DbConn();
+        DbConn.dbConnect();
+        dbConn.updateDb("INSERT INTO Orders (OrderID, CustomerID, SalespersonPersonID, ContactPersonID, OrderDate, ExpectedDeliveryDate, IsUndersupplyBackordered, LastEditedBy, LastEditedWhen, Status) VALUES (" + orderId + ", " + jcbCustomerId.getSelectedItem() + ", 1, 1, '" + getDate() + "', '" + getDate() + "', 0, 1, '" + getDateTime() + "', 'wachten op actie')");
+
+        for(int i = 0; i < panels.size(); i++){
+            addRecordToDb(dbConn,i);
+        }
+
+        dbConn.killStatement();
+        DbConn.dbKill();
+        Start.dbDoneLoading = true;
     }
 
     public void editDb(){
-        maxOrderLineId = getMaxOrderLineId();
-        if (maxOrderLineId == -1){
-            JOptionPane.showMessageDialog(this,"Error, order niet toegevoegd.");
+        if (!Start.dbDoneLoading){
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ie) {
+                System.out.println(ie);
+            }
+            editDb();
         } else {
-            System.out.println("original length: " + originalOrderLines.length);
-            System.out.println("panel length: " + panels.size());
-            for(int i = 0; i < originalOrderLines.length; i++) {
-                boolean found = false;
-                for (int j = 0; j < panels.size(); j++) {
-                    if (panels.get(j).getJcbOrderLine().getSelectedIndex() == originalOrderLines[i][1]) {
-                        found = true;
-                        panels.get(j).setOriginalOrderLine(originalOrderLines[i][0]);
-                        if (Integer.parseInt(panels.get(j).getJtfOrderLine().getText()) != originalOrderLines[i][2]) {
-                            updateRecordInDb(j);
-                            System.out.println("update: original " + i + ", panel " + j);
-                        }
+            Start.dbDoneLoading = false;
+        }
+        DbConn dbConn = new DbConn();
+        DbConn.dbConnect();
+        for(int i = 0; i < originalOrderLines.length; i++) {
+            boolean found = false;
+            for (int j = 0; j < panels.size(); j++) {
+                if (panels.get(j).getJcbOrderLine().getSelectedIndex() == originalOrderLines[i][1]) {
+                    found = true;
+                    panels.get(j).setOriginalOrderLine(originalOrderLines[i][0]);
+                    if (Integer.parseInt(panels.get(j).getJtfOrderLine().getText()) != originalOrderLines[i][2]) {
+                        updateRecordInDb(dbConn,j);
                     }
                 }
-                if (!found) {
-                    deleteRecordFromDb(i);
-                    System.out.println("delete: original " + i);
-                }
             }
-            for(int i = 0; i < panels.size(); i++){
-                if(panels.get(i).getOriginalOrderLine() == -1){
-                    addRecordToDb(i);
-                    System.out.println("add: panel " + i);
-                }
+            if (!found) {
+                deleteRecordFromDb(dbConn,i);
             }
         }
-    }
-
-    public void updateRecordInDb(int panelIndex){
-        DbConn dbConn = new DbConn();
-        DbConn.dbConnect();
-        dbConn.updateDb("UPDATE OrderLines SET Quantity = " + Integer.parseInt(panels.get(panelIndex).getJtfOrderLine().getText()) + " WHERE OrderLineID = " + panels.get(panelIndex).getOriginalOrderLine());
+        for(int i = 0; i < panels.size(); i++){
+            if(panels.get(i).getOriginalOrderLine() == -1){
+                addRecordToDb(dbConn,i);
+            }
+        }
         dbConn.killStatement();
-        DbConn.dbKill();
+        Start.dbDoneLoading = true;
     }
 
-    public void addRecordToDb(int panelIndex){
-        maxOrderLineId++;
-        DbConn dbConn = new DbConn();
-        DbConn.dbConnect();
+    public void updateRecordInDb(DbConn dbConn, int panelIndex){
+        dbConn.updateDb("UPDATE OrderLines SET Quantity = " + Integer.parseInt(panels.get(panelIndex).getJtfOrderLine().getText()) + " WHERE OrderLineID = " + panels.get(panelIndex).getOriginalOrderLine());
+    }
+
+    public void addRecordToDb(DbConn dbConn, int panelIndex){
         dbConn.updateDb("INSERT INTO OrderLines (OrderLineID, OrderID, StockItemID, Description, PackageTypeID, Quantity, TaxRate, PickedQuantity, LastEditedBy, LastEditedWhen) VALUES (" + maxOrderLineId + ", " + orderId + ", " + panels.get(panelIndex).getJcbOrderLine().getSelectedIndex() + ", '-', 1, " + Integer.parseInt(panels.get(panelIndex).getJtfOrderLine().getText()) + ", 15.0, 0, 1,'" + getDateTime() + "')");
-
     }
 
-    public void deleteRecordFromDb(int originalIndex){
-        DbConn dbConn = new DbConn();
-        DbConn.dbConnect();
+    public void deleteRecordFromDb(DbConn dbConn, int originalIndex){
         dbConn.updateDb("DELETE FROM OrderLines WHERE OrderLineID = " + originalOrderLines[originalIndex][0]);
     }
 
     public void setExistingOrderFromDb(){
+        if (!Start.dbDoneLoading){
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ie) {
+                System.out.println(ie);
+            }
+            setExistingOrderFromDb();
+        } else {
+            Start.dbDoneLoading = false;
+        }
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();
         ResultSet rs = dbConn.getResultSetFromDb("SELECT CustomerID FROM Orders WHERE OrderID = " + orderId);
@@ -238,14 +248,25 @@ public class EditOrderDialog extends JDialog implements ActionListener {
             rs.first();
             customerId = rs.getInt("CustomerID");
         } catch (SQLException sqle) {
-            System.out.println(sqle);
+            System.out.println("Er is een SQL fout opgetreden in EditOrderDialog.java in methode setExistingOrderFromDb");
 
         } finally {
             dbConn.killStatement();
+            Start.dbDoneLoading = true;
         }
     }
 
     public void setNewOrderIdFromDb(){
+        if (!Start.dbDoneLoading){
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ie) {
+                System.out.println(ie);
+            }
+            setNewOrderIdFromDb();
+        } else {
+            Start.dbDoneLoading = false;
+        }
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();
         ResultSet rs = dbConn.getResultSetFromDb("SELECT MAX(OrderID) FROM Orders;");
@@ -254,31 +275,51 @@ public class EditOrderDialog extends JDialog implements ActionListener {
             rs.first();
             orderId = rs.getInt("MAX(OrderID)") + 1;
         } catch (SQLException sqle) {
-            System.out.println(sqle);
-        } catch (NumberFormatException nfe) {
-            System.out.println(nfe);
+            System.out.println("Er is een SQL fout opgetreden in EditOrderDialog.java in methode setNewOrderIdFromDb");
         } finally {
             dbConn.killStatement();
+            Start.dbDoneLoading = true;
         }
     }
 
-    public int getMaxOrderLineId(){
+    public void setMaxOrderLineId(){
+        if (!Start.dbDoneLoading){
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ie) {
+                System.out.println(ie);
+            }
+            setMaxOrderLineId();
+        } else {
+            Start.dbDoneLoading = false;
+        }
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();
         ResultSet rs = dbConn.getResultSetFromDb("SELECT MAX(OrderLineID) FROM OrderLines");
 
         try{
             rs.first();
-            return rs.getInt("MAX(OrderLineId)");
+            maxOrderLineId = rs.getInt("MAX(OrderLineId)");
         }catch(SQLException sqle){
-            System.out.println(sqle);
-            return -1;
+            System.out.println("Er is een SQL fout opgetreden in EditOrderDialog.java in methode getMaxOrderLineId");
+            maxOrderLineId = -1;
         }finally{
             dbConn.killStatement();
+            Start.dbDoneLoading = true;
         }
     }
 
     public void getOrderLinesFromDb(){
+        if (!Start.dbDoneLoading){
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ie) {
+                System.out.println(ie);
+            }
+            getOrderLinesFromDb();
+        } else {
+            Start.dbDoneLoading = false;
+        }
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();
         ResultSet rs = dbConn.getResultSetFromDb("SELECT ol.OrderLineID, ol.StockItemID, si.StockItemName, ol.Quantity FROM OrderLines ol JOIN StockItems si ON ol.StockItemID = si.StockItemID WHERE OrderID = " + orderId);
@@ -301,9 +342,10 @@ public class EditOrderDialog extends JDialog implements ActionListener {
             }
             setRows();
             } catch(SQLException sqle){
-            System.out.println(sqle);
+            System.out.println("Er is een SQL fout opgetreden in EditOrderDialog.java in methode getOrderLinesFromDb");
         } finally {
             dbConn.killStatement();
+            Start.dbDoneLoading = true;
         }
     }
 
@@ -315,11 +357,21 @@ public class EditOrderDialog extends JDialog implements ActionListener {
         }
     }
 
-    public void setArticleList(){
+    public void setArticleList() {
         OrderLinePanel.fillArticles();
     }
 
     public void setCustomerList(){
+        if (!Start.dbDoneLoading){
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ie) {
+                System.out.println(ie);
+            }
+            setCustomerList();
+        } else {
+            Start.dbDoneLoading = false;
+        }
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();
         ResultSet rs = dbConn.getResultSetFromDb("SELECT UserID FROM Users ORDER BY UserID");
@@ -338,7 +390,10 @@ public class EditOrderDialog extends JDialog implements ActionListener {
                 rs.next();
             }
         } catch(SQLException sqle){
-            System.out.println(sqle);
+            System.out.println("Er is een SQL fout opgetreden in EditOrderDialog.java in methode setCustomerList");
+        } finally {
+            dbConn.killStatement();
+            Start.dbDoneLoading = true;
         }
     }
 
@@ -400,16 +455,12 @@ public class EditOrderDialog extends JDialog implements ActionListener {
             addPanel();
         } else {
             int button = -1;
-            int combobox = -1;
             for(int i = 0; i < panels.size(); i++){
                 if(e.getSource() == panels.get(i).getJbOrderLine()){
-                    button = i;
+                    removePanel(button);
                 } else if(e.getSource() == panels.get(i).getJcbOrderLine()){
                     checkIfSelected(i);
                 }
-            }
-            if(button != -1){
-                removePanel(button);
             }
         }
     }

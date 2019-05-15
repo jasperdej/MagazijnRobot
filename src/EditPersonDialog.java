@@ -11,6 +11,7 @@ public class EditPersonDialog extends JDialog implements ActionListener {
 
     private int personId;
     private boolean personExists = true;
+    private JPanel panel, topPanel, middlePanel, topMiddlePanel, bottomPanel, buttonPanel;
     private JLabel jlTitelNew, jlTitelEdit, jlVoornaam, jlTussenvoegsel, jlAchternaam, jlEmailadres, jlAdres, jlWoonplaats, jlPostcode, jlVerplicht;
     private JTextField jtfVoornaam, jtfTussenvoegsel, jtfAchternaam, jtfEmailadres, jtfAdres, jtfWoonplaats,jtfPostcode;
     private JButton jbBevestigen, jbAnnuleren;
@@ -37,23 +38,23 @@ public class EditPersonDialog extends JDialog implements ActionListener {
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);
 
-        JPanel panel = (JPanel)this.getContentPane();
+        panel = (JPanel)this.getContentPane();
         panel.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
 
-        JPanel topPanel = new JPanel();
+        topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout());
         topPanel.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
 
-        JPanel middlePanel = new JPanel();
+        middlePanel = new JPanel();
         middlePanel.setLayout(new BorderLayout());
 
-        JPanel topMiddlePanel = new JPanel();
+        topMiddlePanel = new JPanel();
         topMiddlePanel.setLayout(new GridLayout(0,2,0,5));
 
-        JPanel bottomPanel = new JPanel();
+        bottomPanel = new JPanel();
         bottomPanel.setLayout(new BorderLayout());
 
-        JPanel buttonPanel = new JPanel();
+        buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(1,2));
       
         jlTitelNew = new JLabel("Persoon aanmaken");
@@ -205,8 +206,8 @@ public class EditPersonDialog extends JDialog implements ActionListener {
             postcode = rs.getString("UserPostalcode");
 
 
-        } catch (SQLException e) {
-            System.out.println(e);
+        } catch (SQLException sqle) {
+            System.out.println("Er is een SQL fout opgetreden in EditPersonDialog.java in methode setPerson");
         } finally {
             dbConn.killStatement();
             DbConn.dbKill();
@@ -234,9 +235,7 @@ public class EditPersonDialog extends JDialog implements ActionListener {
             rs.first();
             personId = rs.getInt("MAX(UserID)") + 1;
         } catch (SQLException sqle) {
-            System.out.println(sqle);
-        } catch (NumberFormatException nfe) {
-            System.out.println(nfe);
+            System.out.println("Er is een SQL fout opgetreden in EditPersonDialog.java in methode setNewPersonId");
         } finally {
             dbConn.killStatement();
             DbConn.dbKill();

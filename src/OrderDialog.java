@@ -79,7 +79,7 @@ public class OrderDialog extends JDialog {
             }
 
         } catch (SQLException sqle) {
-            System.out.println(sqle);
+            System.out.println("Er is een SQL fout opgetreden in OrderDialog.java in methode fillOrderDetails");
         } finally {
             dbConn.killStatement();
             DbConn.dbKill();
