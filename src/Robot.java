@@ -9,18 +9,22 @@ public abstract class Robot {
         StackTraceElement[] stactrace = Thread.currentThread().getStackTrace();
         StackTraceElement e = stactrace[2];
         String className = e.getClassName();
-        if (className.equals("Orderpick")) {
+        if (className.equals("OrderPick")) {
             ArduinoConn.arduinoPickRobot.serialWrite(coord);
+            System.out.println("TO OP: " + coord);
         } else {
             ArduinoConn.arduinoInpakRobot.serialWrite(coord);
-            System.out.println("Coords gestuurd");
-            System.out.println(coord);
+            System.out.println("TO IP: " + coord);
         }
     }
 
-    public String recievedFromArduino() {
+    public String recievedFromInpak() {
         String arduino = ArduinoConn.arduinoInpakRobot.serialRead();
         return arduino;
+    }
+
+    public String recievedFromOrderpick() {
+        return ArduinoConn.arduinoPickRobot.serialRead();
     }
 
     public String getStatus() {

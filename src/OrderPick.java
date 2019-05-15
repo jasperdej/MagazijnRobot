@@ -14,7 +14,7 @@ public class OrderPick extends Robot{
             toCoords += Integer.toString(articles.get(i).getLocation().getY());
             toCoords += ",";
             if (i+1 % 3 == 0 || i == articles.size()-1) {
-                toCoords += "0,";
+                toCoords += "03,02,11";
             }
         }
         sendToCoords(toCoords);
