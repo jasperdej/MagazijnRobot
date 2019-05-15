@@ -125,18 +125,54 @@ public class EditArticleDialog extends JDialog implements ActionListener {
     }
 
     public void addToDb(){
+        if (!Start.dbDoneLoading) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ie) {
+                System.out.println(ie);
+            }
+            addToDb();
+        }  else {
+            Start.dbDoneLoading = false;
+        }
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();
         dbConn.updateDb("INSERT INTO StockItems (StockItemID , StockItemName, QuantityPerOuter, UnitPrice, TypicalWeightPerUnit, SearchDetails, SupplierID, UnitPackageID, OuterPackageID, LeadTimeDays, IsChillerStock, TaxRate, LastEditedBy, ValidFrom, ValidTo) VALUES (" + articleId + ", '" + productnaam + "', " + Integer.parseInt(productaantal) + ", " + Double.parseDouble(productprijs) + ", " + Double.parseDouble(productgewicht) + ", '" + productbeschrijving + "', 1, 1, 1, 14, 0, 15, 1, '" + getDate() + "' , '9999-12-31 23:59:59' )");
+        dbConn.killStatement();
+        DbConn.dbKill();
+        Start.dbDoneLoading = true;
     }
 
     public void editDb(){
+        if (!Start.dbDoneLoading) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ie) {
+                System.out.println(ie);
+            }
+            editDb();
+        }  else {
+            Start.dbDoneLoading = false;
+        }
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();
         dbConn.updateDb("UPDATE StockItems SET StockItemName = '" + productnaam + "', QuantityPerOuter = " + Integer.parseInt(productaantal) + ", UnitPrice = " + Double.parseDouble(productprijs) + ", TypicalWeightPerUnit = " + Double.parseDouble(productgewicht) + ", SearchDetails = '" + productbeschrijving + "' WHERE StockItemID = " + articleId);
+        dbConn.killStatement();
+        DbConn.dbKill();
+        Start.dbDoneLoading = true;
     }
 
     public void setArticle(){
+        if (!Start.dbDoneLoading) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ie) {
+                System.out.println(ie);
+            }
+            setArticle();
+        }  else {
+            Start.dbDoneLoading = false;
+        }
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();
         ResultSet rs = dbConn.getResultSetFromDb("SELECT StockItemName, QuantityPerOuter, UnitPrice, TypicalWeightPerUnit, SearchDetails FROM StockItems WHERE StockItemID = " + articleId);
@@ -155,11 +191,23 @@ public class EditArticleDialog extends JDialog implements ActionListener {
             System.out.println(e);
         } finally {
             dbConn.killStatement();
+            DbConn.dbKill();
+            Start.dbDoneLoading = true;
         }
     }
 
 
     public void setNewArticleId(){
+        if (!Start.dbDoneLoading) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ie) {
+                System.out.println(ie);
+            }
+            setNewArticleId();
+        }  else {
+            Start.dbDoneLoading = false;
+        }
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();
         ResultSet rs = dbConn.getResultSetFromDb("SELECT MAX(StockItemID) FROM StockItems;");
@@ -174,6 +222,8 @@ public class EditArticleDialog extends JDialog implements ActionListener {
             System.out.println(nfe);
         } finally {
             dbConn.killStatement();
+            DbConn.dbKill();
+            Start.dbDoneLoading = true;
         }
     }
 

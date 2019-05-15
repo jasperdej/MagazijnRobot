@@ -1,7 +1,9 @@
 import arduino.Arduino;
 
 public abstract class Robot {
-    protected String status;
+    protected String status = "Aan het verbinden";
+
+    //functie voor luisteren naar arduino.
 
     public static void sendToCoords(String coord){
         StackTraceElement[] stactrace = Thread.currentThread().getStackTrace();
@@ -11,8 +13,14 @@ public abstract class Robot {
             ArduinoConn.arduinoPickRobot.serialWrite(coord);
         } else {
             ArduinoConn.arduinoInpakRobot.serialWrite(coord);
+            System.out.println("Coords gestuurd");
+            System.out.println(coord);
         }
-        System.out.println("Coords gestuurd");
+    }
+
+    public String recievedFromArduino() {
+        String arduino = ArduinoConn.arduinoInpakRobot.serialRead();
+        return arduino;
     }
 
     public String getStatus() {

@@ -133,22 +133,54 @@ public class EditPersonDialog extends JDialog implements ActionListener {
     }
 
     public void addToDb(){
+        if (!Start.dbDoneLoading) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ie) {
+                System.out.println(ie);
+            }
+            addToDb();
+        }  else {
+            Start.dbDoneLoading = false;
+        }
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();
         dbConn.updateDb("INSERT INTO Users (UserID, UserFirstName, UserPrefix, UserLastName, UserEmail, UserAddress, UserResidence, UserPostalCode) VALUES (" + personId + ", '" + voornaam + "', " + tussenvoegsel + ", '" + achternaam + "', " + emailadres + ", '" + adres + "', '" + woonplaats + "', '" + postcode + "')");
         dbConn.killStatement();
         DbConn.dbKill();
+        Start.dbDoneLoading = true;
     }
 
     public void editDb(){
+        if (!Start.dbDoneLoading) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ie) {
+                System.out.println(ie);
+            }
+            editDb();
+        }  else {
+            Start.dbDoneLoading = false;
+        }
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();
         dbConn.updateDb("UPDATE Users SET UserFirstName = '" + voornaam + "', UserPrefix = " + tussenvoegsel + ", UserLastName = '" + achternaam + "', UserEmail = " + emailadres + ", UserAddress = '" + adres + "', UserResidence = '" + woonplaats + "', UserPostalCode = '" + postcode + "' WHERE UserID = " + personId);
         dbConn.killStatement();
         DbConn.dbKill();
+        Start.dbDoneLoading = true;
     }
 
     public void setPerson(){
+        if (!Start.dbDoneLoading) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ie) {
+                System.out.println(ie);
+            }
+            setPerson();
+        }  else {
+            Start.dbDoneLoading = false;
+        }
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();
         ResultSet rs = dbConn.getResultSetFromDb("SELECT UserFirstName, UserPrefix, UserLastName, UserEmail, UserAddress, UserResidence, UserPostalCode FROM Users WHERE UserID = " + personId);
@@ -177,10 +209,22 @@ public class EditPersonDialog extends JDialog implements ActionListener {
             System.out.println(e);
         } finally {
             dbConn.killStatement();
+            DbConn.dbKill();
+            Start.dbDoneLoading = true;
         }
     }
 
     public void setNewPersonId(){
+        if (!Start.dbDoneLoading) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ie) {
+                System.out.println(ie);
+            }
+            setNewPersonId();
+        }  else {
+            Start.dbDoneLoading = false;
+        }
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();
         ResultSet rs = dbConn.getResultSetFromDb("SELECT MAX(UserID) FROM Users;");
@@ -195,6 +239,8 @@ public class EditPersonDialog extends JDialog implements ActionListener {
             System.out.println(nfe);
         } finally {
             dbConn.killStatement();
+            DbConn.dbKill();
+            Start.dbDoneLoading = true;
         }
     }
 

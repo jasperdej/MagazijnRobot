@@ -3,7 +3,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Order {
-    private int orderNr;
+    private int orderNr = -1;
     private ArrayList<Article> articles;
     private int amountOfArticles;
     private double totalWeight;

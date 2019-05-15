@@ -8,26 +8,27 @@ public class Inpak extends Robot {
     private int currentBin = 1;
     private Graphics graphics;
 
-    public Inpak() {//, Graphics graphics
-        status = "aan het inpakken";
-    }
-
     //binlist is created by bpp algorithm. articles is created by tsp algorithm.
-    public void sendCoordinatesToArduino(ArrayList<Bin> binList, ArrayList<Article> articleList){
+    public ArrayList<Bin> sendCoordinatesToArduino(ArrayList<Bin> binList, ArrayList<Article> articleList){
         toCoords = "";
         binOrder.clear();
         for (Article a: articleList) {
             for (Bin b: binList) {
                 for (Article ab: b.getArticles()) {
                     if (ab.getLocation().getX() == a.getLocation().getX() && ab.getLocation().getY() == a.getLocation().getY()) {
-                        toCoords += Integer.toString(b.getBinNumber());
+                        if (b.getBinNumber() < 10) {
+                            toCoords+="0" + Integer.toString(b.getBinNumber());
+                        } else {
+                            toCoords += Integer.toString(b.getBinNumber());
+                        }
                         binOrder.add(b);
                     }
                 }
             }
         }
-//        sendToCoords(toCoords);
-
+        toCoords+=",00";
+        sendToCoords(toCoords);
+        return binOrder;
     }
 
     public void sendToArduino(String string) {
@@ -59,6 +60,10 @@ public class Inpak extends Robot {
         }
     }
 
+    public void setAmountOfArticlesPacked(int amountOfArticlesPacked) {
+        this.amountOfArticlesPacked = amountOfArticlesPacked;
+    }
+
     public int getAmountOfArticlesPacked() {
         return this.amountOfArticlesPacked;
     }
@@ -67,7 +72,11 @@ public class Inpak extends Robot {
         this.status = status;
     }
 
-    public int getCurrentBinBin() {
+    public void setCurrentBin(int currentBin) {
+        this.currentBin = currentBin;
+    }
+
+    public int getCurrentBin() {
         return currentBin;
     }
 }
