@@ -46,6 +46,16 @@ public class OrderDialog extends JDialog {
     }
 
     public void fillOrderDetails(){
+        if (!Start.dbDoneLoading) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ie) {
+                System.out.println(ie);
+            }
+            fillOrderDetails();
+        }  else {
+            Start.dbDoneLoading = false;
+        }
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();
         ResultSet rs = dbConn.getResultSetFromDb("SELECT ol.StockItemId, ol.Quantity, si.TypicalWeightPerUnit FROM OrderLines ol JOIN StockItems si ON ol.StockItemID = si.StockItemID WHERE ol.OrderID = " + orderId);
@@ -72,6 +82,8 @@ public class OrderDialog extends JDialog {
             System.out.println(sqle);
         } finally {
             dbConn.killStatement();
+            DbConn.dbKill();
+            Start.dbDoneLoading = true;
         }
     }
 

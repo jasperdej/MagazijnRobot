@@ -25,6 +25,9 @@ public class ArduinoConn {
         i=0;
         while(!isPickArduino) {
             i++;
+            if (i > 15) {
+                i = 1;
+            }
                 System.out.println("Poort: " + i);
                 arduinoPickRobot = new Arduino("COM" + i, 9600);
                 if (arduinoPickRobot.openConnection()) {
@@ -35,7 +38,8 @@ public class ArduinoConn {
                         if(arduino.contains("Orderpick")){
                             isPickArduino = true;
                             System.out.println("Ah yes, the port you were looking for...");
-                            arduinoPickRobot.serialWrite("aan");
+                            arduinoPickRobot.serialWrite("Connected");
+
                         }else{
                             System.out.println("Close, but not close enough");
                         }
@@ -49,6 +53,9 @@ public class ArduinoConn {
         i=0;
         while(!isInpakArduino) {
             i++;
+            if (i > 15) {
+                i = 1;
+            }
             System.out.println("Poort: " + i);
             arduinoInpakRobot = new Arduino("COM" + i, 9600);
             if (arduinoInpakRobot.openConnection()) {
@@ -59,7 +66,7 @@ public class ArduinoConn {
                     if(arduino.contains("Inpak")){
                         isInpakArduino = true;
                         System.out.println("Ah yes, the port you were looking for");
-                        arduinoInpakRobot.serialWrite("aan");
+                        arduinoInpakRobot.serialWrite("Connected");
                     }else{
                         System.out.println("Close, but not close enough");
                     }

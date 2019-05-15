@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.concurrent.TransferQueue;
 
 public class Main {
+    private ArduinoConn arduinoConn = new ArduinoConn();
     private ScreenManager screenManager;
     private boolean dbScreensUp = true;
     private Order order = new Order();
@@ -12,6 +13,7 @@ public class Main {
 
     private ModifiedBestFit bestFit;
     private ArrayList<Article> BPP_List = new ArrayList<>();
+    private ArrayList<Bin> finalBinList = new ArrayList<>();
 
     private TSP_Algorithm tsp_algorithm;
     private ArrayList<Article> TSP_List;
@@ -21,29 +23,59 @@ public class Main {
     }
 
 
+    int i = 0;
+
     public void runMainAlgorithm() {
-        screenManager.getRobotDraw().setInpak(inpak);
+        //starts orderScreen and inventoryScreen. they have a slight delay because of database issues when executing queries simultaneously.
+        screenManager.setInpak(inpak);
+        screenManager.setOrderPick(orderPick);
+        screenManager.start();
+
+
+        arduinoConn.arduinoConnectInpakRobot();
+        inpak.setStatus("verbonden");
+//        arduinoConn.arduinoConnectPickRobot();
+        orderPick.setStatus("verbonden");
+
+        boolean opConnected = true;
+        boolean ipConnected = false;
+
+        while (!opConnected || !ipConnected) {
+//            if (orderPick.recievedFromArduino().contains("Orderpick")) {
+//                opConnected = true;
+//            }
+            if (inpak.recievedFromArduino().contains("Inpak")) {
+                ipConnected = true;
+            }
+        }
+
 
         while (true) {
-            orderPick.setStatus("aan het picken");
-            inpak.setStatus("wachten op OP");
+            boolean isOrderDone = false;
+            boolean isOpDone = false;
+            orderPick.setStatus("Wachten op actie");
+            inpak.setStatus("Wachten op actie");
+
+            orderPick.setAmountOfArticlesPicked(0);
+            inpak.setAmountOfArticlesPacked(0);
+            i++;
             if (TSP_List != null) {
                 TSP_List.clear();
             }
 
+            if (BPP_List != null) {
+                BPP_List.clear();
+            }
+
+            if (finalBinList != null) {
+                finalBinList.clear();
+            }
+
             //get new order from database.
             order.getNewOrderIdFromDb();
+            System.out.println("orderid: " + order.getOrderNr());
             //update robot screen to current order.
 
-            //starts orderScreen and inventoryScreen. they have a slight delay because of database issues when executing queries simultaneously.
-            if (dbScreensUp) {
-                if (screenManager.startDbScreens() != null) {
-                    dbScreensUp = false;
-                } else {
-                    screenManager.startDbScreens();
-                    screenManager.start();
-                }
-            }
 
             //send both algorithms to work.
             bestFit = new ModifiedBestFit(order);
@@ -69,23 +101,77 @@ public class Main {
 //            orderPick.sendCoordinatesToArduino(TSP_List);
 
             //Inpak robot wants a string with coordinates. coordinate x: 3 is send as 3.
-            inpak.sendCoordinatesToArduino(bestFit.getBinList(), TSP_List);
+            finalBinList = inpak.sendCoordinatesToArduino(bestFit.getBinList(), TSP_List);
+            orderPick.setStatus("Aan het picken");
+            inpak.setStatus("Aan het inpakken");
+            System.out.println(inpak.getStatus());
 
+            //ints for executing loop and updating robotscreen.
+            int amountPackedIp = 0;
+            int amountPickedOp = 0;
+            int totalArticlesInOrder = TSP_List.size();
 
+            while (!isOrderDone) {
+                String recievedFromInpak = inpak.recievedFromArduino();
+//                String recievedFromOrderpick = orderPick.recievedFromArduino();
+                System.out.println("INPAK: " + recievedFromInpak);
+//                System.out.println("ORDERPICK: " + recievedFromOrderpick);
+
+//                if (recievedFromOrderpick.contains("packed")) {
+//                    amountPickedOp++;
+//                    System.out.println("ORDERPICK PICKED: " + amountPickedOp);
+//                    orderPick.setAmountOfArticlesPicked(amountPickedOp);
+//                    if (amountPickedOp == totalArticlesInOrder) {
+//                        isOpDone = true;
+//                    }
+//                }
+
+                isOpDone = true;
+                if (recievedFromInpak.contains("Scanned")) {
+                    inpak.setCurrentBin(finalBinList.get(amountPackedIp).getBinNumber());
+                    amountPackedIp++;
+                    inpak.setAmountOfArticlesPacked(amountPackedIp);
+                    System.out.println("INPAK PACKED: " + amountPackedIp);
+                    if (amountPackedIp == totalArticlesInOrder && isOpDone) {
+                        isOrderDone = true;
+                        System.out.println("done");
+                    }
+                }
+            }
 
             //to-do list.
             //get information from robots.
             //send correct information to robotScreen.
-            //keep updating robotScreen and keep sending coordinates to robots.
             try {
-                Thread.sleep(10000);
-            } catch (Exception e) {
-                System.out.println(e);
+                Thread.sleep(4000);
+            } catch (InterruptedException ie) {
+                System.out.println(ie);
             } finally {
-                screenManager.updateRobotScreen(orderPick, inpak);
+                //updates database. order is now picked and status is changed to "verwerkt".
+                System.out.println("volgende loop");
+//                updateDatabase();
             }
 
+        }
+    }
+
+    public void updateDatabase() {
+        if (!Start.dbDoneLoading) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ie) {
+                System.out.println(ie);
             }
+            updateDatabase();
+        }  else {
+            Start.dbDoneLoading = false;
+        }
+        DbConn dbConn = new DbConn();
+        DbConn.dbConnect();
+        dbConn.updateDb("UPDATE orders SET status = 'verwerkt' WHERE orderid = " + order.getOrderNr());
+        dbConn.killStatement();
+        DbConn.dbKill();
+        Start.dbDoneLoading = true;
     }
 
     public Order getCurrentOrder() {

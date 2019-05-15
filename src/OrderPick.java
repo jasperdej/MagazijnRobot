@@ -3,14 +3,9 @@ import arduino.Arduino;
 import java.util.ArrayList;
 
 public class OrderPick extends Robot{
-    private CoordinatePoint currentLocation;
-    private int amountOfArticlesPicked;
+    private CoordinatePoint currentLocation = new CoordinatePoint(0 , 0);
+    private int amountOfArticlesPicked = 0;
     private String toCoords;
-
-    public OrderPick () {
-        currentLocation = new CoordinatePoint(0, 0);
-        status = "a";
-    }
 
     public void sendCoordinatesToArduino(ArrayList<Article> articles){
         toCoords = "";
@@ -31,6 +26,10 @@ public class OrderPick extends Robot{
 
     public CoordinatePoint getCurrentLocation() {
         return currentLocation;
+    }
+
+    public void setAmountOfArticlesPicked(int amountOfArticlesPicked) {
+        this.amountOfArticlesPicked = amountOfArticlesPicked;
     }
 
     public int getAmountOfArticlesPicked() {

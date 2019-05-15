@@ -7,18 +7,26 @@ public class ScreenManager extends Thread {
     private InventoryScreen inventoryScreen;
     private JFrame currentScreen;
     private DbScreens dbScreens;
+    private Main main;
+
+    private OrderPick orderPick;
+    private Inpak inpak;
 
     public void run() {
-        robotScreen.setUpOp(new OrderPick());
-        robotScreen.setUpIp(new Inpak());
+        robotScreen.setUpOp(orderPick);
+        robotScreen.setUpIp(inpak);
+        robotDraw.setInpak(inpak);
         robotScreen.createScreen();
         robotDraw.setVisible(true);
         currentScreen = robotScreen;
 
         dbScreens = new DbScreens();
         dbScreens.setScreenManager(this);
+        this.orderPick = main.getOrderPick();
+        this.inpak = main.getInpak();
         while (true) {
             robotDraw.repaint();
+            updateRobotScreen(orderPick, inpak);
             try {
                 Thread.sleep(750);
             } catch (InterruptedException ie) {
@@ -81,5 +89,17 @@ public class ScreenManager extends Thread {
 
     public RobotDraw getRobotDraw() {
         return robotDraw;
+    }
+
+    public void setOrderPick(OrderPick orderPick) {
+        this.orderPick = orderPick;
+    }
+
+    public void setInpak(Inpak inpak) {
+        this.inpak = inpak;
+    }
+
+    public void setMain(Main main) {
+        this.main = main;
     }
 }
