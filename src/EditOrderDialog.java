@@ -6,37 +6,31 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class EditOrderDialog extends JDialog implements ActionListener {
 
     private int orderId;
+    private int customerId;
     private boolean orderExists = true;
-    private int rows = 7;
+    private int rows = 6;
     private JLabel jlTitelNew, jlTitelEdit, jlCustomerId, jlArticleId, jlArticleAmount;
     private JComboBox<Integer> jcbCustomerId;
-    private JPanel panel, topPanel, middlePanel, topMiddlePanel, bottomMiddlePanel, jpOrderLine, jpOrderLineLeft, jpOrderLineRight, bottomPanel, buttonPanel;
+    private JPanel panel, topPanel, middlePanel, topMiddlePanel, bottomMiddlePanel, jpOrderLine, jpOrderLineRight, bottomPanel, buttonPanel;
     private GridLayout grBottomMiddlePanel = new GridLayout(rows,1);
     private JButton jbAddArticle, jbBevestigen, jbAnnuleren;
-    private String customerId;
-    private ArrayList<JTextField> jtfOrderLines;
-    private ArrayList<JComboBox> jcbOrderLines;
-    private ArrayList<JButton> jbOrderLines;
-    private ArrayList<JPanel> panels;
-    private int[] originalOrderLines, originalQuantities;
+    private ArrayList<OrderLinePanel> panels;
     private Integer[] customers;
-    private String[] articles;
+    private int[][] originalOrderLines;
     private JScrollPane sp;
+    private int maxOrderLineId;
 
     public EditOrderDialog(JFrame jFrame, int orderId){
         super(jFrame,true);
         this.orderId = orderId;
         setExistingOrderFromDb();
-        setArticleList();
-        setCustomerList();
-        setArrayLists();
+        setLists();
         createDialog();
     }
 
@@ -44,9 +38,7 @@ public class EditOrderDialog extends JDialog implements ActionListener {
         super(jFrame,true);
         orderExists = false;
         setNewOrderIdFromDb();
-        setArticleList();
-        setCustomerList();
-        setArrayLists();
+        setLists();
         createDialog();
     }
 
@@ -65,12 +57,13 @@ public class EditOrderDialog extends JDialog implements ActionListener {
         topPanel.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
         middlePanel = new JPanel();
         middlePanel.setLayout(new BorderLayout());
+        middlePanel.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
         topMiddlePanel = new JPanel();
         topMiddlePanel.setLayout(new GridLayout(0,2));
         bottomMiddlePanel = new JPanel();
         bottomMiddlePanel.setLayout(grBottomMiddlePanel);
         bottomPanel = new JPanel();
-        bottomPanel.setLayout(new BorderLayout());
+        bottomPanel.setLayout(new BorderLayout(0,10));
         buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(1,2));
 
@@ -90,17 +83,16 @@ public class EditOrderDialog extends JDialog implements ActionListener {
         topMiddlePanel.add(jlCustomerId);
         jcbCustomerId = new JComboBox<>(customers);
         if(orderExists){
+            jcbCustomerId.setSelectedIndex(customerId-1);
             jcbCustomerId.setEnabled(false);
         }
         topMiddlePanel.add(jcbCustomerId);
 
-        jlArticleId = new JLabel("Artikel ID: ");
+        jlArticleId = new JLabel("Artikelen: ");
         topMiddlePanel.add(jlArticleId);
-        jlArticleAmount = new JLabel("Aantal: ");
-        topMiddlePanel.add(jlArticleAmount);
 
         //add orderLines to panel
-        fillPanel();
+        showPanels();
 
         sp = new JScrollPane(bottomMiddlePanel);
 
@@ -110,7 +102,7 @@ public class EditOrderDialog extends JDialog implements ActionListener {
         //add Buttons
         jbAddArticle = new JButton("Artikel toevoegen");
         jbAddArticle.addActionListener(this);
-        bottomPanel.add(jbAddArticle, BorderLayout.PAGE_START);
+        bottomPanel.add(jbAddArticle, BorderLayout.LINE_END);
 
         jbBevestigen = new JButton("Bevestigen");
         jbBevestigen.addActionListener(this);
@@ -130,76 +122,37 @@ public class EditOrderDialog extends JDialog implements ActionListener {
         setVisible(true);
     }
 
-    public void setArrayLists(){
-        jcbOrderLines = new ArrayList<>();
-        jtfOrderLines = new ArrayList<>();
-        jbOrderLines = new ArrayList<>();
+    public void setLists(){
+        setCustomerList();
+        setArticleList();
         panels = new ArrayList<>();
         if(orderExists){
             getOrderLinesFromDb();
         } else {
-            jcbOrderLines.add(new JComboBox<>(articles));
-            jtfOrderLines.add(new JTextField(3));
-            jbOrderLines.add(new JButton("Verwijder"));
+            panels.add(new OrderLinePanel(this));
         }
     }
 
-    public void fillPanel(){
-        panels.clear();
-        for(int i = 0; i < jtfOrderLines.size(); i++){
-            jpOrderLine = new JPanel();
-            jpOrderLine.setLayout(new BorderLayout());
-            jpOrderLineRight = new JPanel();
-            jpOrderLineRight.setLayout(new BorderLayout());
-
-            jpOrderLineRight.add(jtfOrderLines.get(i),BorderLayout.CENTER);
-            jpOrderLineRight.add(jbOrderLines.get(i),BorderLayout.LINE_END);
-
-            jpOrderLine.add(jcbOrderLines.get(i),BorderLayout.CENTER);
-            jpOrderLine.add(jpOrderLineRight,BorderLayout.LINE_END);
-            panels.add(jpOrderLine);
-            bottomMiddlePanel.add(panels.get(i));
+    public void showPanels(){
+        for(int i = 0; i < panels.size(); i++){
+            bottomMiddlePanel.add(panels.get(i).getJpOrderLine());
         }
-        //System.out.println(jcbOrderLines.size() + " " + jtfOrderLines.size() + " " + jbOrderLines.size());
     }
 
-    public void addToPanel(){
-        jcbOrderLines.add(new JComboBox<>(articles));
-        jcbOrderLines.get(jcbOrderLines.size() - 1).addActionListener(this);
-        jtfOrderLines.add(new JTextField("0",3));
-        jbOrderLines.add(new JButton("Verwijder"));
-        jbOrderLines.get(jbOrderLines.size() - 1).addActionListener(this);
-
+    public void addPanel(){
+        panels.add(new OrderLinePanel(this));
         setRows();
-
-        jpOrderLine = new JPanel();
-        jpOrderLine.setLayout(new BorderLayout());
-        jpOrderLineRight = new JPanel();
-        jpOrderLineRight.setLayout(new BorderLayout());
-
-        jpOrderLineRight.add(jtfOrderLines.get(jbOrderLines.size() - 1),BorderLayout.CENTER);
-        jpOrderLineRight.add(jbOrderLines.get(jbOrderLines.size() - 1),BorderLayout.LINE_END);
-
-        jpOrderLine.add(jcbOrderLines.get(jbOrderLines.size() - 1),BorderLayout.CENTER);
-        jpOrderLine.add(jpOrderLineRight,BorderLayout.LINE_END);
-        panels.add(jpOrderLine);
-        bottomMiddlePanel.add(panels.get(panels.size() - 1));
-
+        bottomMiddlePanel.add(panels.get(panels.size()-1).getJpOrderLine());
         revalidate();
         repaint();
-        //System.out.println(jcbOrderLines.size() + " " + jtfOrderLines.size() + " " + jbOrderLines.size());
     }
 
-    public void removeFromPanel(int i){
-        bottomMiddlePanel.remove(panels.get(i));
-        jcbOrderLines.remove(i);
-        jtfOrderLines.remove(i);
-        jbOrderLines.remove(i);
-        panels.remove(i);
+    public void removePanel(int index){
+        bottomMiddlePanel.remove(panels.get(index).getJpOrderLine());
+        panels.remove(index);
         setRows();
         revalidate();
         repaint();
-        //System.out.println(jcbOrderLines.size() + " " + jtfOrderLines.size() + " " + jbOrderLines.size());
     }
 
     public void addToDb(){
@@ -211,9 +164,9 @@ public class EditOrderDialog extends JDialog implements ActionListener {
             DbConn.dbConnect();
             dbConn.updateDb("INSERT INTO Orders (OrderID, CustomerID, SalespersonPersonID, ContactPersonID, OrderDate, ExpectedDeliveryDate, IsUndersupplyBackordered, LastEditedBy, LastEditedWhen, Status) VALUES (" + orderId + ", " + jcbCustomerId.getSelectedItem() + ", 1, 1, '" + getDate() + "', '" + getDate() + "', 0, 1, '" + getDateTime() + "', 'wachten op actie')");
 
-            for(int i = 0; i < jcbOrderLines.size(); i++){
+            for(int i = 0; i < panels.size(); i++){
                 orderLineId++;
-                dbConn.updateDb("INSERT INTO OrderLines (OrderLineID, OrderID, StockItemID, Description, PackageTypeID, Quantity, TaxRate, PickedQuantity, LastEditedBy, LastEditedWhen) VALUES (" + orderLineId + ", " + orderId + ", " + jcbOrderLines.get(i).getSelectedIndex() + ", '-', 1," + Integer.parseInt(jtfOrderLines.get(i).getText()) + ", 15.0, 0, 1, '" + getDateTime() + "')");
+                dbConn.updateDb("INSERT INTO OrderLines (OrderLineID, OrderID, StockItemID, Description, PackageTypeID, Quantity, TaxRate, PickedQuantity, LastEditedBy, LastEditedWhen) VALUES (" + orderLineId + ", " + orderId + ", " + panels.get(i).getJcbOrderLine().getSelectedIndex() + ", '-', 1," + Integer.parseInt(panels.get(i).getJtfOrderLine().getText()) + ", 15.0, 0, 1, '" + getDateTime() + "')");
                 orderLineId++;
             }
             dbConn.killStatement();
@@ -222,11 +175,58 @@ public class EditOrderDialog extends JDialog implements ActionListener {
     }
 
     public void editDb(){
+        maxOrderLineId = getMaxOrderLineId();
+        if (maxOrderLineId == -1){
+            JOptionPane.showMessageDialog(this,"Error, order niet toegevoegd.");
+        } else {
+            System.out.println("original length: " + originalOrderLines.length);
+            System.out.println("panel length: " + panels.size());
+            for(int i = 0; i < originalOrderLines.length; i++) {
+                boolean found = false;
+                for (int j = 0; j < panels.size(); j++) {
+                    if (panels.get(j).getJcbOrderLine().getSelectedIndex() == originalOrderLines[i][1]) {
+                        found = true;
+                        panels.get(j).setOriginalOrderLine(originalOrderLines[i][0]);
+                        if (Integer.parseInt(panels.get(j).getJtfOrderLine().getText()) != originalOrderLines[i][2]) {
+                            updateRecordInDb(j);
+                            System.out.println("update: original " + i + ", panel " + j);
+                        }
+                    }
+                }
+                if (!found) {
+                    deleteRecordFromDb(i);
+                    System.out.println("delete: original " + i);
+                }
+            }
+            for(int i = 0; i < panels.size(); i++){
+                if(panels.get(i).getOriginalOrderLine() == -1){
+                    addRecordToDb(i);
+                    System.out.println("add: panel " + i);
+                }
+            }
+        }
+    }
+
+    public void updateRecordInDb(int panelIndex){
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();
-        dbConn.updateDb("UPDATE Orders SET CustomerID = " + customerId + " WHERE OrderID = " + orderId);
+        dbConn.updateDb("UPDATE OrderLines SET Quantity = " + Integer.parseInt(panels.get(panelIndex).getJtfOrderLine().getText()) + " WHERE OrderLineID = " + panels.get(panelIndex).getOriginalOrderLine());
         dbConn.killStatement();
         DbConn.dbKill();
+    }
+
+    public void addRecordToDb(int panelIndex){
+        maxOrderLineId++;
+        DbConn dbConn = new DbConn();
+        DbConn.dbConnect();
+        dbConn.updateDb("INSERT INTO OrderLines (OrderLineID, OrderID, StockItemID, Description, PackageTypeID, Quantity, TaxRate, PickedQuantity, LastEditedBy, LastEditedWhen) VALUES (" + maxOrderLineId + ", " + orderId + ", " + panels.get(panelIndex).getJcbOrderLine().getSelectedIndex() + ", '-', 1, " + Integer.parseInt(panels.get(panelIndex).getJtfOrderLine().getText()) + ", 15.0, 0, 1,'" + getDateTime() + "')");
+
+    }
+
+    public void deleteRecordFromDb(int originalIndex){
+        DbConn dbConn = new DbConn();
+        DbConn.dbConnect();
+        dbConn.updateDb("DELETE FROM OrderLines WHERE OrderLineID = " + originalOrderLines[originalIndex][0]);
     }
 
     public void setExistingOrderFromDb(){
@@ -236,7 +236,7 @@ public class EditOrderDialog extends JDialog implements ActionListener {
 
         try{
             rs.first();
-            customerId = rs.getString("CustomerID");
+            customerId = rs.getInt("CustomerID");
         } catch (SQLException sqle) {
             System.out.println(sqle);
 
@@ -269,11 +269,10 @@ public class EditOrderDialog extends JDialog implements ActionListener {
 
         try{
             rs.first();
-
             return rs.getInt("MAX(OrderLineId)");
         }catch(SQLException sqle){
             System.out.println(sqle);
-            return 0;
+            return -1;
         }finally{
             dbConn.killStatement();
         }
@@ -282,7 +281,7 @@ public class EditOrderDialog extends JDialog implements ActionListener {
     public void getOrderLinesFromDb(){
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();
-        ResultSet rs = dbConn.getResultSetFromDb("SELECT ol.StockItemID, si.StockItemName, ol.Quantity FROM OrderLines ol JOIN StockItems si ON ol.StockItemID = si.StockItemID WHERE OrderID = " + orderId);
+        ResultSet rs = dbConn.getResultSetFromDb("SELECT ol.OrderLineID, ol.StockItemID, si.StockItemName, ol.Quantity FROM OrderLines ol JOIN StockItems si ON ol.StockItemID = si.StockItemID WHERE OrderID = " + orderId);
 
         int amountOfRows = 0;
 
@@ -291,51 +290,33 @@ public class EditOrderDialog extends JDialog implements ActionListener {
             amountOfRows = rs.getRow();
             rs.first();
 
-            originalOrderLines = new int[amountOfRows];
-            originalQuantities = new int[amountOfRows];
+            originalOrderLines = new int[amountOfRows][3];
 
             for(int i = 0; i < amountOfRows; i++){
-                originalOrderLines[i] = rs.getInt("ol.StockItemID");
-                originalQuantities[i] = rs.getInt("ol.Quantity");
-                jcbOrderLines.add(new JComboBox<>(articles));
-                jcbOrderLines.get(i).setSelectedIndex(rs.getInt("ol.StockItemID"));
-                jcbOrderLines.get(i).addActionListener(this);
-                jtfOrderLines.add(new JTextField(rs.getString("ol.Quantity"),3));
-                jbOrderLines.add(new JButton("Verwijder"));
-                jbOrderLines.get(i).addActionListener(this);
+                panels.add(new OrderLinePanel(this,rs.getInt("ol.StockItemID"),rs.getInt("ol.Quantity")));
+                originalOrderLines[i][0] = rs.getInt("ol.OrderLineID");
+                originalOrderLines[i][1] = rs.getInt("ol.StockItemID");
+                originalOrderLines[i][2] = rs.getInt("ol.Quantity");
                 rs.next();
             }
             setRows();
-            //System.out.println(jcbOrderLines.size() + " " + jtfOrderLines.size() + " " + jbOrderLines.size());
-        } catch(SQLException sqle){
+            } catch(SQLException sqle){
             System.out.println(sqle);
         } finally {
             dbConn.killStatement();
         }
     }
 
-    public void setArticleList(){
-        DbConn dbConn = new DbConn();
-        DbConn.dbConnect();
-        ResultSet rs = dbConn.getResultSetFromDb("SELECT StockItemID, StockItemName FROM StockItems ORDER BY StockItemID");
-
-        int amountOfRows = 0;
-
-        try{
-            rs.last();
-            amountOfRows = rs.getRow() + 1;
-            rs.first();
-
-            articles = new String[amountOfRows];
-            articles[0] = "Kies een artikel";
-
-            for(int i = 1; i < amountOfRows; i++){
-                articles[i] = rs.getInt("StockItemID") + "  " + rs.getString("StockItemName");
-                rs.next();
+    public void checkIfSelected(int index){
+        for(int i = 0; i < panels.size(); i++){
+            if(i != index && panels.get(i).getJcbOrderLine().getSelectedIndex() == panels.get(index).getJcbOrderLine().getSelectedIndex()){
+                panels.get(index).getJcbOrderLine().setSelectedIndex(0);
             }
-        } catch(SQLException sqle){
-            System.out.println(sqle);
         }
+    }
+
+    public void setArticleList(){
+        OrderLinePanel.fillArticles();
     }
 
     public void setCustomerList(){
@@ -362,10 +343,10 @@ public class EditOrderDialog extends JDialog implements ActionListener {
     }
 
     public void setRows(){
-        if(jbOrderLines.size() > 7){
-            rows = jbOrderLines.size();
+        if(panels.size() > 6){
+            rows = panels.size();
         } else {
-            rows = 7;
+            rows = 6;
         }
         grBottomMiddlePanel.setRows(rows);
     }
@@ -388,18 +369,13 @@ public class EditOrderDialog extends JDialog implements ActionListener {
             dispose();
         } else if (e.getSource() == jbBevestigen) {
             boolean correctInput = true;
-            for(JTextField jtf : jtfOrderLines){
+            for(OrderLinePanel o : panels){
                 try{
-                    int x = Integer.parseInt(jtf.getText());
-                    if(x <= 0){
+                    int x = Integer.parseInt(o.getJtfOrderLine().getText());
+                    if(x <= 0 || o.getJcbOrderLine().getSelectedIndex() == 0){
                         correctInput = false;
                     }
                 } catch (NumberFormatException nfe){
-                    correctInput = false;
-                }
-            }
-            for(JComboBox jcb : jcbOrderLines){
-                if(jcb.getSelectedIndex() == 0){
                     correctInput = false;
                 }
             }
@@ -421,21 +397,20 @@ public class EditOrderDialog extends JDialog implements ActionListener {
                 }
             }
         } else if(e.getSource() == jbAddArticle){
-            addToPanel();
+            addPanel();
         } else {
-            int deleteSourceButton = -1;
-            for(int i = 0; i < jbOrderLines.size(); i++){
-                if(e.getSource() == jbOrderLines.get(i)){
-                    deleteSourceButton = i;
+            int button = -1;
+            int combobox = -1;
+            for(int i = 0; i < panels.size(); i++){
+                if(e.getSource() == panels.get(i).getJbOrderLine()){
+                    button = i;
+                } else if(e.getSource() == panels.get(i).getJcbOrderLine()){
+                    checkIfSelected(i);
                 }
             }
-            if(deleteSourceButton != -1){
-                removeFromPanel(deleteSourceButton);
+            if(button != -1){
+                removePanel(button);
             }
         }
-        for(JComboBox jcb : jcbOrderLines){
-            System.out.println(jcb.getSelectedIndex());
-        }
-        getDate();
     }
 }
