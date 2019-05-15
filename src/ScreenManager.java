@@ -22,6 +22,7 @@ public class ScreenManager extends Thread {
 
         dbScreens = new DbScreens();
         dbScreens.setScreenManager(this);
+        dbScreens.start();
         this.orderPick = main.getOrderPick();
         this.inpak = main.getInpak();
         while (true) {
@@ -35,10 +36,9 @@ public class ScreenManager extends Thread {
         }
     }
 
-    public DbScreens startDbScreens() {
+    public void startDbScreens() {
         Thread thread = new Thread(dbScreens);
         thread.start();
-        return this.dbScreens;
     }
 
     public void updateRobotScreen(OrderPick orderPick, Inpak inpak) {

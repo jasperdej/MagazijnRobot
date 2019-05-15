@@ -23,42 +23,52 @@ public class Main {
     }
 
 
-    int i = 0;
-
     public void runMainAlgorithm() {
         //starts orderScreen and inventoryScreen. they have a slight delay because of database issues when executing queries simultaneously.
         screenManager.setInpak(inpak);
         screenManager.setOrderPick(orderPick);
+        screenManager.startDbScreens();
         screenManager.start();
 
 
-        arduinoConn.arduinoConnectInpakRobot();
-        inpak.setStatus("verbonden");
-//        arduinoConn.arduinoConnectPickRobot();
+        arduinoConn.arduinoConnectPickRobot();
+        while (orderPick.recievedFromOrderpick().contains("Orderpick")) {
+            System.out.println("aan het verbinden op");
+        }
         orderPick.setStatus("verbonden");
 
-        boolean opConnected = true;
-        boolean ipConnected = false;
+        arduinoConn.arduinoConnectInpakRobot();
+        while (inpak.recievedFromInpak().contains("Inpak")) {
+            System.out.println("aan het verbinden ip");
+        }
+        inpak.setStatus("verbonden");
 
-        while (!opConnected || !ipConnected) {
+
+//        boolean opConnected = false;
+//        boolean ipConnected = false;
+//
+//        while (!opConnected && !ipConnected) {
 //            if (orderPick.recievedFromArduino().contains("Orderpick")) {
 //                opConnected = true;
+//                System.out.println("opconnected");
 //            }
-            if (inpak.recievedFromArduino().contains("Inpak")) {
-                ipConnected = true;
-            }
-        }
+//            if (inpak.recievedFromArduino().contains("Inpak")) {
+//                ipConnected = true;
+//                System.out.println("ipConnected");
+//            }
+//        }
+        System.out.println("connected");
 
 
         while (true) {
             boolean isOrderDone = false;
             boolean isOpDone = false;
+            boolean isIpDone = false;
             orderPick.setStatus("Wachten op actie");
             inpak.setStatus("Wachten op actie");
 
             orderPick.setAmountOfArticlesPicked(0);
             inpak.setAmountOfArticlesPacked(0);
-            i++;
             if (TSP_List != null) {
                 TSP_List.clear();
             }
@@ -98,13 +108,12 @@ public class Main {
 
             //send algorithm outcomes to robots.
             //orderPick robot wants a string with coordinates. coordinate x: 3, y: 5 is send as 35.
-//            orderPick.sendCoordinatesToArduino(TSP_List);
+            orderPick.sendCoordinatesToArduino(TSP_List);
+            orderPick.setStatus("Aan het picken");
 
             //Inpak robot wants a string with coordinates. coordinate x: 3 is send as 3.
             finalBinList = inpak.sendCoordinatesToArduino(bestFit.getBinList(), TSP_List);
-            orderPick.setStatus("Aan het picken");
             inpak.setStatus("Aan het inpakken");
-            System.out.println(inpak.getStatus());
 
             //ints for executing loop and updating robotscreen.
             int amountPackedIp = 0;
@@ -112,30 +121,37 @@ public class Main {
             int totalArticlesInOrder = TSP_List.size();
 
             while (!isOrderDone) {
-                String recievedFromInpak = inpak.recievedFromArduino();
-//                String recievedFromOrderpick = orderPick.recievedFromArduino();
-                System.out.println("INPAK: " + recievedFromInpak);
-//                System.out.println("ORDERPICK: " + recievedFromOrderpick);
+                String recievedFromInpak = inpak.recievedFromInpak();
+                String recievedFromOrderpick = orderPick.recievedFromOrderpick();
+                if (recievedFromOrderpick.length() != 0) {
+                    System.out.println("ORDERPICK: " + recievedFromOrderpick);
+                }
 
-//                if (recievedFromOrderpick.contains("packed")) {
-//                    amountPickedOp++;
-//                    System.out.println("ORDERPICK PICKED: " + amountPickedOp);
-//                    orderPick.setAmountOfArticlesPicked(amountPickedOp);
-//                    if (amountPickedOp == totalArticlesInOrder) {
-//                        isOpDone = true;
-//                    }
-//                }
+                if (recievedFromInpak.length() !=0) {
+                    System.out.println("INPAK: " + recievedFromInpak);
+                }
 
-                isOpDone = true;
+                if (recievedFromOrderpick.contains("Packed")) {
+                    amountPickedOp++;
+                    System.out.println("ORDERPICK PICKED: " + amountPickedOp);
+                    orderPick.setAmountOfArticlesPicked(amountPickedOp);
+                    if (amountPickedOp == totalArticlesInOrder) {
+                        isOpDone = true;
+                    }
+                }
+
                 if (recievedFromInpak.contains("Scanned")) {
                     inpak.setCurrentBin(finalBinList.get(amountPackedIp).getBinNumber());
                     amountPackedIp++;
                     inpak.setAmountOfArticlesPacked(amountPackedIp);
                     System.out.println("INPAK PACKED: " + amountPackedIp);
-                    if (amountPackedIp == totalArticlesInOrder && isOpDone) {
-                        isOrderDone = true;
-                        System.out.println("done");
+                    if (amountPackedIp == totalArticlesInOrder) {
+                        isIpDone = true;
                     }
+                }
+                isOpDone = true;
+                if (isIpDone && isOpDone) {
+                    isOrderDone = true;
                 }
             }
 
