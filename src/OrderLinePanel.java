@@ -46,6 +46,16 @@ public class OrderLinePanel {
     }
 
     public static void fillArticles(){
+        if (!Start.dbDoneLoading){
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ie) {
+                System.out.println(ie);
+            }
+            fillArticles();
+        } else {
+            Start.dbDoneLoading = false;
+        }
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();
         ResultSet rs = dbConn.getResultSetFromDb("SELECT StockItemID, StockItemName FROM StockItems ORDER BY StockItemID");
@@ -65,8 +75,11 @@ public class OrderLinePanel {
                 rs.next();
             }
         } catch(SQLException sqle){
-            System.out.println(sqle);
+            System.out.println("Er is een SQL fout opgetreden in OrderLinePanel.java in methode fillArticles");
+        } finally {
+            dbConn.killStatement();
         }
+        Start.dbDoneLoading = true;
     }
 
     public JPanel getJpOrderLine() {

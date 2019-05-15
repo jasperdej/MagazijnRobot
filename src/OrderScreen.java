@@ -9,6 +9,8 @@ import java.sql.SQLException;
 
 public class OrderScreen extends JFrame implements MouseListener, ActionListener {
 
+    private JPanel headerPanel, buttonPanel1, buttonPanel2;
+
     //variables for JTable.
     private Object[][] allOrders;
     private String[] columnNames = {"OrderID","Aantal","Gewicht (in kg)","Klantnummer","Status"};
@@ -49,11 +51,11 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
         setUndecorated(true);
 
         //buttonpanel to which buttons are added. is set to display at top of screen.
-        JPanel headerPanel = new JPanel();
+        headerPanel = new JPanel();
         headerPanel.setLayout(new GridLayout(1,2));
-        JPanel buttonPanel1 = new JPanel();
+        buttonPanel1 = new JPanel();
         buttonPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
-        JPanel buttonPanel2 = new JPanel();
+        buttonPanel2 = new JPanel();
         buttonPanel2.setLayout(new FlowLayout(FlowLayout.RIGHT));
 
         //adds buttons to buttonpanel.
@@ -65,7 +67,6 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
         buttonPanel2.add(editPersoon);
         buttonPanel2.add(addOrder);
         buttonPanel2.add(editOrder);
-
 
         headerPanel.add(buttonPanel1);
         headerPanel.add(buttonPanel2);
@@ -143,7 +144,7 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
                 rs.next();
             }
         } catch (SQLException sqle) {
-            System.out.println(sqle);
+            System.out.println("Er is een SQL fout opgetreden in OrderScreen.java in methode fillAllOrders");
         } catch (Exception e) {
             fillAllOrders();
         } finally {
@@ -186,7 +187,7 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
                 return true;
             }
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println("Er is een fout opgetreden in OrderScreen.java in methode checkID");
         } finally {
             dbConn.killStatement();
         }

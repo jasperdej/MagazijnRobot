@@ -12,6 +12,7 @@ public class EditArticleDialog extends JDialog implements ActionListener {
 
     private int articleId;
     private boolean articleExists = true;
+    private JPanel panel, topPanel, middlePanel, topMiddlePanel, bottomMiddlePanel, bottomPanel, buttonPanel;
     private JButton jbBevestigen, jbAnnuleren;
     private JLabel jlTitelNew, jlTitelEdit, jlProductNaam, jlProductAantal, jlProductPrijs, jlProductGewicht, jlProductBeschrijving, jlVerplicht;
     private JTextField jtfProductNaam, jtfProductAantal, jtfProductPrijs, jtfProductGewicht;
@@ -40,27 +41,27 @@ public class EditArticleDialog extends JDialog implements ActionListener {
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);
 
-        JPanel panel =(JPanel)this.getContentPane();
+        panel =(JPanel)this.getContentPane();
         panel.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
 
-        JPanel topPanel = new JPanel();
+        topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout());
         topPanel.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
 
-        JPanel middlePanel = new JPanel();
+        middlePanel = new JPanel();
         middlePanel.setLayout(new BorderLayout());
 
-        JPanel topMiddlePanel = new JPanel();
+        topMiddlePanel = new JPanel();
         topMiddlePanel.setLayout(new GridLayout(0,2,0,5));
 
-        JPanel bottomMiddlePanel = new JPanel();
+        bottomMiddlePanel = new JPanel();
         bottomMiddlePanel.setLayout(new GridLayout(1,1));
         bottomMiddlePanel.setBorder(BorderFactory.createEmptyBorder(2,0,0,0));
 
-        JPanel bottomPanel = new JPanel();
+        bottomPanel = new JPanel();
         bottomPanel.setLayout(new BorderLayout());
 
-        JPanel buttonPanel = new JPanel();
+        buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(1,2));
 
         jlTitelNew = new JLabel("Artikel aanmaken");
@@ -98,7 +99,6 @@ public class EditArticleDialog extends JDialog implements ActionListener {
         topMiddlePanel.add(jlProductBeschrijving);
         jtaProductBeschrijving = new JTextArea(productbeschrijving);
         bottomMiddlePanel.add(jtaProductBeschrijving);
-
 
         middlePanel.add(topMiddlePanel,BorderLayout.PAGE_START);
         middlePanel.add(bottomMiddlePanel);
@@ -187,8 +187,8 @@ public class EditArticleDialog extends JDialog implements ActionListener {
             productgewicht = rs.getString("TypicalWeightPerUnit");
             productbeschrijving = rs.getString("SearchDetails");
 
-        } catch (SQLException e){
-            System.out.println(e);
+        } catch (SQLException sqle){
+            System.out.println("Er is een SQL fout opgetreden in EditArticleDialog.java in methode setArticle");
         } finally {
             dbConn.killStatement();
             DbConn.dbKill();
@@ -212,14 +212,11 @@ public class EditArticleDialog extends JDialog implements ActionListener {
         DbConn.dbConnect();
         ResultSet rs = dbConn.getResultSetFromDb("SELECT MAX(StockItemID) FROM StockItems;");
 
-
         try{
             rs.first();
             articleId = rs.getInt("MAX(StockItemID)") + 1;
         } catch (SQLException sqle) {
-            System.out.println(sqle);
-        } catch (NumberFormatException nfe) {
-            System.out.println(nfe);
+            System.out.println("Er is een SQL fout opgetreden in EditArticleDialog.java in methode setNewArticleId");
         } finally {
             dbConn.killStatement();
             DbConn.dbKill();
