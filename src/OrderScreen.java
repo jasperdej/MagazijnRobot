@@ -103,6 +103,7 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
 
         //adds mouselistener for opening extra information dialog.
         jTable.addMouseListener(this);
+        jTable.getTableHeader().setReorderingAllowed(false);
 
         //adds jtable.
         add(jTable);
@@ -178,7 +179,16 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
     //gets results from database and updates current values on screen.
     public void refreshAllOrders() {
         fillAllOrders();
-        jTable = new JTable(allOrders, columnNames);
+        jTable = new JTable(allOrders, columnNames){
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        //adds mouselistener for opening extra information dialog.
+        jTable.addMouseListener(this);
+        jTable.getTableHeader().setReorderingAllowed(false);
+        revalidate();
+        repaint();
     }
 
     //mouseClicked opens dialog after user clicked on jtable row.

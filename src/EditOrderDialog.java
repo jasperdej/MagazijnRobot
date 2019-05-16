@@ -222,6 +222,7 @@ public class EditOrderDialog extends JDialog implements ActionListener {
     }
 
     public void addRecordToDb(DbConn dbConn, int panelIndex){
+        maxOrderLineId++;
         dbConn.updateDb("INSERT INTO OrderLines (OrderLineID, OrderID, StockItemID, Description, PackageTypeID, Quantity, TaxRate, PickedQuantity, LastEditedBy, LastEditedWhen) VALUES (" + maxOrderLineId + ", " + orderId + ", " + panels.get(panelIndex).getJcbOrderLine().getSelectedIndex() + ", '-', 1, " + Integer.parseInt(panels.get(panelIndex).getJtfOrderLine().getText()) + ", 15.0, 0, 1,'" + getDateTime() + "')");
     }
 
