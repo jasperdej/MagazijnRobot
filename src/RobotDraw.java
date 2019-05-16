@@ -11,6 +11,10 @@ public class RobotDraw extends JPanel{
     private Inpak inpak;
     private int beltPosition = 0;
 
+    private int binId1 = 1;
+    private int binId2 = 2;
+    private int binId3 = 3;
+
     public  RobotDraw(ScreenManager screenManager, Main main) {
         this.screenManager = screenManager;
         this.main = main;
@@ -85,7 +89,7 @@ public class RobotDraw extends JPanel{
             }
 
             //draws article on conveyor belt.
-            if (inpak.getStatus().equals("aan het inpakken")) {
+            if (inpak.getStatus().equals("Aan het inpakken")) {
                 graphics.fillRect((screenSize.width / 2 + screenSize.width / 50 + 7) + beltPosition * screenSize.width / 10 + beltPosition * screenSize.width / 50, screenSize.width / 8 - 40, screenSize.height / 10 + 2, screenSize.height / 10 + 2);
                 if (beltPosition == 2) {
                     beltPosition = 0;
@@ -95,35 +99,35 @@ public class RobotDraw extends JPanel{
             }
 
             if (inpak.getCurrentBin() == 1) {
-                graphics.drawString("3", width - widthDiffRight - width / 50 + widthDiffRight / 2, (heightDiffRight) - heightDiffRight + 80 - 40 + (heightDiffRight - 40) / 2 - 10);
+                graphics.drawString(Integer.toString(main.getBinId3()), width - widthDiffRight - width / 50 + widthDiffRight / 2, (heightDiffRight) - heightDiffRight + 80 - 40 + (heightDiffRight - 40) / 2 - 10);
                 graphics.drawString(inpak.binPercentageFilled(3) + "%", width - widthDiffRight - width / 50 + widthDiffRight / 2, (heightDiffRight) - heightDiffRight + 80 - 40 + (heightDiffRight - 40) / 2 + 10);
 
-                graphics.drawString("1", width - widthDiffRight - width / 50 + widthDiffRight / 2, (heightDiffRight) * 2 - heightDiffRight + 80 - 40 * 2 + (heightDiffRight - 40) / 2 - 10);
+                graphics.drawString(Integer.toString(main.getBinId1()), width - widthDiffRight - width / 50 + widthDiffRight / 2, (heightDiffRight) * 2 - heightDiffRight + 80 - 40 * 2 + (heightDiffRight - 40) / 2 - 10);
                 graphics.drawString(inpak.binPercentageFilled(1) + "%", width - widthDiffRight - width / 50 + widthDiffRight / 2, (heightDiffRight) * 2 - heightDiffRight + 80 - 40 * 2 + (heightDiffRight - 40) / 2 + 10);
 
-                graphics.drawString("2", width - widthDiffRight - width / 50 + widthDiffRight / 2, (heightDiffRight) * 3 - heightDiffRight + 80 - 40 * 3 + (heightDiffRight - 40) / 2 - 10);
+                graphics.drawString(Integer.toString(main.getBinId2()), width - widthDiffRight - width / 50 + widthDiffRight / 2, (heightDiffRight) * 3 - heightDiffRight + 80 - 40 * 3 + (heightDiffRight - 40) / 2 - 10);
                 graphics.drawString(inpak.binPercentageFilled(2) + "%", width - widthDiffRight - width / 50 + widthDiffRight / 2, (heightDiffRight) * 3 - heightDiffRight + 80 - 40 * 3 + (heightDiffRight - 40) / 2 + 10);
 
 
             } else if (inpak.getCurrentBin() == 2) {
-                graphics.drawString("1", width - widthDiffRight - width / 50 + widthDiffRight / 2, (heightDiffRight) - heightDiffRight + 80 - 40 + (heightDiffRight - 40) / 2 - 10);
+                graphics.drawString(Integer.toString(main.getBinId1()), width - widthDiffRight - width / 50 + widthDiffRight / 2, (heightDiffRight) - heightDiffRight + 80 - 40 + (heightDiffRight - 40) / 2 - 10);
                 graphics.drawString(inpak.binPercentageFilled(1) + "%", width - widthDiffRight - width / 50 + widthDiffRight / 2, (heightDiffRight) - heightDiffRight + 80 - 40 + (heightDiffRight - 40) / 2 + 10);
 
-                graphics.drawString("2", width - widthDiffRight - width / 50 + widthDiffRight / 2, (heightDiffRight) * 2 - heightDiffRight + 80 - 40 * 2 + (heightDiffRight - 40) / 2 - 10);
+                graphics.drawString(Integer.toString(main.getBinId2()), width - widthDiffRight - width / 50 + widthDiffRight / 2, (heightDiffRight) * 2 - heightDiffRight + 80 - 40 * 2 + (heightDiffRight - 40) / 2 - 10);
                 graphics.drawString(inpak.binPercentageFilled(2) + "%", width - widthDiffRight - width / 50 + widthDiffRight / 2, (heightDiffRight) * 2 - heightDiffRight + 80 - 40 * 2 + (heightDiffRight - 40) / 2 + 10);
 
-                graphics.drawString("3", width - widthDiffRight - width / 50 + widthDiffRight / 2, (heightDiffRight) * 3 - heightDiffRight + 80 - 40 * 3 + (heightDiffRight - 40) / 2 - 10);
+                graphics.drawString(Integer.toString(main.getBinId3()), width - widthDiffRight - width / 50 + widthDiffRight / 2, (heightDiffRight) * 3 - heightDiffRight + 80 - 40 * 3 + (heightDiffRight - 40) / 2 - 10);
                 graphics.drawString(inpak.binPercentageFilled(3) + "%", width - widthDiffRight - width / 50 + widthDiffRight / 2, (heightDiffRight) * 3 - heightDiffRight + 80 - 40 * 3 + (heightDiffRight - 40) / 2 + 10);
 
 
             } else {
-                graphics.drawString("2", width - widthDiffRight - width / 50 + widthDiffRight / 2, (heightDiffRight) - heightDiffRight + 80 - 40 + (heightDiffRight - 40) / 2 - 10);
+                graphics.drawString(Integer.toString(main.getBinId2()), width - widthDiffRight - width / 50 + widthDiffRight / 2, (heightDiffRight) - heightDiffRight + 80 - 40 + (heightDiffRight - 40) / 2 - 10);
                 graphics.drawString(inpak.binPercentageFilled(2) + "%", width - widthDiffRight - width / 50 + widthDiffRight / 2, (heightDiffRight) - heightDiffRight + 80 - 40 + (heightDiffRight - 40) / 2 + 10);
 
-                graphics.drawString("3", width - widthDiffRight - width / 50 + widthDiffRight / 2, (heightDiffRight) * 2 - heightDiffRight + 80 - 40 * 2 + (heightDiffRight - 40) / 2 - 10);
+                graphics.drawString(Integer.toString(main.getBinId3()), width - widthDiffRight - width / 50 + widthDiffRight / 2, (heightDiffRight) * 2 - heightDiffRight + 80 - 40 * 2 + (heightDiffRight - 40) / 2 - 10);
                 graphics.drawString(inpak.binPercentageFilled(3) + "%", width - widthDiffRight - width / 50 + widthDiffRight / 2, (heightDiffRight) * 2 - heightDiffRight + 80 - 40 * 2 + (heightDiffRight - 40) / 2 + 10);
 
-                graphics.drawString("1", width - widthDiffRight - width / 50 + widthDiffRight / 2, (heightDiffRight) * 3 - heightDiffRight + 80 - 40 * 3 + (heightDiffRight - 40) / 2 - 10);
+                graphics.drawString(Integer.toString(main.getBinId1()), width - widthDiffRight - width / 50 + widthDiffRight / 2, (heightDiffRight) * 3 - heightDiffRight + 80 - 40 * 3 + (heightDiffRight - 40) / 2 - 10);
                 graphics.drawString(inpak.binPercentageFilled(1) + "%", width - widthDiffRight - width / 50 + widthDiffRight / 2, (heightDiffRight) * 3 - heightDiffRight + 80 - 40 * 3 + (heightDiffRight - 40) / 2 + 10);
 
             }
@@ -133,5 +137,17 @@ public class RobotDraw extends JPanel{
 
     public void setInpak(Inpak inpak) {
         this.inpak = inpak;
+    }
+
+    public void setBinId1(int binId1) {
+        this.binId1 = binId1;
+    }
+
+    public void setBinId2(int binId2) {
+        this.binId2 = binId2;
+    }
+
+    public void setBinId3(int binId3) {
+        this.binId3 = binId3;
     }
 }

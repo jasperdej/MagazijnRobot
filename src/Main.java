@@ -15,8 +15,14 @@ public class Main {
     private ArrayList<Article> BPP_List = new ArrayList<>();
     private ArrayList<Bin> finalBinList = new ArrayList<>();
 
-    private TSP_Algorithm tsp_algorithm;
+    private TSP tsp;
     private ArrayList<Article> TSP_List;
+
+    private int binId1 = 1;
+    private int binId2 = 2;
+    private int binId3 = 3;
+
+    private boolean isPaused = false;
 
     public Main(ScreenManager screenManager) {
         this.screenManager = screenManager;
@@ -30,35 +36,19 @@ public class Main {
         screenManager.startDbScreens();
         screenManager.start();
 
-
-        arduinoConn.arduinoConnectPickRobot();
-        while (orderPick.recievedFromOrderpick().contains("Orderpick")) {
-            System.out.println("aan het verbinden op");
-        }
-        orderPick.setStatus("verbonden");
-
+        //connects both arduino's, first the orderpick and then the inpak.
+        // the arduino's keep sending "orderpick" and "inpak" untill a succesfull connection is established.
         arduinoConn.arduinoConnectInpakRobot();
         while (inpak.recievedFromInpak().contains("Inpak")) {
             System.out.println("aan het verbinden ip");
         }
         inpak.setStatus("verbonden");
 
-
-//        boolean opConnected = false;
-//        boolean ipConnected = false;
-//
-//        while (!opConnected && !ipConnected) {
-//            if (orderPick.recievedFromArduino().contains("Orderpick")) {
-//                opConnected = true;
-//                System.out.println("opconnected");
-//            }
-//            if (inpak.recievedFromArduino().contains("Inpak")) {
-//                ipConnected = true;
-//                System.out.println("ipConnected");
-//            }
-//        }
-        System.out.println("connected");
-
+        arduinoConn.arduinoConnectPickRobot();
+        while (orderPick.recievedFromOrderpick().contains("Orderpick")) {
+            System.out.println("aan het verbinden op");
+        }
+        orderPick.setStatus("verbonden");
 
         while (true) {
             boolean isOrderDone = false;
@@ -84,10 +74,10 @@ public class Main {
             //get new order from database.
             order.getNewOrderIdFromDb();
             System.out.println("orderid: " + order.getOrderNr());
-            //update robot screen to current order.
-
 
             //send both algorithms to work.
+            //BPP algorithm sets articles in order they are to be packed.
+            // TSP shuffles that order slightly, this makes the orderpick robot take a more efficient route.
             bestFit = new ModifiedBestFit(order);
 
             //BPP algorithm gives a arraylist with bin objects. bin objects have an arraylist filled with article objects.
@@ -95,10 +85,12 @@ public class Main {
             BPP_List = bestFit.getArticleList();
 
             //sets Articles in fastest order for orderPick robot.
+            //3 articles are sent to Tsp algorithm, this shuffles the bpp order slightly.
+            //this is done in order to maintain bin order slightly
             if (BPP_List.size() >= 3) {
                 for (int i = 1; i <= BPP_List.size() - BPP_List.size() % 3; i = i + 3) {
-                    tsp_algorithm = new TSP_Algorithm(BPP_List.get(i - 1), BPP_List.get(i), BPP_List.get(i + 1));
-                    for (Article a: tsp_algorithm.getArticles()) {
+                    tsp = new TSP(BPP_List.get(i - 1), BPP_List.get(i), BPP_List.get(i + 1));
+                    for (Article a: tsp.getArticlesOutput()) {
                         TSP_List.add(a);
                     }
                 }
@@ -141,15 +133,34 @@ public class Main {
                 }
 
                 if (recievedFromInpak.contains("Scanned")) {
+                    boolean lastOfCurrentBin = true;
                     inpak.setCurrentBin(finalBinList.get(amountPackedIp).getBinNumber());
                     amountPackedIp++;
                     inpak.setAmountOfArticlesPacked(amountPackedIp);
+
+                    for (int i = amountPackedIp; i < finalBinList.size(); i++) {
+                        if (finalBinList.get(i-1).getBinNumber() == inpak.getCurrentBin()) {
+                            lastOfCurrentBin = false;
+                        }
+                    }
+                    if (lastOfCurrentBin) {
+                        if (finalBinList.contains(inpak.getCurrentBin()+3)) {
+                            if (inpak.getCurrentBin() % 3 == 0) {
+                                binId1 = inpak.getCurrentBin()+3;
+                            } else if (inpak.getCurrentBin() % 3 == 1) {
+                                binId2 = inpak.getCurrentBin()+3;
+                            } else {
+                                binId3 = inpak.getCurrentBin()+3;
+                            }
+                        }
+                        screenManager.createBinDialog(inpak.getCurrentBin());
+                    }
+
                     System.out.println("INPAK PACKED: " + amountPackedIp);
                     if (amountPackedIp == totalArticlesInOrder) {
                         isIpDone = true;
                     }
                 }
-                isOpDone = true;
                 if (isIpDone && isOpDone) {
                     isOrderDone = true;
                 }
@@ -166,6 +177,13 @@ public class Main {
                 //updates database. order is now picked and status is changed to "verwerkt".
                 System.out.println("volgende loop");
 //                updateDatabase();
+            }
+            while (isPaused) {
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException ie) {
+                    System.out.println(ie);
+                }
             }
 
         }
@@ -188,6 +206,7 @@ public class Main {
         dbConn.killStatement();
         DbConn.dbKill();
         Start.dbDoneLoading = true;
+        screenManager.updateDbscreens();
     }
 
     public Order getCurrentOrder() {
@@ -200,5 +219,21 @@ public class Main {
 
     public OrderPick getOrderPick() {
         return orderPick;
+    }
+
+    public int getBinId1() {
+        return binId1;
+    }
+
+    public int getBinId2() {
+        return binId2;
+    }
+
+    public int getBinId3() {
+        return binId3;
+    }
+
+    public void setPaused(boolean paused) {
+        isPaused = paused;
     }
 }
