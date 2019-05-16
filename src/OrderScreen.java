@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,7 +22,27 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
 
     //buttons for switching between screens.
     private JButton robotScreen = new JButton("Robot overzicht");
-    private JButton orderScreen = new JButton("Order overzicht");
+    private JButton orderScreen = new JButton("Order overzicht"){
+        protected void paintComponent(Graphics g){
+            setContentAreaFilled(false);
+            Graphics2D g2 = (Graphics2D)g.create();
+            g2.setPaint(new GradientPaint(
+                    new Point(0, 0),
+                    new Color(141, 177, 216),
+                    new Point(0, getHeight()/3),
+                    new Color(230, 230, 230)));
+            g2.fillRect(0, 0, getWidth(), getHeight()/3);
+            g2.setPaint(new GradientPaint(
+                    new Point(0, getHeight()/3),
+                    new Color(230, 230, 230),
+                    new Point(0, getHeight()),
+                    new Color(141, 177, 216)));
+            g2.fillRect(0, getHeight()/3, getWidth(), getHeight());
+            g2.dispose();
+
+            super.paintComponent(g);
+        }
+    };
     private JButton inventoryScreen = new JButton("Voorraad overzicht");
 
     private JButton addOrder = new JButton("Order toevoegen");
@@ -52,7 +73,7 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
 
         //buttonpanel to which buttons are added. is set to display at top of screen.
         headerPanel = new JPanel();
-        headerPanel.setLayout(new GridLayout(1,2));
+        headerPanel.setLayout(new GridLayout(1, 2));
         buttonPanel1 = new JPanel();
         buttonPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
         buttonPanel2 = new JPanel();
@@ -209,10 +230,10 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
         } else if (e.getSource() == editOrder) {
             String orderid = JOptionPane.showInputDialog(this,"Voer order nummer in: ");
             if(orderid != null){
-                if (checkID("SELECT OrderID FROM Orders WHERE OrderID = ", orderid)) {
+                if (checkID("SELECT OrderID FROM Orders WHERE Status = 'wachten op actie' AND OrderID = ", orderid)) {
                     EditOrderDialog editOrderDialog = new EditOrderDialog(this, Integer.parseInt(orderid));
                 } else {
-                    JOptionPane.showMessageDialog(this, "Deze order bestaat niet.");
+                    JOptionPane.showMessageDialog(this, "Ongeldige invoer.");
                 }
             }
         } else if (e.getSource() == addPersoon) {
@@ -223,7 +244,7 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
                 if (checkID("SELECT UserID FROM USERS WHERE UserID = ", persoonid)) {
                     EditPersonDialog editPersonDialog = new EditPersonDialog(this, Integer.parseInt(persoonid));
                 } else {
-                    JOptionPane.showMessageDialog(this, "Deze klant bestaat niet.");
+                    JOptionPane.showMessageDialog(this, "Ongeldige invoer.");
                 }
             }
         }

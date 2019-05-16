@@ -232,8 +232,12 @@ public class EditArticleDialog extends JDialog implements ActionListener {
 
     public boolean isInt(String input){
         try{
-            Integer.parseInt(input);
-            return true;
+            int x = Integer.parseInt(input);
+            if(x > 0){
+                return true;
+            } else {
+                return false;
+            }
         } catch (NumberFormatException nfe) {
             return false;
         }
@@ -241,8 +245,12 @@ public class EditArticleDialog extends JDialog implements ActionListener {
 
     public boolean isDouble(String input){
         try{
-            Double.parseDouble(input);
-            return true;
+            double x = Double.parseDouble(input);
+            if(x > 0){
+                return true;
+            } else {
+                return false;
+            }
         } catch (NumberFormatException nfe){
             return false;
         }
