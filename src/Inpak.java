@@ -15,17 +15,32 @@ public class Inpak extends Robot {
         for (Article a: articleList) {
             for (Bin b: binList) {
                 for (Article ab: b.getArticles()) {
-                    if (ab.getLocation().getX() == a.getLocation().getX() && ab.getLocation().getY() == a.getLocation().getY()) {
-                        if (b.getBinNumber() < 10) {
-                            toCoords+="0" + Integer.toString(b.getBinNumber());
+                    if (a == ab) {
+                        if (b.getBinNumber() < 10){
+                            toCoords += "0" + b.getBinNumber();
                         } else {
-                            toCoords += Integer.toString(b.getBinNumber());
+                            toCoords += b.getBinNumber();
                         }
                         binOrder.add(b);
                     }
                 }
             }
         }
+//
+//        for (Article a: articleList) {
+//            for (Bin b: binList) {
+//                for (Article ab: b.getArticles()) {
+//                    if (ab.getLocation().getX() == a.getLocation().getX() && ab.getLocation().getY() == a.getLocation().getY()) {
+//                        if (b.getBinNumber() < 10) {
+//                            toCoords+="0" + Integer.toString(b.getBinNumber());
+//                        } else {
+//                            toCoords += Integer.toString(b.getBinNumber());
+//                        }
+//                        binOrder.add(b);
+//                    }
+//                }
+//            }
+//        }
         toCoords+=",00";
         sendToCoords(toCoords);
         return binOrder;

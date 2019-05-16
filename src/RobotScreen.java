@@ -3,6 +3,7 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.InvalidPropertiesFormatException;
 
 import static java.awt.GridBagConstraints.*;
 
@@ -67,7 +68,7 @@ public class RobotScreen extends JFrame implements ActionListener {
     private JLabel opFiller, opStatus2, opOrderNr2, opTotalAmountOfArticles2,opAmountOfArticlesPicked2,opCoordinate2;
 
     //buttons for OrderPick robot.
-    private JButton opOnOffButton = new JButton("ON/OFF");
+    private JButton opOnOffButton = new JButton("OFF");
     private JButton opResetButton = new JButton("Reset");
 
     //labels for displaying Inpak robot information description.
@@ -83,7 +84,7 @@ public class RobotScreen extends JFrame implements ActionListener {
     private JLabel ipFiller, ipStatus2, ipOrderNr2, ipTotalArticlesInOrder2, ipAmountOfArticlesPacked2, ipBinId2;
 
     //buttons for Inpak robot.
-    private JButton ipOnOffButton = new JButton("ON/OFF");
+    private JButton ipOnOffButton = new JButton("OFF");
     private JButton ipResetButton = new JButton("Reset");
 
     //constructor initiates robotdraw and screenmanager.
@@ -202,18 +203,26 @@ public class RobotScreen extends JFrame implements ActionListener {
             screenManager.buttonPressed("InventoryScreen");
         } else if (e.getSource() == opOnOffButton) {
             if (isOpOn) {
-                main.getOrderPick().sendToArduino("off");
+                opOnOffButton.setText("ON");
+                ipOnOffButton.setText("ON");
+                main.setPaused(true);
             } else {
-                main.getOrderPick().sendToArduino("on");
+                opOnOffButton.setText("OFF");
+                ipOnOffButton.setText("OFF");
+                main.setPaused(false);
             }
             isOpOn = !isOpOn;
         } else if (e.getSource() == opResetButton) {
             main.getOrderPick().sendToArduino("reset");
         } else if (e.getSource() == ipOnOffButton) {
             if (isIpOn) {
-                main.getInpak().sendToArduino("off");
+                opOnOffButton.setText("ON");
+                ipOnOffButton.setText("ON");
+                main.setPaused(true);
             } else {
-                main.getInpak().sendToArduino("on");
+                opOnOffButton.setText("OFF");
+                ipOnOffButton.setText("OFF");
+                main.setPaused(false);
             }
             isIpOn = !isIpOn;
         } else if (e.getSource() == ipResetButton) {
@@ -264,6 +273,10 @@ public class RobotScreen extends JFrame implements ActionListener {
         ipOrderNr2.setText(Integer.toString(main.getCurrentOrder().getOrderNr()));
         ipTotalArticlesInOrder2.setText(Integer.toString(main.getCurrentOrder().getAmountOfArticles()));
         ipAmountOfArticlesPacked2.setText(Integer.toString(inpakRobot.getAmountOfArticlesPacked()));
-        ipBinId2.setText(Integer.toString(1));
+        ipBinId2.setText(Integer.toString(inpakRobot.getCurrentBin()));
+    }
+
+    public JFrame getJframe() {
+        return this;
     }
 }

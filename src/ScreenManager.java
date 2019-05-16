@@ -47,6 +47,11 @@ public class ScreenManager extends Thread {
         robotDraw.repaint();
     }
 
+    public void updateDbscreens() {
+        orderScreen.refreshAllOrders();
+        inventoryScreen.refreshInventoryScreen();
+    }
+
     public void buttonPressed(String nameOfScreen) {
         if (nameOfScreen.equals("RobotScreen")) {
             if (currentScreen != robotScreen) {
@@ -68,6 +73,10 @@ public class ScreenManager extends Thread {
                 currentScreen = inventoryScreen;
             }
         }
+    }
+
+    public void createBinDialog(int binId) {
+        new BinDialog(robotScreen.getJframe(), binId);
     }
 
 
