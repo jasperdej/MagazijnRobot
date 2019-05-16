@@ -454,10 +454,9 @@ public class EditOrderDialog extends JDialog implements ActionListener {
         } else if(e.getSource() == jbAddArticle){
             addPanel();
         } else {
-            int button = -1;
             for(int i = 0; i < panels.size(); i++){
                 if(e.getSource() == panels.get(i).getJbOrderLine()){
-                    removePanel(button);
+                    removePanel(i);
                 } else if(e.getSource() == panels.get(i).getJcbOrderLine()){
                     checkIfSelected(i);
                 }

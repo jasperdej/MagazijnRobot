@@ -30,7 +30,27 @@ public class RobotScreen extends JFrame implements ActionListener {
     private JLabel[] ipLabels2;
 
     //buttons for swithing screens.
-    private JButton robotScreen = new JButton("Robot overzicht");
+    private JButton robotScreen = new JButton("Robot overzicht"){
+        protected void paintComponent(Graphics g){
+            setContentAreaFilled(false);
+            Graphics2D g2 = (Graphics2D)g.create();
+            g2.setPaint(new GradientPaint(
+                    new Point(0, 0),
+                    new Color(141, 177, 216),
+                    new Point(0, getHeight()/3),
+                    new Color(230, 230, 230)));
+            g2.fillRect(0, 0, getWidth(), getHeight()/3);
+            g2.setPaint(new GradientPaint(
+                    new Point(0, getHeight()/3),
+                    new Color(230, 230, 230),
+                    new Point(0, getHeight()),
+                    new Color(141, 177, 216)));
+            g2.fillRect(0, getHeight()/3, getWidth(), getHeight());
+            g2.dispose();
+
+            super.paintComponent(g);
+        }
+    };
     private JButton orderScreen = new JButton("Order overzicht");
     private JButton inventoryScreen = new JButton("Voorraad overzicht");
 
