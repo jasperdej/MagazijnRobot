@@ -85,6 +85,7 @@ public class InventoryScreen extends JFrame implements ActionListener {
                 return false;
             }
         };
+        jTable.getTableHeader().setReorderingAllowed(false);
 
         //adds JTable to screen.
         add(jTable);
