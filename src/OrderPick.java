@@ -9,12 +9,15 @@ public class OrderPick extends Robot{
 
     public void sendCoordinatesToArduino(ArrayList<Article> articles){
         toCoords = "";
-        for (int i = 0; i < articles.size(); i++) {
-            toCoords += Integer.toString(articles.get(i).getLocation().getX());
-            toCoords += Integer.toString(articles.get(i).getLocation().getY());
+        for (int i = 1; i <= articles.size(); i++) {
+            toCoords += Integer.toString(articles.get(i-1).getLocation().getX());
+            toCoords += Integer.toString(articles.get(i-1).getLocation().getY());
             toCoords += ",";
-            if (i+1 % 3 == 0 || i == articles.size()-1) {
+            if (i % 3 == 0 || i == articles.size()) {
                 toCoords += "03,02,11";
+                if (i != articles.size()) {
+                    toCoords+=",";
+                }
             }
         }
         sendToCoords(toCoords);

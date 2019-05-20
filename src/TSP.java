@@ -6,7 +6,9 @@ public class TSP {
     private ArrayList<Article> articlesOutput = new ArrayList<>();
     private double smallestDistance;
 
-    public TSP (Article article1, Article article2, Article article3) {
+
+    public void setArticlesInput(Article article1, Article article2, Article article3) {
+        articlesInput.clear();
         articlesInput.add(article1);
         articlesInput.add(article2);
         articlesInput.add(article3);
