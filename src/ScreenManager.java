@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.xml.transform.sax.SAXSource;
 
 public class ScreenManager extends Thread {
     private RobotScreen robotScreen;
@@ -28,6 +29,7 @@ public class ScreenManager extends Thread {
         while (true) {
             robotDraw.repaint();
             updateRobotScreen(orderPick, inpak);
+            updateDbscreens();
             try {
                 Thread.sleep(750);
             } catch (InterruptedException ie) {
@@ -48,8 +50,12 @@ public class ScreenManager extends Thread {
     }
 
     public void updateDbscreens() {
-        orderScreen.refreshAllOrders();
-        inventoryScreen.refreshInventoryScreen();
+        try {
+            orderScreen.refreshAllOrders();
+            inventoryScreen.refreshInventoryScreen();
+        } catch(NullPointerException npe){
+            //will arrive here when orderscreen or inventoryscreen isn't done loading yet
+        }
     }
 
     public void buttonPressed(String nameOfScreen) {

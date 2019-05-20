@@ -20,6 +20,10 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
     //variables for correctly displaying information on screen.
     private ScreenManager screenManager;
 
+    private JScrollPane sp;
+    private EditOrderDialog createOrderDialog, editOrderDialog;
+    private boolean isEdited = false;
+
     //buttons for switching between screens.
     private JButton robotScreen = new JButton("Robot overzicht");
     private JButton orderScreen = new JButton("Order overzicht"){
@@ -105,11 +109,8 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
         jTable.addMouseListener(this);
         jTable.getTableHeader().setReorderingAllowed(false);
 
-        //adds jtable.
-        add(jTable);
-
         //jtable is added to scrollpane. scrollpane is responsible for being able to scroll trough jtable.
-        JScrollPane sp = new JScrollPane(jTable);
+        sp = new JScrollPane(jTable);
 
         //adds scrollpane.
         add(sp);
@@ -178,34 +179,55 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
 
     //gets results from database and updates current values on screen.
     public void refreshAllOrders() {
-        fillAllOrders();
-        jTable = new JTable(allOrders, columnNames){
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-        //adds mouselistener for opening extra information dialog.
-        jTable.addMouseListener(this);
-        jTable.getTableHeader().setReorderingAllowed(false);
-        revalidate();
-        repaint();
+        remove(sp);
+        editTable();
+        add(sp);
+        this.revalidate();
+        this.repaint();
+    }
+
+    public void editTable(){
+        if(isEdited){
+            fillAllOrders();
+            jTable = new JTable(allOrders, columnNames){
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
+            //adds mouselistener for opening extra information dialog.
+            jTable.addMouseListener(this);
+            jTable.getTableHeader().setReorderingAllowed(false);
+
+            sp = new JScrollPane(jTable);
+
+            isEdited = false;
+        }
+    }
+
+    public void setIsEdited(boolean value){
+        isEdited = value;
     }
 
     //mouseClicked opens dialog after user clicked on jtable row.
     @Override
     public void mouseClicked(MouseEvent e) {
-        //gets row clicked.
-        int row = jTable.getSelectedRow();
-        int orderId;
+        System.out.println(e.getSource());
+        System.out.println(jTable);
+        if(e.getSource() == jTable){
+            //gets row clicked.
+            int row = jTable.getSelectedRow();
+            System.out.println(row);
+            int orderId;
 
-        //gets orderId of row clikced.
-        try {
-            orderId = Integer.parseInt((String)jTable.getValueAt(row,0));
-        } catch (ClassCastException ex) {
-            orderId = 0;
+            //gets orderId of row clicked.
+            try {
+                orderId = Integer.parseInt((String)jTable.getValueAt(row,0));
+                //creates dialog
+                new OrderDialog(this,orderId);
+            } catch (ClassCastException ex) {
+                System.out.println("Er is een ClassCastException opgetreden in OrderScreen.java in methode mouseClicked");
+            }
         }
-        //creates dialog
-        OrderDialog dialog = new OrderDialog(this,orderId);
     }
 
     public boolean checkID(String query, String id){
@@ -236,23 +258,29 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
             screenManager.buttonPressed("InventoryScreen");
         }
         else if (e.getSource() == addOrder) {
-            EditOrderDialog createOrderDialog = new EditOrderDialog(this);
+            createOrderDialog = new EditOrderDialog(this,this);
+            if(createOrderDialog.getIsOk()){
+                isEdited = true;
+            }
         } else if (e.getSource() == editOrder) {
             String orderid = JOptionPane.showInputDialog(this,"Voer order nummer in: ");
             if(orderid != null){
                 if (checkID("SELECT OrderID FROM Orders WHERE Status = 'wachten op actie' AND OrderID = ", orderid)) {
-                    EditOrderDialog editOrderDialog = new EditOrderDialog(this, Integer.parseInt(orderid));
+                    editOrderDialog = new EditOrderDialog(this,this, Integer.parseInt(orderid));
+                    if(editOrderDialog.getIsOk()){
+                        isEdited = true;
+                    }
                 } else {
                     JOptionPane.showMessageDialog(this, "Ongeldige invoer.");
                 }
             }
         } else if (e.getSource() == addPersoon) {
-            EditPersonDialog createPersonDialog = new EditPersonDialog(this);
+            new EditPersonDialog(this);
         } else if (e.getSource() == editPersoon) {
             String persoonid = JOptionPane.showInputDialog(this, "Voer klant nummer in: ");
             if(persoonid != null) {
                 if (checkID("SELECT UserID FROM USERS WHERE UserID = ", persoonid)) {
-                    EditPersonDialog editPersonDialog = new EditPersonDialog(this, Integer.parseInt(persoonid));
+                    new EditPersonDialog(this, Integer.parseInt(persoonid));
                 } else {
                     JOptionPane.showMessageDialog(this, "Ongeldige invoer.");
                 }

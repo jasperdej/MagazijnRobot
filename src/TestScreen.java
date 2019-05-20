@@ -70,19 +70,22 @@ public class TestScreen extends JFrame implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e){
+        remove(jbCreatePerson);
+        revalidate();
+        repaint();
         if(e.getSource() == jbCreateArticle){
-            EditArticleDialog createArticleDialog = new EditArticleDialog(this);
+            //EditArticleDialog createArticleDialog = new EditArticleDialog(this);
         } else if (e.getSource() == jbEditArticle){
             if(checkID("SELECT StockItemID FROM StockItems WHERE StockItemID = ", jtfArticle.getText())) {
-                EditArticleDialog editArticleDialog = new EditArticleDialog(this, Integer.parseInt(jtfArticle.getText()));
+                //EditArticleDialog editArticleDialog = new EditArticleDialog(this, Integer.parseInt(jtfArticle.getText()));
             } else {
                 JOptionPane.showMessageDialog(this,"Dit artikel bestaat niet.");
             }
         } else if (e.getSource() == jbCreateOrder) {
-            EditOrderDialog createOrderDialog = new EditOrderDialog(this);
+           // EditOrderDialog createOrderDialog = new EditOrderDialog(this,this);
         } else if (e.getSource() == jbEditOrder) {
             if(checkID("SELECT OrderID FROM Orders WHERE OrderID = ",jtfOrder.getText())) {
-                EditOrderDialog editOrderDialog = new EditOrderDialog(this,Integer.parseInt(jtfOrder.getText()));
+             //   EditOrderDialog editOrderDialog = new EditOrderDialog(this,this,Integer.parseInt(jtfOrder.getText()));
             } else {
                 JOptionPane.showMessageDialog(this,"Deze order bestaat niet.");
             }

@@ -27,6 +27,7 @@ public class OrderLinePanel {
         this.dialog = dialog;
         jtfOrderLine = new JTextField(3);
         jcbOrderLine = new JComboBox(articles);
+        jcbOrderLine.addActionListener(dialog);
         jbOrderLine = new JButton("Verwijder");
         jbOrderLine.addActionListener(dialog);
         createPanel();
