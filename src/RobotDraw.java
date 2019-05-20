@@ -10,10 +10,7 @@ public class RobotDraw extends JPanel{
     private Graphics graphics;
     private Inpak inpak;
     private int beltPosition = 0;
-
-    private int binId1 = 1;
-    private int binId2 = 2;
-    private int binId3 = 3;
+    private CoordinatePoint coordinatePointOp;
 
     public  RobotDraw(ScreenManager screenManager, Main main) {
         this.screenManager = screenManager;
@@ -49,6 +46,9 @@ public class RobotDraw extends JPanel{
                 graphics.drawString(i + " - " + n, widthDiffLeft * i - widthDiffLeft/2 - 8, (5 *(heightDiffLeft-8) ) - n*(heightDiffLeft -8) + heightDiffLeft - (heightDiffLeft-8)/2+4 - 20);
             }
         }
+
+        g2.drawRect(widthDiffLeft * coordinatePointOp.getX() - widthDiffLeft/2 - 8 - widthDiffLeft/4, (5 *(heightDiffLeft-8) ) - coordinatePointOp.getY() *(heightDiffLeft -8) + heightDiffLeft - (heightDiffLeft-8)/2+4 - 20, widthDiffLeft/2, heightDiffLeft/2);
+//        graphics.draw3DRect(widthDiffLeft * coordinatePointOp.getX() - widthDiffLeft/2 - 8 - widthDiffLeft/4, (5 *(heightDiffLeft-8) ) - coordinatePointOp.getY() *(heightDiffLeft -8) + heightDiffLeft - (heightDiffLeft-8)/2+4 - 20, widthDiffLeft/2, heightDiffLeft/2,true);
 
         //right side of screen. draws conveyor belt and bins.
         g2.draw(new Rectangle.Float(width/2 + width/50, heightDiffRight, width/3, heightDiffRight - 40));
@@ -98,6 +98,7 @@ public class RobotDraw extends JPanel{
                 }
             }
 
+            //prints binpercentage and binid.
             if (inpak.getCurrentBin() == 1) {
                 graphics.drawString(Integer.toString(main.getBinId3()), width - widthDiffRight - width / 50 + widthDiffRight / 2, (heightDiffRight) - heightDiffRight + 80 - 40 + (heightDiffRight - 40) / 2 - 10);
                 graphics.drawString(inpak.binPercentageFilled(3) + "%", width - widthDiffRight - width / 50 + widthDiffRight / 2, (heightDiffRight) - heightDiffRight + 80 - 40 + (heightDiffRight - 40) / 2 + 10);
@@ -139,15 +140,7 @@ public class RobotDraw extends JPanel{
         this.inpak = inpak;
     }
 
-    public void setBinId1(int binId1) {
-        this.binId1 = binId1;
-    }
-
-    public void setBinId2(int binId2) {
-        this.binId2 = binId2;
-    }
-
-    public void setBinId3(int binId3) {
-        this.binId3 = binId3;
+    public void setCoordinatePointOp(CoordinatePoint coordinatePointOp) {
+        this.coordinatePointOp = coordinatePointOp;
     }
 }

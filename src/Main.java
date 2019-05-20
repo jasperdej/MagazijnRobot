@@ -1,3 +1,4 @@
+import javax.sound.sampled.Line;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.concurrent.TransferQueue;
@@ -15,7 +16,8 @@ public class Main {
     private ArrayList<Article> BPP_List = new ArrayList<>();
     private ArrayList<Bin> finalBinList = new ArrayList<>();
 
-    private TSP tsp;
+    private CoordinatePoint coordinatePointOP = new CoordinatePoint(0, 0);
+    private TSP tsp = new TSP();
     private ArrayList<Article> TSP_List;
 
     private int binId1 = 1;
@@ -34,6 +36,7 @@ public class Main {
         screenManager.setInpak(inpak);
         screenManager.setOrderPick(orderPick);
         screenManager.startDbScreens();
+        screenManager.getRobotDraw().setCoordinatePointOp(coordinatePointOP);
         screenManager.start();
 
         //connects both arduino's, first the orderpick and then the inpak.
@@ -89,10 +92,15 @@ public class Main {
             //this is done in order to maintain bin order slightly
             if (BPP_List.size() >= 3) {
                 for (int i = 1; i <= BPP_List.size() - BPP_List.size() % 3; i = i + 3) {
-                    tsp = new TSP(BPP_List.get(i - 1), BPP_List.get(i), BPP_List.get(i + 1));
-                    for (Article a: tsp.getArticlesOutput()) {
-                        TSP_List.add(a);
-                    }
+                    tsp.setArticlesInput(BPP_List.get(i - 1), BPP_List.get(i), BPP_List.get(i + 1));
+                    tsp.setInOrder();
+                    TSP_List = tsp.getArticlesOutput();
+                }
+                if (BPP_List.size() % 3 == 1) {
+                    TSP_List.add(BPP_List.get(BPP_List.size()-1));
+                } else if (BPP_List.size() % 3 == 2) {
+                    TSP_List.add(BPP_List.get(BPP_List.size() - 1));
+                    TSP_List.add(BPP_List.get(BPP_List.size() - 2));
                 }
             } else {
                 TSP_List = BPP_List;
@@ -106,6 +114,7 @@ public class Main {
             //Inpak robot wants a string with coordinates. coordinate x: 3 is send as 3.
             finalBinList = inpak.sendCoordinatesToArduino(bestFit.getBinList(), TSP_List);
             inpak.setStatus("Aan het inpakken");
+            inpak.setCurrentBin(finalBinList.get(0).getBinNumber());
 
             //ints for executing loop and updating robotscreen.
             int amountPackedIp = 0;
@@ -115,16 +124,35 @@ public class Main {
             while (!isOrderDone) {
                 String recievedFromInpak = inpak.recievedFromInpak();
                 String recievedFromOrderpick = orderPick.recievedFromOrderpick();
+
+                //prints string recieved form orderpickrobot.
                 if (recievedFromOrderpick.length() != 0) {
-                    System.out.println("ORDERPICK: " + recievedFromOrderpick);
+//                    System.out.println("ORDERPICK: " + recievedFromOrderpick);
                 }
 
+                //prints string recieved from inpakrobot.
                 if (recievedFromInpak.length() !=0) {
                     System.out.println("INPAK: " + recievedFromInpak);
                 }
 
+                //gets coordinatepoint send by orderpickrobot.
+                if (!recievedFromOrderpick.contains("Packed") && recievedFromOrderpick.length() != 0) {
+                    String coordinateOrderpick = (recievedFromOrderpick.substring(0,2).replaceAll("\\uFEFF", "").replaceAll("\n", "")).trim();
+                    if (coordinateOrderpick.length() == 2) {
+                        if (Integer.parseInt(coordinateOrderpick) >= 11 || Integer.parseInt(coordinateOrderpick) == 01 || Integer.parseInt(coordinateOrderpick) == 02 || Integer.parseInt(coordinateOrderpick) == 03) {
+                            System.out.println("coordinaatpunt van op: " + recievedFromOrderpick.substring(0,2));
+                            coordinatePointOP.setX(Integer.parseInt(recievedFromOrderpick.substring(0,1)));
+                            coordinatePointOP.setY(Integer.parseInt(recievedFromOrderpick.substring(1,2)));
+                        }
+                    }
+                }
+
                 if (recievedFromOrderpick.contains("Packed")) {
-                    amountPickedOp++;
+                    if (TSP_List.size() - amountPickedOp >= 3) {
+                        amountPickedOp = amountPickedOp + 3;
+                    } else {
+                        amountPickedOp = TSP_List.size();
+                    }
                     System.out.println("ORDERPICK PICKED: " + amountPickedOp);
                     orderPick.setAmountOfArticlesPicked(amountPickedOp);
                     if (amountPickedOp == totalArticlesInOrder) {
@@ -133,17 +161,25 @@ public class Main {
                 }
 
                 if (recievedFromInpak.contains("Scanned")) {
-                    boolean lastOfCurrentBin = true;
-                    inpak.setCurrentBin(finalBinList.get(amountPackedIp).getBinNumber());
                     amountPackedIp++;
+
+                    //updates amount packed for robotscreen. robotscreen automatically updates 4/3 times a second.
                     inpak.setAmountOfArticlesPacked(amountPackedIp);
 
-                    for (int i = amountPackedIp; i < finalBinList.size(); i++) {
+                    //opens a new bin dialog when a bin is full.
+                    boolean lastOfCurrentBin = true;
+                    for (int i = amountPackedIp; i <= finalBinList.size(); i++) {
                         if (finalBinList.get(i-1).getBinNumber() == inpak.getCurrentBin()) {
                             lastOfCurrentBin = false;
                         }
                     }
+
+                    //sets new bin as current bin.
+                    inpak.setCurrentBin(finalBinList.get(amountPackedIp-1).getBinNumber());
+
+
                     if (lastOfCurrentBin) {
+                        screenManager.createBinDialog(inpak.getCurrentBin());
                         if (finalBinList.contains(inpak.getCurrentBin()+3)) {
                             if (inpak.getCurrentBin() % 3 == 0) {
                                 binId1 = inpak.getCurrentBin()+3;
@@ -153,7 +189,6 @@ public class Main {
                                 binId3 = inpak.getCurrentBin()+3;
                             }
                         }
-                        screenManager.createBinDialog(inpak.getCurrentBin());
                     }
 
                     System.out.println("INPAK PACKED: " + amountPackedIp);
@@ -169,15 +204,11 @@ public class Main {
             //to-do list.
             //get information from robots.
             //send correct information to robotScreen.
-            try {
-                Thread.sleep(4000);
-            } catch (InterruptedException ie) {
-                System.out.println(ie);
-            } finally {
+
                 //updates database. order is now picked and status is changed to "verwerkt".
                 System.out.println("volgende loop");
-//                updateDatabase();
-            }
+                updateDatabase();
+
             while (isPaused) {
                 try {
                     Thread.sleep(200);
