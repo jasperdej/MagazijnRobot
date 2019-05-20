@@ -25,6 +25,7 @@ public class Main {
     private int binId3 = 3;
 
     private boolean isPaused = false;
+    private boolean isReset = false;
 
     public Main(ScreenManager screenManager) {
         this.screenManager = screenManager;
@@ -36,7 +37,7 @@ public class Main {
         screenManager.setInpak(inpak);
         screenManager.setOrderPick(orderPick);
         screenManager.startDbScreens();
-        screenManager.getRobotDraw().setCoordinatePointOp(coordinatePointOP);
+        screenManager.getRobotDraw().setCoordinatePointOp(orderPick.getCurrentLocation());
         screenManager.start();
 
         //connects both arduino's, first the orderpick and then the inpak.
@@ -120,6 +121,7 @@ public class Main {
             int amountPackedIp = 0;
             int amountPickedOp = 0;
             int totalArticlesInOrder = TSP_List.size();
+            int i = 0;
 
             while (!isOrderDone) {
                 String recievedFromInpak = inpak.recievedFromInpak();
@@ -140,9 +142,8 @@ public class Main {
                     String coordinateOrderpick = (recievedFromOrderpick.substring(0,2).replaceAll("\\uFEFF", "").replaceAll("\n", "")).trim();
                     if (coordinateOrderpick.length() == 2) {
                         if (Integer.parseInt(coordinateOrderpick) >= 11 || Integer.parseInt(coordinateOrderpick) == 01 || Integer.parseInt(coordinateOrderpick) == 02 || Integer.parseInt(coordinateOrderpick) == 03) {
-                            System.out.println("coordinaatpunt van op: " + recievedFromOrderpick.substring(0,2));
-                            coordinatePointOP.setX(Integer.parseInt(recievedFromOrderpick.substring(0,1)));
-                            coordinatePointOP.setY(Integer.parseInt(recievedFromOrderpick.substring(1,2)));
+                            orderPick.getCurrentLocation().setX(Integer.parseInt(recievedFromOrderpick.substring(0,1)));
+                            orderPick.getCurrentLocation().setY(Integer.parseInt(recievedFromOrderpick.substring(1,2)));
                         }
                     }
                 }
@@ -160,22 +161,29 @@ public class Main {
                     }
                 }
 
-                if (recievedFromInpak.contains("Scanned")) {
+                if (recievedFromInpak.contains("Scanned") && i < order.getAmountOfArticles()) {
                     amountPackedIp++;
 
                     //updates amount packed for robotscreen. robotscreen automatically updates 4/3 times a second.
                     inpak.setAmountOfArticlesPacked(amountPackedIp);
 
+                    //sets new bin as current bin.
+
                     //opens a new bin dialog when a bin is full.
                     boolean lastOfCurrentBin = true;
-                    for (int i = amountPackedIp; i <= finalBinList.size(); i++) {
-                        if (finalBinList.get(i-1).getBinNumber() == inpak.getCurrentBin()) {
-                            lastOfCurrentBin = false;
-                        }
+                    if (inpak.binPercentageFilled(inpak.getCurrentBin()) < 100) {
+                        lastOfCurrentBin = false;
+//                        System.out.println("bin% = " + inpak.binPercentageFilled(inpak.getCurrentBin()) + "succeeded" + " -- currentbinnr " + inpak.getCurrentBin());
+                    } else {
+//                        System.out.println("bin% = " + inpak.binPercentageFilled(inpak.getCurrentBin()) + "failed" + " -- currentbinnr " + inpak.getCurrentBin());
                     }
 
-                    //sets new bin as current bin.
-                    inpak.setCurrentBin(finalBinList.get(amountPackedIp-1).getBinNumber());
+
+                    i++;
+                    if (i != finalBinList.size()) {
+//                        System.out.println("i: " + i + "newbinid: " + finalBinList.get(i).getBinNumber() + "currentid: " + inpak.getCurrentBin());
+                        inpak.setCurrentBin(finalBinList.get(i).getBinNumber());
+                    }
 
 
                     if (lastOfCurrentBin) {
@@ -196,18 +204,16 @@ public class Main {
                         isIpDone = true;
                     }
                 }
-                if (isIpDone && isOpDone) {
+                if (isIpDone && isOpDone || isReset) {
                     isOrderDone = true;
                 }
             }
 
-            //to-do list.
-            //get information from robots.
-            //send correct information to robotScreen.
-
-                //updates database. order is now picked and status is changed to "verwerkt".
-                System.out.println("volgende loop");
+            //updates database. order is now picked and status is changed to "verwerkt".
+            //if reset button is pressed, database is not updated because orderpicking has failed catastrophically.
+            if (!isReset) {
                 updateDatabase();
+            }
 
             while (isPaused) {
                 try {
@@ -266,5 +272,13 @@ public class Main {
 
     public void setPaused(boolean paused) {
         isPaused = paused;
+    }
+
+    public void setReset(boolean reset) {
+        isReset = reset;
+    }
+
+    public boolean isReset() {
+        return isReset;
     }
 }

@@ -206,6 +206,9 @@ public class RobotScreen extends JFrame implements ActionListener {
                 opOnOffButton.setText("ON");
                 ipOnOffButton.setText("ON");
                 main.setPaused(true);
+                if (main.isReset()) {
+                    main.setReset(false);
+                }
             } else {
                 opOnOffButton.setText("OFF");
                 ipOnOffButton.setText("OFF");
@@ -214,11 +217,19 @@ public class RobotScreen extends JFrame implements ActionListener {
             isOpOn = !isOpOn;
         } else if (e.getSource() == opResetButton) {
             main.getOrderPick().sendToArduino("reset");
+            main.getInpak().sendToArduino("reset");
+            main.setReset(true);
+            opOnOffButton.setText("ON");
+            ipOnOffButton.setText("ON");
+            main.setPaused(true);
         } else if (e.getSource() == ipOnOffButton) {
             if (isIpOn) {
                 opOnOffButton.setText("ON");
                 ipOnOffButton.setText("ON");
                 main.setPaused(true);
+                if (main.isReset()) {
+                    main.setReset(false);
+                }
             } else {
                 opOnOffButton.setText("OFF");
                 ipOnOffButton.setText("OFF");
@@ -227,6 +238,11 @@ public class RobotScreen extends JFrame implements ActionListener {
             isIpOn = !isIpOn;
         } else if (e.getSource() == ipResetButton) {
             main.getInpak().sendToArduino("reset");
+            main.getOrderPick().sendToArduino("reset");
+            main.setReset(true);
+            opOnOffButton.setText("ON");
+            ipOnOffButton.setText("ON");
+            main.setPaused(true);
         }
     }
 

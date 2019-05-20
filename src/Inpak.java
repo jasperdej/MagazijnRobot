@@ -5,7 +5,7 @@ public class Inpak extends Robot {
     private int amountOfArticlesPacked = 0;
     private String toCoords;
     private ArrayList<Bin> binOrder = new ArrayList<>();
-    private int currentBin = 1;
+    private int currentBin;
     private Graphics graphics;
 
     //binlist is created by bpp algorithm. articles is created by tsp algorithm.
@@ -38,6 +38,7 @@ public class Inpak extends Robot {
     public int binPercentageFilled(int binId) {
         int amountPacked = 0;
         int totalInBin = 0;
+        double binPercentageFilled = 0;
 
         if (binOrder.size() == 0) {
             return 0;
@@ -56,7 +57,8 @@ public class Inpak extends Robot {
         if (totalInBin == 0) {
             return 0;
         } else {
-            return Math.round(amountPacked/totalInBin)*100;
+            binPercentageFilled = (double) amountPacked/totalInBin * 100;
+            return (int) Math.round(binPercentageFilled);
         }
     }
 
