@@ -11,6 +11,9 @@ public class InventoryScreen extends JFrame implements ActionListener {
     private JTable jTable;
     private ScreenManager screenManager;
 
+    private EditArticleDialog createArticleDialog, editArticleDialog;
+    private JScrollPane sp;
+
     //buttons for swithing screens.
 
     private JButton robotScreen = new JButton("Robot overzicht");
@@ -39,6 +42,8 @@ public class InventoryScreen extends JFrame implements ActionListener {
 
     private JButton addArticle = new JButton("Artikel toevoegen");
     private JButton editArticle = new JButton("Artikel bewerken");
+
+    private boolean isEdited = false;
 
     public InventoryScreen() {
         createScreen();
@@ -87,11 +92,8 @@ public class InventoryScreen extends JFrame implements ActionListener {
         };
         jTable.getTableHeader().setReorderingAllowed(false);
 
-        //adds JTable to screen.
-        add(jTable);
-
         //scrollpane adds scroll functionality to jtable. adds scrollpane with jtable to screen.
-        JScrollPane sp = new JScrollPane(jTable);
+        sp = new JScrollPane(jTable);
         add(sp);
 
         //adds actionlisteners for buttons.
@@ -189,8 +191,29 @@ public class InventoryScreen extends JFrame implements ActionListener {
 
     //gets results from database and updates current values on screen.
     public void refreshInventoryScreen() {
-        fillAllArticles();
-        jTable = new JTable(allArticles, columnNames);
+        remove(sp);
+        editTable();
+        add(sp);
+        this.revalidate();
+        this.repaint();
+    }
+
+    public void editTable(){
+        if(isEdited){
+            fillAllArticles();
+            jTable = new JTable(allArticles, columnNames){
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
+            jTable.getTableHeader().setReorderingAllowed(false);
+            sp = new JScrollPane(jTable);
+            isEdited = false;
+        }
+    }
+
+    public void setIsEdited(boolean value){
+        isEdited = value;
     }
 
     public void setScreenManager(ScreenManager screenManager) {
@@ -209,12 +232,18 @@ public class InventoryScreen extends JFrame implements ActionListener {
             screenManager.buttonPressed("InventoryScreen");
 
         } else if (e.getSource() == addArticle){
-            EditArticleDialog createArticleDialog = new EditArticleDialog(this);
+            createArticleDialog = new EditArticleDialog(this,this);
+            if(createArticleDialog.getIsOk()){
+                isEdited = true;
+            }
         } else if (e.getSource() == editArticle){
             String artikelid = JOptionPane.showInputDialog(this,"Voer artikel nummer in: ");
             if(!artikelid.equals(null)) {
                 if (checkID("SELECT StockItemID FROM StockItems WHERE StockItemID = ", artikelid)) {
-                    EditArticleDialog editArticleDialog = new EditArticleDialog(this, Integer.parseInt(artikelid));
+                    editArticleDialog = new EditArticleDialog(this,this, Integer.parseInt(artikelid));
+                    if(editArticleDialog.getIsOk()){
+                        isEdited = true;
+                    }
                 } else {
                     JOptionPane.showMessageDialog(this, "Ongeldige invoer.");
                 }

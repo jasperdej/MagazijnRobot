@@ -11,13 +11,14 @@ import java.util.Date;
 
 public class EditOrderDialog extends JDialog implements ActionListener {
 
+    private OrderScreen screen;
     private int orderId;
     private int customerId;
     private boolean orderExists = true;
     private int rows = 6;
     private JLabel jlTitelNew, jlTitelEdit, jlCustomerId, jlArticleId, jlArticleAmount;
     private JComboBox<Integer> jcbCustomerId;
-    private JPanel panel, topPanel, middlePanel, topMiddlePanel, bottomMiddlePanel, jpOrderLine, jpOrderLineRight, bottomPanel, buttonPanel;
+    private JPanel panel, topPanel, middlePanel, topMiddlePanel, bottomMiddlePanel, bottomPanel, buttonPanel;
     private GridLayout grBottomMiddlePanel = new GridLayout(rows,1);
     private JButton jbAddArticle, jbBevestigen, jbAnnuleren;
     private ArrayList<OrderLinePanel> panels;
@@ -25,17 +26,20 @@ public class EditOrderDialog extends JDialog implements ActionListener {
     private int[][] originalOrderLines;
     private JScrollPane sp;
     private int maxOrderLineId;
+    private boolean isOk;
 
-    public EditOrderDialog(JFrame jFrame, int orderId){
+    public EditOrderDialog(OrderScreen orderScreen, JFrame jFrame, int orderId){
         super(jFrame,true);
+        this.screen = orderScreen;
         this.orderId = orderId;
         setExistingOrderFromDb();
         setLists();
         createDialog();
     }
 
-    public EditOrderDialog(JFrame jFrame){
+    public EditOrderDialog(OrderScreen orderScreen, JFrame jFrame){
         super(jFrame,true);
+        this.screen = orderScreen;
         orderExists = false;
         setNewOrderIdFromDb();
         setLists();
@@ -178,6 +182,7 @@ public class EditOrderDialog extends JDialog implements ActionListener {
         dbConn.killStatement();
         DbConn.dbKill();
         Start.dbDoneLoading = true;
+        isOk = true;
     }
 
     public void editDb(){
@@ -215,6 +220,7 @@ public class EditOrderDialog extends JDialog implements ActionListener {
         }
         dbConn.killStatement();
         Start.dbDoneLoading = true;
+        isOk = true;
     }
 
     public void updateRecordInDb(DbConn dbConn, int panelIndex){
@@ -407,6 +413,33 @@ public class EditOrderDialog extends JDialog implements ActionListener {
         grBottomMiddlePanel.setRows(rows);
     }
 
+    public boolean orderEdited(){
+        System.out.println(panels.size());
+        System.out.println(originalOrderLines.length);
+        if(panels.size() != originalOrderLines.length){
+            return true;
+        }
+        for(int j = 0; j < panels.size(); j++){
+            System.out.println("panel " + j);
+            boolean found = false;
+            for(int i = 0; i < originalOrderLines.length; i++){
+                if(panels.get(j).getJcbOrderLine().getSelectedIndex() == originalOrderLines[i][1]){
+                    System.out.println("check1");
+                    if(Integer.parseInt(panels.get(j).getJtfOrderLine().getText()) == originalOrderLines[i][2]){
+                        System.out.println("check2");
+                        found = true;
+                    }
+                }
+            }
+            System.out.println(found);
+            if(found == false){
+                System.out.println("check3");
+                return true;
+            }
+        }
+        return false;
+    }
+
     public String getDateTime(){
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
@@ -419,36 +452,48 @@ public class EditOrderDialog extends JDialog implements ActionListener {
         return dateFormat.format(date);
     }
 
+    public boolean getIsOk(){
+        return isOk;
+    }
+
     public void actionPerformed(ActionEvent e){
 
         if (e.getSource() == jbAnnuleren) {
             dispose();
         } else if (e.getSource() == jbBevestigen) {
             boolean correctInput = true;
-            for(OrderLinePanel o : panels){
-                try{
-                    int x = Integer.parseInt(o.getJtfOrderLine().getText());
-                    if(x <= 0 || o.getJcbOrderLine().getSelectedIndex() == 0){
+            if(panels.size() == 0){
+                correctInput = false;
+            } else {
+                for(OrderLinePanel o : panels){
+                    try{
+                        int x = Integer.parseInt(o.getJtfOrderLine().getText());
+                        if(x <= 0 || o.getJcbOrderLine().getSelectedIndex() == 0){
+                            correctInput = false;
+                        }
+                    } catch (NumberFormatException nfe){
                         correctInput = false;
                     }
-                } catch (NumberFormatException nfe){
-                    correctInput = false;
                 }
             }
             if(!correctInput){
-                JOptionPane.showMessageDialog(this,"Niet alle verplichte velden zijn ingevuld.");
+                JOptionPane.showMessageDialog(this,"Ongeldige invoer.");
             } else {
                 if (orderExists == true) {
-                    int keuze = JOptionPane.showConfirmDialog(this, "Weet u zeker dat u deze gegevens wilt wijzigen?", "Wijzigen gegevens", JOptionPane.YES_NO_OPTION);
-                    if (keuze == JOptionPane.YES_OPTION) {
-                        editDb();
-                        dispose();
+                    if(orderEdited()){
+                        int keuze = JOptionPane.showConfirmDialog(this, "Weet u zeker dat u deze gegevens wilt wijzigen?", "Wijzigen gegevens", JOptionPane.YES_NO_OPTION);
+                        if (keuze == JOptionPane.YES_OPTION) {
+                            editDb();
+                            setVisible(false);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(this,"Geen wijzigingen gedetecteerd.");
                     }
                 } else {
                     int keuze = JOptionPane.showConfirmDialog(this, "Weet u zeker dat u deze order wilt toevoegen?", "Toevoegen order", JOptionPane.YES_NO_OPTION);
                     if (keuze == JOptionPane.YES_OPTION) {
                         addToDb();
-                        dispose();
+                        setVisible(false);
                     }
                 }
             }
