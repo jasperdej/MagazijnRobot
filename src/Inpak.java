@@ -7,6 +7,7 @@ public class Inpak extends Robot {
     private ArrayList<Bin> binOrder = new ArrayList<>();
     private int currentBin;
     private Graphics graphics;
+    private Bin bin;
 
     //binlist is created by bpp algorithm. articles is created by tsp algorithm.
     public ArrayList<Bin> sendCoordinatesToArduino(ArrayList<Bin> binList, ArrayList<Article> articleList){
@@ -80,5 +81,13 @@ public class Inpak extends Robot {
 
     public int getCurrentBin() {
         return currentBin;
+    }
+
+    public Bin getBin() {
+        return bin;
+    }
+
+    public void setBin(Bin bin) {
+        this.bin = bin;
     }
 }

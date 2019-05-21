@@ -9,18 +9,21 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 public class Pakbon{
 
     private Customer customer;
-    private int y = 495;
+    private int y;
 
     public Pakbon(Customer customer) {
         this.customer = customer;
     }
 
-    public void CreatePakbon(){
+    public void createPakbon(){
 
+        y = 495;
         try{
    customer.getCustomerInfo();
             System.out.println("PDF wordt gemaakt");
-            String fileName =  customer.getOrder().getOrderNr() + customer.getBin().getBinNumber() + ".pdf"; // name of our file
+            System.out.println("ordernr: " + customer.getOrder().getOrderNr());
+            System.out.println("binnr: " + customer.getBin().getBinNumber());
+            String fileName = (String) Integer.toString(customer.getOrder().getOrderNr()) + Integer.toString(customer.getBin().getBinNumber()) + ".pdf"; // name of our file
 
             PDDocument doc = new PDDocument();
             PDPage page = new PDPage();
@@ -29,7 +32,7 @@ public class Pakbon{
 
             PDPageContentStream content = new PDPageContentStream(doc, page);
 
-            PDImageXObject pdImage = PDImageXObject.createFromFile("D:/Bestanden/Documents/MagazijnRobot/WWI.png", doc);
+            PDImageXObject pdImage = PDImageXObject.createFromFile("C:\\Users\\Rick\\IdeaProjects\\MagazijnRobot\\WWI.png", doc);
 
 
             //content.drawImage(pdImage, 300, 670);
@@ -107,6 +110,7 @@ public class Pakbon{
             content.beginText();
             content.setFont(PDType1Font.HELVETICA, 12);
             content.moveTextPositionByAmount(80, 685);
+            System.out.println("last name: " + customer.lastName);
             content.drawString(customer.lastName);
             content.endText();
             //Address
@@ -140,8 +144,6 @@ public class Pakbon{
             content.drawString(Integer.toString(customer.getBin().getBinNumber()));
             content.endText();
 
-
-
             for(Article a: customer.getBin().getArticles()) {
                 a.getName();
                 a.getId();
@@ -165,7 +167,7 @@ public class Pakbon{
             doc.save(fileName);
             doc.close();
 
-            System.out.println("your file created in : "+ System.getProperty("user.dir/pakbonnen"));
+            System.out.println("your file created in : "+ System.getProperty("user.dir"));
 
         }
         catch(IOException e){
