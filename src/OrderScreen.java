@@ -187,25 +187,27 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
     }
 
     public void editTable(){
-        if(isEdited){
-            fillAllOrders();
-            jTable = new JTable(allOrders, columnNames){
-                public boolean isCellEditable(int row, int column) {
-                    return false;
-                }
-            };
-            //adds mouselistener for opening extra information dialog.
-            jTable.addMouseListener(this);
-            jTable.getTableHeader().setReorderingAllowed(false);
+        fillAllOrders();
+        jTable = new JTable(allOrders, columnNames){
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        //adds mouselistener for opening extra information dialog.
+        jTable.addMouseListener(this);
+        jTable.getTableHeader().setReorderingAllowed(false);
 
-            sp = new JScrollPane(jTable);
+        sp = new JScrollPane(jTable);
 
-            isEdited = false;
-        }
+        isEdited = false;
     }
 
     public void setIsEdited(boolean value){
         isEdited = value;
+    }
+
+    public boolean getIsEdited(){
+        return isEdited;
     }
 
     //mouseClicked opens dialog after user clicked on jtable row.
