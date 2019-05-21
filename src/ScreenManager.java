@@ -82,7 +82,7 @@ public class ScreenManager extends Thread {
     }
 
     public void createBinDialog(int binId) {
-        new BinDialog(robotScreen.getJframe(), binId);
+        new BinDialog(robotScreen.getJframe(), binId, main);
     }
 
 

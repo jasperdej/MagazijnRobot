@@ -20,6 +20,9 @@ public class Main {
     private TSP tsp = new TSP();
     private ArrayList<Article> TSP_List;
 
+    private Customer customer = new Customer(order);
+    private Pakbon pakbon = new Pakbon(customer);
+
     private int binId1 = 1;
     private int binId2 = 2;
     private int binId3 = 3;
@@ -154,7 +157,6 @@ public class Main {
                     } else {
                         amountPickedOp = TSP_List.size();
                     }
-                    System.out.println("ORDERPICK PICKED: " + amountPickedOp);
                     orderPick.setAmountOfArticlesPicked(amountPickedOp);
                     if (amountPickedOp == totalArticlesInOrder) {
                         isOpDone = true;
@@ -178,14 +180,6 @@ public class Main {
 //                        System.out.println("bin% = " + inpak.binPercentageFilled(inpak.getCurrentBin()) + "failed" + " -- currentbinnr " + inpak.getCurrentBin());
                     }
 
-
-                    i++;
-                    if (i != finalBinList.size()) {
-//                        System.out.println("i: " + i + "newbinid: " + finalBinList.get(i).getBinNumber() + "currentid: " + inpak.getCurrentBin());
-                        inpak.setCurrentBin(finalBinList.get(i).getBinNumber());
-                    }
-
-
                     if (lastOfCurrentBin) {
                         screenManager.createBinDialog(inpak.getCurrentBin());
                         if (finalBinList.contains(inpak.getCurrentBin()+3)) {
@@ -198,6 +192,15 @@ public class Main {
                             }
                         }
                     }
+
+                    i++;
+                    if (i != finalBinList.size()) {
+//                        System.out.println("i: " + i + "newbinid: " + finalBinList.get(i).getBinNumber() + "currentid: " + inpak.getCurrentBin());
+                        inpak.setCurrentBin(finalBinList.get(i).getBinNumber());
+                        inpak.setBin(finalBinList.get(i));
+                    }
+
+
 
                     System.out.println("INPAK PACKED: " + amountPackedIp);
                     if (amountPackedIp == totalArticlesInOrder) {
@@ -244,6 +247,11 @@ public class Main {
         DbConn.dbKill();
         Start.dbDoneLoading = true;
         screenManager.updateDbscreens();
+    }
+
+    public void createPakBon(int binId) {
+        customer.setBin(inpak.getBin());
+        pakbon.createPakbon();
     }
 
     public Order getCurrentOrder() {

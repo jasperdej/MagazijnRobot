@@ -8,10 +8,12 @@ import static java.awt.GridBagConstraints.LINE_START;
 public class BinDialog extends JDialog implements ActionListener {
     private JPanel panel, buttonPanel;
     private int binId;
+    private Main main;
 
-    public BinDialog(JFrame owner, int binId) {
+    public BinDialog(JFrame owner, int binId, Main main) {
         super(owner, true);
         this.binId = binId;
+        this.main = main;
         setSize(400, 250);
         setLocationRelativeTo(null);
         setLayout(new GridLayout(3, 1));
@@ -45,5 +47,11 @@ public class BinDialog extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         dispose();
+        main.createPakBon(binId);
+        while (binId > 3) {
+            binId = binId - 3;
+        }
+        main.getInpak().sendToArduino("Reset led" + binId);
+        System.out.println("Reset led" + binId);
     }
 }

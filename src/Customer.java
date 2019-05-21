@@ -7,22 +7,9 @@ public class Customer {
     private Order order;
     private Bin bin;
 
-    public void setBin(Bin bin) {
-        this.bin = bin;
-    }
-
-    public Bin getBin() {
-        return bin;
-    }
-
     public Customer (Order order) {
         this.order = order;
     }
-
-    public Order getOrder() {
-        return order;
-    }
-
 
     public void getCustomerInfo(){
         if (!Start.dbDoneLoading) {
@@ -37,7 +24,7 @@ public class Customer {
     }
     DbConn dbConn = new DbConn();
         DbConn.dbConnect();
-        ResultSet rsCustomer = dbConn.getResultSetFromDb("SELECT UserID, UserLastName, UserAddress, UserResidence, UserPostalCode FROM users JOIN orders ON users.UserID = orders.CustomerID WHERE OrderID =" +order);
+        ResultSet rsCustomer = dbConn.getResultSetFromDb("SELECT UserID, UserLastName, UserAddress, UserResidence, UserPostalCode FROM users JOIN orders ON users.UserID = orders.CustomerID WHERE OrderID = " + order.getOrderNr());
         System.out.println(rsCustomer);
 
         try {
@@ -57,6 +44,18 @@ public class Customer {
         Start.dbDoneLoading = true;
     }
 }
+
+    public void setBin(Bin bin) {
+        this.bin = bin;
+    }
+
+    public Bin getBin() {
+        return bin;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
 
     public int getId() {
         return id;
