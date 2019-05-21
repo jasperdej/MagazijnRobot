@@ -199,21 +199,23 @@ public class InventoryScreen extends JFrame implements ActionListener {
     }
 
     public void editTable(){
-        if(isEdited){
-            fillAllArticles();
-            jTable = new JTable(allArticles, columnNames){
-                public boolean isCellEditable(int row, int column) {
+        fillAllArticles();
+        jTable = new JTable(allArticles, columnNames){
+            public boolean isCellEditable(int row, int column) {
                     return false;
                 }
-            };
-            jTable.getTableHeader().setReorderingAllowed(false);
-            sp = new JScrollPane(jTable);
-            isEdited = false;
-        }
+        };
+        jTable.getTableHeader().setReorderingAllowed(false);
+        sp = new JScrollPane(jTable);
+        isEdited = false;
     }
 
     public void setIsEdited(boolean value){
         isEdited = value;
+    }
+
+    public boolean getIsEdited(){
+        return isEdited;
     }
 
     public void setScreenManager(ScreenManager screenManager) {

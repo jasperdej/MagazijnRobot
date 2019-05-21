@@ -29,7 +29,9 @@ public class ScreenManager extends Thread {
         while (true) {
             robotDraw.repaint();
             updateRobotScreen(orderPick, inpak);
-            updateDbscreens();
+
+                updateDbscreens();
+
             try {
                 Thread.sleep(750);
             } catch (InterruptedException ie) {
@@ -51,8 +53,12 @@ public class ScreenManager extends Thread {
 
     public void updateDbscreens() {
         try {
-            orderScreen.refreshAllOrders();
-            inventoryScreen.refreshInventoryScreen();
+            if(orderScreen.getIsEdited()) {
+                orderScreen.refreshAllOrders();
+            }
+            if(inventoryScreen.getIsEdited()) {
+                inventoryScreen.refreshInventoryScreen();
+            }
         } catch(NullPointerException npe){
             //will arrive here when orderscreen or inventoryscreen isn't done loading yet
         }
