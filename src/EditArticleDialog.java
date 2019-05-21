@@ -277,6 +277,19 @@ public class EditArticleDialog extends JDialog implements ActionListener {
         return dateFormat.format(date);
     }
 
+    public boolean isCoordinate(String input){
+        try{
+            int x = Integer.parseInt(input);
+            if(x > 0 && x <= 5){
+                return true;
+            } else {
+                return false;
+            }
+        } catch(NumberFormatException nfe){
+            return false;
+        }
+    }
+
     public boolean isInt(String input){
         try{
             int x = Integer.parseInt(input);
@@ -303,6 +316,19 @@ public class EditArticleDialog extends JDialog implements ActionListener {
         }
     }
 
+    public boolean isIntCanBeZero(String input){
+        try {
+            int x = Integer.parseInt(input);
+            if(x >= 0){
+                return true;
+            } else {
+                return false;
+            }
+        } catch(NumberFormatException nfe) {
+            return false;
+        }
+    }
+
     public boolean getIsOk(){
         return isOk;
     }
@@ -323,10 +349,8 @@ public class EditArticleDialog extends JDialog implements ActionListener {
             if (productnaam.equals("") || productbeschrijving.equals("") || productaantal.equals("") || productprijs.equals("") || productgewicht.equals("") || productvoorraad.equals("") || productlocatiex.equals("") || productlocatiey.equals("")) {
                 JOptionPane.showMessageDialog(this, "Niet alle verplichte velden zijn ingevuld.");
             } else {
-                if(!isInt(productaantal) || !isDouble(productprijs) || !isDouble(productgewicht) || !isInt(productvoorraad) || !isInt(productlocatiex) || !isInt(productlocatiey)){
-                    if(productlocatiex.length() > 1 || productlocatiey.length() > 1){
-                        JOptionPane.showMessageDialog(this,"Ongeldige invoer.");
-                    }
+                if(!isInt(productaantal) || !isDouble(productprijs) || !isDouble(productgewicht) || !isIntCanBeZero(productvoorraad) || !isCoordinate(productlocatiex) || !isCoordinate(productlocatiey)){
+                    JOptionPane.showMessageDialog(this,"Ongeldige invoer.");
                 } else {
                     if (articleExists == true) {
                         int keuze = JOptionPane.showConfirmDialog(this, "Weet u zeker dat u dit product wijzigen?", "Wijzigen product", JOptionPane.YES_NO_OPTION);

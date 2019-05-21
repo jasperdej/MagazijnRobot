@@ -22,7 +22,7 @@ public class ModifiedBestFit {
         Collections.sort(list, new Comparator<Article>() {
             @Override
             public int compare(Article a, Article b) {
-                return a.getWeight().compareTo(b.getWeight());
+                return a.getSumWeight().compareTo(b.getSumWeight());
             }
         });
         Collections.reverse(list);
@@ -45,9 +45,9 @@ public class ModifiedBestFit {
                     for (int i = 1; i < freeSpace; i++) { //adds to reserved weight for every free space he finds -1
                         int listIndex = list.size() - i - reservedLast; //finds the weight it has to substract
                         if(listIndex >= 0){ //makes sure the item it's gonna compare with isn't below 0
-                            if (list.get(listIndex).getWeight() < l.getWeight()) { //checks if the item just found is still below the item in the list
-                                if (reservedWeight + list.get(listIndex).getWeight() > 0) { //checks if the last item even fits in the bin
-                                    reservedWeight += list.get(listIndex).getWeight(); //adds reserved item to reservedWeight
+                            if (list.get(listIndex).getSumWeight() < l.getSumWeight()) { //checks if the item just found is still below the item in the list
+                                if (reservedWeight + list.get(listIndex).getSumWeight() > 0) { //checks if the last item even fits in the bin
+                                    reservedWeight += list.get(listIndex).getSumWeight(); //adds reserved item to reservedWeight
                                     reservedLast++; //adds 1 to reserved last index
                                 }
                             }
@@ -55,9 +55,9 @@ public class ModifiedBestFit {
                     }
                     tempCapacity -= reservedWeight;
                 }
-                if (b.getTotalWeight() + l.getWeight() <= tempCapacity && b.getItems().size() < binMaxItems && placed == false) {
+                if (b.getTotalWeight() + l.getSumWeight() <= tempCapacity && b.getItems().size() < binMaxItems && placed == false) {
                     b.addItem(l);
-                    b.addToTotalWeight(l.getWeight());
+                    b.addToTotalWeight(l.getSumWeight());
                     placed = true;
                 }
             }
@@ -65,7 +65,7 @@ public class ModifiedBestFit {
             if (placed == false) {
                 bins.add(new Bin(order, binCapacity, binMaxItems));
                 bins.get(bins.size() - 1).addItem(l);
-                bins.get(bins.size() - 1).addToTotalWeight(l.getWeight());
+                bins.get(bins.size() - 1).addToTotalWeight(l.getSumWeight());
             }
         }
     }

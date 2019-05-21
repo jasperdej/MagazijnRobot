@@ -61,4 +61,9 @@ public class Article {
     public void printWeight() {
         System.out.println(weight);
     }
+
+    public Double getSumWeight(){
+        double sumWeight = Math.round((weight * amountReserved) * 1000) / 1000;
+        return sumWeight;
+    }
 }
