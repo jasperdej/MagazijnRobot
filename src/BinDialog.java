@@ -47,9 +47,21 @@ public class BinDialog extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         main.createPakBon(binId);
+        for (Bin b: main.getFinalBinList()) {
+            if (b.getBinNumber() == binId + 3) {
+                if (binId == 1 || binId % 3 == 1) {
+                    main.setBinId1(binId + 3);
+                } else if (binId == 2 || binId % 3 == 2) {
+                    main.setBinId2(binId + 3);
+                } else {
+                    main.setBinId3(binId + 3);
+                }
+            }
+        }
         while (binId > 3) {
             binId = binId - 3;
         }
+
         main.getInpak().sendToArduino("Reset led" + binId);
         System.out.println("Reset led" + binId);
         dispose();

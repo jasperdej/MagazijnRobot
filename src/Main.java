@@ -66,6 +66,10 @@ public class Main {
 
             orderPick.setAmountOfArticlesPicked(0);
             inpak.setAmountOfArticlesPacked(0);
+
+            binId1 = 1;
+            binId2 = 2;
+            binId3 = 3;
             if (TSP_List != null) {
                 TSP_List.clear();
             }
@@ -250,7 +254,15 @@ public class Main {
     }
 
     public void createPakBon(int binId) {
-        customer.setBin(inpak.getBin());
+        if (inpak.getBin() == null) {
+            for (Bin b: finalBinList) {
+                if (b.getBinNumber() == inpak.getCurrentBin()) {
+                    customer.setBin(b);
+                }
+            }
+        } else {
+            customer.setBin(inpak.getBin());
+        }
         pakbon.createPakbon();
     }
 
@@ -276,6 +288,32 @@ public class Main {
 
     public int getBinId3() {
         return binId3;
+    }
+
+    public int getBinIdUknown(int i) {
+        if (i % 3 == 1 || i == 1) {
+            return binId1;
+        } else if (i % 3 == 2 || i == 2) {
+            return binId2;
+        } else {
+            return binId3;
+        }
+    }
+
+    public void setBinId1(int binId1) {
+        this.binId1 = binId1;
+    }
+
+    public void setBinId2(int binId2) {
+        this.binId2 = binId2;
+    }
+
+    public void setBinId3(int binId3) {
+        this.binId3 = binId3;
+    }
+
+    public ArrayList<Bin> getFinalBinList() {
+        return finalBinList;
     }
 
     public void setPaused(boolean paused) {

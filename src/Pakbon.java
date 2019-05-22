@@ -21,7 +21,7 @@ public class Pakbon{
         try{
    customer.getCustomerInfo();
             System.out.println("PDF wordt gemaakt");
-            System.out.println("ordernr: " + customer.getOrder().getOrderNr());
+            System.out.println("ordernr " + customer.getOrder().getOrderNr());
             System.out.println("binnr: " + customer.getBin().getBinNumber());
             String fileName = (String) Integer.toString(customer.getOrder().getOrderNr()) + Integer.toString(customer.getBin().getBinNumber()) + ".pdf"; // name of our file
 

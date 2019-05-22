@@ -84,7 +84,7 @@ public class Inpak extends Robot {
     }
 
     public Bin getBin() {
-        return bin;
+        return this.bin;
     }
 
     public void setBin(Bin bin) {
