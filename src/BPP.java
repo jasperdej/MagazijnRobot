@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class ModifiedBestFit {
+public class BPP {
 
     private Order order;
     private ArrayList<Article> list;
@@ -10,7 +10,7 @@ public class ModifiedBestFit {
     private double binCapacity = 1.5;
     private int binMaxItems = 10;
 
-    public ModifiedBestFit(Order order) {
+    public BPP(Order order) {
         Bin.setBinCount(0);
         this.order = order;
         list = order.getArticles();
