@@ -16,6 +16,7 @@ public class TSP {
 
 
     public void setInOrder() {
+        currentArticleOrder.clear();
         int a;
         for (int i = 0; i < 3; i++) {
             for (int n = 0 + i; n < 3 + i; n++) {

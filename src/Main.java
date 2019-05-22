@@ -63,6 +63,10 @@ public class Main {
 
             orderPick.setAmountOfArticlesPicked(0);
             inpak.setAmountOfArticlesPacked(0);
+
+            binId1 = 1;
+            binId2 = 2;
+            binId3 = 3;
             if (TSP_List != null) {
                 TSP_List.clear();
             }
@@ -82,7 +86,9 @@ public class Main {
             //send both algorithms to work.
             //BPP algorithm sets articles in order they are to be packed.
             // TSP shuffles that order slightly, this makes the orderpick robot take a more efficient route.
+
             bestFit = new BPP(order);
+            tsp = new TSP();
 
             //BPP algorithm gives a arraylist with bin objects. bin objects have an arraylist filled with article objects.
             //articles contains all articles of current order in bin order.
@@ -91,12 +97,18 @@ public class Main {
             //sets Articles in fastest order for orderPick robot.
             //3 articles are sent to Tsp algorithm, this shuffles the bpp order slightly.
             //this is done in order to maintain bin order slightly
+            System.out.println("BPPlength: " + BPP_List.size());
+            for (Article a: BPP_List) {
+                System.out.println(a.getId());
+            }
             if (BPP_List.size() >= 3) {
                 for (int i = 1; i <= BPP_List.size() - BPP_List.size() % 3; i = i + 3) {
                     tsp.setArticlesInput(BPP_List.get(i - 1), BPP_List.get(i), BPP_List.get(i + 1));
                     tsp.setInOrder();
                     TSP_List = tsp.getArticlesOutput();
+                    System.out.println("in de if-statement " + i);
                 }
+                System.out.println("tsplength: " + TSP_List.size());
                 if (BPP_List.size() % 3 == 1) {
                     TSP_List.add(BPP_List.get(BPP_List.size()-1));
                 } else if (BPP_List.size() % 3 == 2) {
@@ -247,7 +259,15 @@ public class Main {
     }
 
     public void createPakBon(int binId) {
-        customer.setBin(inpak.getBin());
+        if (inpak.getBin() == null) {
+            for (Bin b: finalBinList) {
+                if (b.getBinNumber() == inpak.getCurrentBin()) {
+                    customer.setBin(b);
+                }
+            }
+        } else {
+            customer.setBin(inpak.getBin());
+        }
         pakbon.createPakbon();
     }
 
@@ -275,12 +295,40 @@ public class Main {
         return binId3;
     }
 
+    public int getBinIdUknown(int i) {
+        if (i % 3 == 1 || i == 1) {
+            return binId1;
+        } else if (i % 3 == 2 || i == 2) {
+            return binId2;
+        } else {
+            return binId3;
+        }
+    }
+
+    public void setBinId1(int binId1) {
+        this.binId1 = binId1;
+    }
+
+    public void setBinId2(int binId2) {
+        this.binId2 = binId2;
+    }
+
+    public void setBinId3(int binId3) {
+        this.binId3 = binId3;
+    }
+
+    public ArrayList<Bin> getFinalBinList() {
+        return finalBinList;
+    }
+
     public void setPaused(boolean paused) {
         isPaused = paused;
+        System.out.println("isPaused: " + isPaused);
     }
 
     public void setReset(boolean reset) {
         isReset = reset;
+        System.out.println("isReset: " + isReset);
     }
 
     public boolean isReset() {
