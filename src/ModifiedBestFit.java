@@ -39,7 +39,7 @@ public class ModifiedBestFit {
             int reservedLast = 0;
             for (Bin b : bins) {
                 double tempCapacity = binCapacity; //set to all free
-                int freeSpace = binMaxItems - b.getItems().size(); //gets amount of free space
+                int freeSpace = binMaxItems - b.getArticles().size(); //gets amount of free space
                 if (freeSpace > 1) { //checks if free space is at least 2
                     double reservedWeight = 0; //sets reserved weight for extra stuff at 0
                     for (int i = 1; i < freeSpace; i++) { //adds to reserved weight for every free space he finds -1
@@ -55,13 +55,12 @@ public class ModifiedBestFit {
                     }
                     tempCapacity -= reservedWeight;
                 }
-                if (b.getTotalWeight() + l.getSumWeight() <= tempCapacity && b.getItems().size() < binMaxItems && placed == false) {
+                if (b.getTotalWeight() + l.getSumWeight() <= tempCapacity && b.getArticles().size() < binMaxItems && placed == false) {
                     b.addItem(l);
                     b.addToTotalWeight(l.getSumWeight());
                     placed = true;
                 }
             }
-//
             if (placed == false) {
                 bins.add(new Bin(order, binCapacity, binMaxItems));
                 bins.get(bins.size() - 1).addItem(l);

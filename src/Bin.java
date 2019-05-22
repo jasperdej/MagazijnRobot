@@ -41,10 +41,6 @@ public class Bin {
         totalWeight += weight;
     }
 
-    public ArrayList<Article> getItems() {
-        return articles;
-    }
-
     public ArrayList<Article> getArticles() {
         return articles;
     }
