@@ -1,7 +1,4 @@
-import javax.sound.sampled.Line;
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.concurrent.TransferQueue;
 
 public class Main {
     private ArduinoConn arduinoConn = new ArduinoConn();
@@ -12,7 +9,7 @@ public class Main {
     private OrderPick orderPick = new OrderPick();
     private Inpak inpak = new Inpak();
 
-    private ModifiedBestFit bestFit;
+    private BPP bestFit;
     private ArrayList<Article> BPP_List = new ArrayList<>();
     private ArrayList<Bin> finalBinList = new ArrayList<>();
 
@@ -89,7 +86,8 @@ public class Main {
             //send both algorithms to work.
             //BPP algorithm sets articles in order they are to be packed.
             // TSP shuffles that order slightly, this makes the orderpick robot take a more efficient route.
-            bestFit = new ModifiedBestFit(order);
+
+            bestFit = new BPP(order);
             tsp = new TSP();
 
             //BPP algorithm gives a arraylist with bin objects. bin objects have an arraylist filled with article objects.
