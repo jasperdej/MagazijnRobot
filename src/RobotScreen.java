@@ -206,13 +206,11 @@ public class RobotScreen extends JFrame implements ActionListener {
                 opOnOffButton.setText("ON");
                 ipOnOffButton.setText("ON");
                 main.setPaused(true);
-                if (main.isReset()) {
-                    main.setReset(false);
-                }
             } else {
                 opOnOffButton.setText("OFF");
                 ipOnOffButton.setText("OFF");
                 main.setPaused(false);
+                main.setReset(false);
             }
             isOpOn = !isOpOn;
         } else if (e.getSource() == opResetButton) {
@@ -227,13 +225,11 @@ public class RobotScreen extends JFrame implements ActionListener {
                 opOnOffButton.setText("ON");
                 ipOnOffButton.setText("ON");
                 main.setPaused(true);
-                if (main.isReset()) {
-                    main.setReset(false);
-                }
             } else {
                 opOnOffButton.setText("OFF");
                 ipOnOffButton.setText("OFF");
                 main.setPaused(false);
+                main.setReset(false);
             }
             isIpOn = !isIpOn;
         } else if (e.getSource() == ipResetButton) {

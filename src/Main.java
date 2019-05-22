@@ -90,6 +90,7 @@ public class Main {
             //BPP algorithm sets articles in order they are to be packed.
             // TSP shuffles that order slightly, this makes the orderpick robot take a more efficient route.
             bestFit = new ModifiedBestFit(order);
+            tsp = new TSP();
 
             //BPP algorithm gives a arraylist with bin objects. bin objects have an arraylist filled with article objects.
             //articles contains all articles of current order in bin order.
@@ -98,12 +99,18 @@ public class Main {
             //sets Articles in fastest order for orderPick robot.
             //3 articles are sent to Tsp algorithm, this shuffles the bpp order slightly.
             //this is done in order to maintain bin order slightly
+            System.out.println("BPPlength: " + BPP_List.size());
+            for (Article a: BPP_List) {
+                System.out.println(a.getId());
+            }
             if (BPP_List.size() >= 3) {
                 for (int i = 1; i <= BPP_List.size() - BPP_List.size() % 3; i = i + 3) {
                     tsp.setArticlesInput(BPP_List.get(i - 1), BPP_List.get(i), BPP_List.get(i + 1));
                     tsp.setInOrder();
                     TSP_List = tsp.getArticlesOutput();
+                    System.out.println("in de if-statement " + i);
                 }
+                System.out.println("tsplength: " + TSP_List.size());
                 if (BPP_List.size() % 3 == 1) {
                     TSP_List.add(BPP_List.get(BPP_List.size()-1));
                 } else if (BPP_List.size() % 3 == 2) {
@@ -318,10 +325,12 @@ public class Main {
 
     public void setPaused(boolean paused) {
         isPaused = paused;
+        System.out.println("isPaused: " + isPaused);
     }
 
     public void setReset(boolean reset) {
         isReset = reset;
+        System.out.println("isReset: " + isReset);
     }
 
     public boolean isReset() {

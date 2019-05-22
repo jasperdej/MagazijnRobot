@@ -81,8 +81,6 @@ public class RobotDraw extends JPanel{
                 }
             }
 
-            System.out.println("Variabele i: " + i + " - Color: " + graphics.getColor());
-            System.out.println("=====================================================");
             //draws rectangle filled with color.
             graphics.fillRect(width - widthDiffRight - width/50,  (heightDiffRight) * i - heightDiffRight + 80 - 40 * i, widthDiffRight, heightDiffRight - 40);
             graphics.setColor(Color.BLACK);
@@ -155,7 +153,6 @@ public class RobotDraw extends JPanel{
     }
 
     private void setColor (int i) {
-        System.out.println("binID: " + i);
         if (inpak.binPercentageFilled(main.getBinIdUknown(i)) == 0) {
             graphics.setColor(Color.green);
         } else if (inpak.binPercentageFilled(main.getBinIdUknown(i)) > 0 && inpak.binPercentageFilled(i) < 100) {
