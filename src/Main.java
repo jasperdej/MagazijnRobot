@@ -266,7 +266,7 @@ public class Main {
         dbConn.killStatement();
         DbConn.dbKill();
         Start.dbDoneLoading = true;
-        screenManager.updateDbscreens();
+        screenManager.getOrderScreen().setIsEdited(true);
     }
 
     //creates pakbon of currentbin
@@ -308,7 +308,7 @@ public class Main {
     }
 
     //returns current bin if binID is unknown, used in robotdraw.
-    public int getBinIdUknown(int i) {
+    public int getBinIdUnknown(int i) {
         if (i % 3 == 1 || i == 1) {
             return binId1;
         } else if (i % 3 == 2 || i == 2) {
