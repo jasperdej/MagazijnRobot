@@ -122,4 +122,8 @@ public class ScreenManager extends Thread {
     public void setMain(Main main) {
         this.main = main;
     }
+
+    public OrderScreen getOrderScreen(){
+        return orderScreen;
+    }
 }

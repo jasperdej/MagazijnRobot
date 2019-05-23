@@ -152,11 +152,11 @@ public class RobotDraw extends JPanel{
     }
 
     private void setColor (int i) {
-        if (inpak.binPercentageFilled(main.getBinIdUknown(i)) == 0) {
+        if (inpak.binPercentageFilled(main.getBinIdUnknown(i)) == 0) {
             graphics.setColor(Color.green);
-        } else if (inpak.binPercentageFilled(main.getBinIdUknown(i)) > 0 && inpak.binPercentageFilled(i) < 100) {
+        } else if (inpak.binPercentageFilled(main.getBinIdUnknown(i)) > 0 && inpak.binPercentageFilled(i) < 100) {
             graphics.setColor(Color.yellow);
-        } else if (inpak.binPercentageFilled(main.getBinIdUknown(i)) == 100) {
+        } else if (inpak.binPercentageFilled(main.getBinIdUnknown(i)) == 100) {
             graphics.setColor(Color.RED);
         }
     }

@@ -15,7 +15,7 @@ public class EditOrderDialog extends JDialog implements ActionListener {
     private int customerId;
     private boolean orderExists = true;
     private int rows = 6;
-    private JLabel jlTitelNew, jlTitelEdit, jlCustomerId, jlArticleId, jlArticleAmount;
+    private JLabel jlTitelNew, jlTitelEdit, jlCustomerId, jlArticleId;
     private JComboBox<Integer> jcbCustomerId;
     private JPanel panel, topPanel, middlePanel, topMiddlePanel, bottomMiddlePanel, bottomPanel, buttonPanel;
     private GridLayout grBottomMiddlePanel = new GridLayout(rows,1);

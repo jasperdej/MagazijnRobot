@@ -259,7 +259,7 @@ public class Main {
         dbConn.killStatement();
         DbConn.dbKill();
         Start.dbDoneLoading = true;
-        screenManager.updateDbscreens();
+        screenManager.getOrderScreen().setIsEdited(true);
     }
 
     public void createPakBon(int binId) {
@@ -299,7 +299,7 @@ public class Main {
         return binId3;
     }
 
-    public int getBinIdUknown(int i) {
+    public int getBinIdUnknown(int i) {
         if (i % 3 == 1 || i == 1) {
             return binId1;
         } else if (i % 3 == 2 || i == 2) {
