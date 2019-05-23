@@ -36,6 +36,7 @@ public class EditArticleDialog extends JDialog implements ActionListener {
         createDialog();
     }
 
+    //creates dialog
     public void createDialog(){
         setSize(480,400);
         setResizable(false);

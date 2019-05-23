@@ -25,6 +25,7 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
     //buttons for switching between screens.
     private JButton robotScreen = new JButton("Robot overzicht");
     private JButton orderScreen = new JButton("Order overzicht"){
+        //sets colors for buttons.
         protected void paintComponent(Graphics g){
             setContentAreaFilled(false);
             Graphics2D g2 = (Graphics2D)g.create();
@@ -183,6 +184,7 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
         this.repaint();
     }
 
+    //refreshing of orderscreen.
     public void editTable(){
         fillAllOrders();
         jTable = new JTable(allOrders, columnNames){
@@ -199,6 +201,7 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
         isEdited = false;
     }
 
+    //would have been used for updating screens after finishing order.
     public void setIsEdited(boolean value){
         isEdited = value;
     }
@@ -229,6 +232,7 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
         }
     }
 
+    //checks if Order exists in database.
     public boolean checkID(String query, String id){
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();

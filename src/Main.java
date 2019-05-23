@@ -32,6 +32,7 @@ public class Main {
     }
 
 
+    //main algorithm keeps robots running.
     public void runMainAlgorithm() {
         //starts orderScreen and inventoryScreen. they have a slight delay because of database issues when executing queries simultaneously.
         screenManager.setInpak(inpak);
@@ -67,6 +68,8 @@ public class Main {
             binId1 = 1;
             binId2 = 2;
             binId3 = 3;
+
+            //empties lists for new order.
             if (TSP_List != null) {
                 TSP_List.clear();
             }
@@ -105,7 +108,6 @@ public class Main {
             //sets Articles in fastest order for orderPick robot.
             //3 articles are sent to Tsp algorithm, this shuffles the bpp order slightly.
             //this is done in order to maintain bin order slightly
-
             if (BPP_List.size() >= 3) {
                 for (int i = 0; i < BPP_List.size() - BPP_List.size() % 3; i = i + 3) {
                     tsp.setArticlesInput(BPP_List.get(i), BPP_List.get(i + 1), BPP_List.get(i + 2));
@@ -166,6 +168,7 @@ public class Main {
                     }
                 }
 
+                //recieves packed from orderpick, sets amount of articles packed +3 or lower if there are less articles in order remaining.
                 if (recievedFromOrderpick.contains("Packed")) {
                     if (TSP_List.size() - amountPickedOp >= 3) {
                         amountPickedOp = amountPickedOp + 3;
@@ -178,6 +181,7 @@ public class Main {
                     }
                 }
 
+                //recieves scanned from inpakrobot. sets amount packed +1. checks if bin is full.
                 if (recievedFromInpak.contains("Scanned") && i < order.getAmountOfArticles()) {
                     amountPackedIp++;
 
@@ -192,6 +196,7 @@ public class Main {
                         lastOfCurrentBin = false;
                     }
 
+                    //checks if bin is full.
                     if (lastOfCurrentBin) {
                         screenManager.createBinDialog(inpak.getCurrentBin());
                         if (finalBinList.contains(inpak.getCurrentBin()+3)) {
@@ -205,19 +210,20 @@ public class Main {
                         }
                     }
 
+                    //sets current bin.
                     i++;
                     if (i != finalBinList.size()) {
                         inpak.setCurrentBin(finalBinList.get(i).getBinNumber());
                         inpak.setBin(finalBinList.get(i));
                     }
 
-
-
-                    System.out.println("INPAK PACKED: " + amountPackedIp);
+                    //ends loop if all articles in order are packed.
                     if (amountPackedIp == totalArticlesInOrder) {
                         isIpDone = true;
                     }
                 }
+
+                //ends loop if reset button is pressed or if all articles are picked and packed.
                 if (isIpDone && isOpDone || isReset) {
                     isOrderDone = true;
                 }
@@ -242,6 +248,7 @@ public class Main {
         }
     }
 
+    //sets current order to "verwerkt" if order is picked and packed.
     public void updateDatabase() {
         if (!Start.dbDoneLoading) {
             try {
@@ -262,6 +269,7 @@ public class Main {
         screenManager.updateDbscreens();
     }
 
+    //creates pakbon of currentbin
     public void createPakBon(int binId) {
         if (inpak.getBin() == null) {
             for (Bin b: finalBinList) {
@@ -299,6 +307,7 @@ public class Main {
         return binId3;
     }
 
+    //returns current bin if binID is unknown, used in robotdraw.
     public int getBinIdUknown(int i) {
         if (i % 3 == 1 || i == 1) {
             return binId1;

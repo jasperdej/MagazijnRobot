@@ -12,7 +12,8 @@ public class RobotDraw extends JPanel{
     private int beltPosition = 0;
     private CoordinatePoint coordinatePointOp;
 
-    public  RobotDraw(ScreenManager screenManager, Main main) {
+    //sets private variables.
+    public RobotDraw(ScreenManager screenManager, Main main) {
         this.screenManager = screenManager;
         this.main = main;
 
@@ -20,6 +21,7 @@ public class RobotDraw extends JPanel{
         setPreferredSize(new Dimension());
     }
 
+    //paints lower half of robotscreen.
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
         this.graphics = graphics;
@@ -31,6 +33,7 @@ public class RobotDraw extends JPanel{
         int heightDiffRight = height/6;
         int a;
 
+        //sets color to black and changes line thickness to 8.
         graphics.setColor(Color.BLACK);
         g2 = (Graphics2D) graphics;
         g2.setStroke(new BasicStroke(8));
@@ -47,6 +50,7 @@ public class RobotDraw extends JPanel{
             }
         }
 
+        //draws robot in warehouse
         g2.drawRect(widthDiffLeft * coordinatePointOp.getX() - widthDiffLeft/2 - 8 - widthDiffLeft/4, (5 *(heightDiffLeft-8) ) - coordinatePointOp.getY() *(heightDiffLeft -8) + heightDiffLeft - (heightDiffLeft-8)/2+4 - 20, widthDiffLeft/2, heightDiffLeft/2);
 
         //right side of screen. draws conveyor belt and bins.
@@ -151,6 +155,7 @@ public class RobotDraw extends JPanel{
         this.coordinatePointOp = coordinatePointOp;
     }
 
+    //sets color based on bin percentage filled. green == bin is empty, yellow == bin is somewhat filled(bin% < 100 && bin% >0), red == bin is filled
     private void setColor (int i) {
         if (inpak.binPercentageFilled(main.getBinIdUknown(i)) == 0) {
             graphics.setColor(Color.green);

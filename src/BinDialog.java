@@ -8,6 +8,7 @@ public class BinDialog extends JDialog implements ActionListener {
     private int binId;
     private Main main;
 
+    //creates new dialog.
     public BinDialog(JFrame owner, int binId, Main main) {
         super(owner, true);
         this.binId = binId;
@@ -39,9 +40,9 @@ public class BinDialog extends JDialog implements ActionListener {
         add(buttonPanel);
 
         setVisible(true);
-
     }
 
+    //creates pakbon, closes dialog and empties bin.
     @Override
     public void actionPerformed(ActionEvent e) {
         main.createPakBon(binId);

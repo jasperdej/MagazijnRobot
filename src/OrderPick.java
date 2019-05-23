@@ -5,6 +5,7 @@ public class OrderPick extends Robot{
     private int amountOfArticlesPicked = 0;
     private String toCoords;
 
+    //sends coordinates of new order to arduino. after every 3 articles the robot delivers to inpak.
     public void sendCoordinatesToArduino(ArrayList<Article> articles){
         toCoords = "";
         for (int i = 1; i <= articles.size(); i++) {

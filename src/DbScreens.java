@@ -3,6 +3,7 @@ public class DbScreens extends Thread{
     private InventoryScreen inventoryScreen;
     private ScreenManager screenManager;
 
+    //starts orderscreen and inventoryscreen
     @Override
     public void run() {
         orderScreen = new OrderScreen();

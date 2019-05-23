@@ -14,6 +14,7 @@ public class Pakbon{
         this.customer = customer;
     }
 
+    //creates pdf file for current bin.
     public void createPakbon(){
 
         y = 495;
@@ -143,6 +144,7 @@ public class Pakbon{
             content.drawString(Integer.toString(customer.getBin().getBinNumber()));
             content.endText();
 
+            //draws all articles
             for(Article a: customer.getBin().getArticles()) {
                 a.getName();
                 a.getId();

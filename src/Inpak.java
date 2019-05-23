@@ -32,10 +32,13 @@ public class Inpak extends Robot {
         return binOrder;
     }
 
+    //sends string to Inpak Arduino
     public void sendToArduino(String string) {
         sendToCoords(string);
     }
 
+    //takes amount of articles going in this bin and how many are packed already.
+    //returns percentage filled.
     public int binPercentageFilled(int binId) {
         int amountPacked = 0;
         int totalInBin = 0;

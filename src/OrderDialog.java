@@ -85,6 +85,7 @@ public class OrderDialog extends JDialog {
         }
     }
 
+    //returns total weight of order.
     public BigDecimal getTotalWeight(){
         BigDecimal weight;
         BigDecimal count;

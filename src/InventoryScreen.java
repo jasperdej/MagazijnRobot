@@ -14,10 +14,10 @@ public class InventoryScreen extends JFrame implements ActionListener {
     private JScrollPane sp;
 
     //buttons for swithing screens.
-
     private JButton robotScreen = new JButton("Robot overzicht");
     private JButton orderScreen = new JButton("Order overzicht");
     private JButton inventoryScreen = new JButton("Voorraad overzicht"){
+        //sets button color.
         protected void paintComponent(Graphics g){
             setContentAreaFilled(false);
             Graphics2D g2 = (Graphics2D)g.create();
@@ -49,6 +49,7 @@ public class InventoryScreen extends JFrame implements ActionListener {
         System.out.println("InventoryScreen ready!");
     }
 
+    //creates screen
     private void createScreen() {
         //fills array with articles from database.
         fillAllArticles();
@@ -172,6 +173,7 @@ public class InventoryScreen extends JFrame implements ActionListener {
 
     }
 
+    //checks if article exists
     public boolean checkID(String query, String id){
         DbConn dbConn = new DbConn();
         DbConn.dbConnect();
