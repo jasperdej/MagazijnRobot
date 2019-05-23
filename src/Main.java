@@ -15,7 +15,7 @@ public class Main {
 
     private CoordinatePoint coordinatePointOP = new CoordinatePoint(0, 0);
     private TSP tsp = new TSP();
-    private ArrayList<Article> TSP_List;
+    private ArrayList<Article> TSP_List = new ArrayList<>();
 
     private Customer customer = new Customer(order);
     private Pakbon pakbon = new Pakbon(customer);
@@ -44,13 +44,13 @@ public class Main {
         // the arduino's keep sending "orderpick" and "inpak" untill a succesfull connection is established.
         arduinoConn.arduinoConnectInpakRobot();
         while (inpak.recievedFromInpak().contains("Inpak")) {
-            System.out.println("aan het verbinden ip");
+
         }
         inpak.setStatus("verbonden");
 
         arduinoConn.arduinoConnectPickRobot();
         while (orderPick.recievedFromOrderpick().contains("Orderpick")) {
-            System.out.println("aan het verbinden op");
+
         }
         orderPick.setStatus("verbonden");
 
@@ -97,18 +97,16 @@ public class Main {
             //sets Articles in fastest order for orderPick robot.
             //3 articles are sent to Tsp algorithm, this shuffles the bpp order slightly.
             //this is done in order to maintain bin order slightly
-            System.out.println("BPPlength: " + BPP_List.size());
-            for (Article a: BPP_List) {
-                System.out.println(a.getId());
-            }
+
             if (BPP_List.size() >= 3) {
-                for (int i = 1; i <= BPP_List.size() - BPP_List.size() % 3; i = i + 3) {
-                    tsp.setArticlesInput(BPP_List.get(i - 1), BPP_List.get(i), BPP_List.get(i + 1));
+                for (int i = 0; i < BPP_List.size() - BPP_List.size() % 3; i = i + 3) {
+                    tsp.setArticlesInput(BPP_List.get(i), BPP_List.get(i + 1), BPP_List.get(i + 2));
                     tsp.setInOrder();
-                    TSP_List = tsp.getArticlesOutput();
-                    System.out.println("in de if-statement " + i);
+                    for (int n = 0; n < tsp.getArticlesOutput().size(); n++) {
+                        TSP_List.add(tsp.getArticlesOutput().get(n));
+                    }
                 }
-                System.out.println("tsplength: " + TSP_List.size());
+
                 if (BPP_List.size() % 3 == 1) {
                     TSP_List.add(BPP_List.get(BPP_List.size()-1));
                 } else if (BPP_List.size() % 3 == 2) {
@@ -150,7 +148,7 @@ public class Main {
                 }
 
                 //gets coordinatepoint send by orderpickrobot.
-                if (!recievedFromOrderpick.contains("Packed") && recievedFromOrderpick.length() != 0) {
+                if (!recievedFromOrderpick.contains("Packed") && !recievedFromOrderpick.contains("Orderpick") && recievedFromOrderpick.length() != 0) {
                     String coordinateOrderpick = (recievedFromOrderpick.substring(0,2).replaceAll("\\uFEFF", "").replaceAll("\n", "")).trim();
                     if (coordinateOrderpick.length() == 2) {
                         if (Integer.parseInt(coordinateOrderpick) >= 11 || Integer.parseInt(coordinateOrderpick) == 01 || Integer.parseInt(coordinateOrderpick) == 02 || Integer.parseInt(coordinateOrderpick) == 03) {
@@ -178,15 +176,12 @@ public class Main {
                     //updates amount packed for robotscreen. robotscreen automatically updates 4/3 times a second.
                     inpak.setAmountOfArticlesPacked(amountPackedIp);
 
-                    //sets new bin as current bin.
 
+                    //sets new bin as current bin.
                     //opens a new bin dialog when a bin is full.
                     boolean lastOfCurrentBin = true;
                     if (inpak.binPercentageFilled(inpak.getCurrentBin()) < 100) {
                         lastOfCurrentBin = false;
-//                        System.out.println("bin% = " + inpak.binPercentageFilled(inpak.getCurrentBin()) + "succeeded" + " -- currentbinnr " + inpak.getCurrentBin());
-                    } else {
-//                        System.out.println("bin% = " + inpak.binPercentageFilled(inpak.getCurrentBin()) + "failed" + " -- currentbinnr " + inpak.getCurrentBin());
                     }
 
                     if (lastOfCurrentBin) {
@@ -204,7 +199,6 @@ public class Main {
 
                     i++;
                     if (i != finalBinList.size()) {
-//                        System.out.println("i: " + i + "newbinid: " + finalBinList.get(i).getBinNumber() + "currentid: " + inpak.getCurrentBin());
                         inpak.setCurrentBin(finalBinList.get(i).getBinNumber());
                         inpak.setBin(finalBinList.get(i));
                     }
@@ -323,12 +317,10 @@ public class Main {
 
     public void setPaused(boolean paused) {
         isPaused = paused;
-        System.out.println("isPaused: " + isPaused);
     }
 
     public void setReset(boolean reset) {
         isReset = reset;
-        System.out.println("isReset: " + isReset);
     }
 
     public boolean isReset() {

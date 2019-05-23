@@ -6,16 +6,10 @@ public class Bin {
     private int binNumber;
     private Order order;
     private Double totalWeight;
-    private CoordinatePoint topCoordinatePoint;
-    private CoordinatePoint bottomCoordinatePoint;
-    private double maximumWeight;
-    private int maximumQuantity;
     private ArrayList<Article> articles;
-    private String status;
-    private int percentageFilled;
 
     //needs adjusting
-    public Bin(Order order, double maximumWeight, int maximumQuantity) {
+    public Bin(Order order) {
         binCount++;
         this.order = order;
         binNumber = binCount;

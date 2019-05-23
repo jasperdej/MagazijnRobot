@@ -6,7 +6,6 @@ public class Order {
     private int orderNr = -1;
     private ArrayList<Article> articles;
     private int amountOfArticles;
-    private double totalWeight;
 
     //looks for new orderid from database. if new orderid is found, the arraylist with articles is filled with it's articles.
     public void getNewOrderIdFromDb() {
@@ -92,10 +91,6 @@ public class Order {
 
     public int getAmountOfArticles() {
         return amountOfArticles;
-    }
-
-    public double getTotalWeight() {
-        return totalWeight;
     }
 
     public ArrayList<Article> getArticles() {

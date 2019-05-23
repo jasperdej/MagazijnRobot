@@ -48,6 +48,7 @@ public class RobotScreen extends JFrame implements ActionListener {
             super.paintComponent(g);
         }
     };
+
     private JButton orderScreen = new JButton("Order overzicht");
     private JButton inventoryScreen = new JButton("Voorraad overzicht");
 
@@ -164,8 +165,6 @@ public class RobotScreen extends JFrame implements ActionListener {
 
         //adds both information JPanels to topPanel.
         topPanel.add(buttonPanel, BorderLayout.PAGE_START);
-//        topPanel.add(opLabelPanel, BorderLayout.LINE_START);
-//        topPanel.add(ipLabelPanel, BorderLayout.LINE_END);
         topPanel.add(labelPanel,BorderLayout.CENTER);
 
         //add topPanel to screen. fills the upper part of the screen.
@@ -173,8 +172,6 @@ public class RobotScreen extends JFrame implements ActionListener {
 
         //add robotDraw to screen. fills the bottom part of the screen.
         add(robotDraw);
-//        add(conveyorBeltAnimation);
-
 
         //adds actionlistener for all buttons.
         opOnOffButton.addActionListener(this);

@@ -68,11 +68,9 @@ public class TSP {
             } else {
                 afstand += x * xasPenalty;
             }
-//            System.out.println(articles.get(0).getId() + " , " + afstand);
-
         }
+
         if (smallestDistance > afstand || smallestDistance == 0) {
-//            System.out.println(smallestDistance + " - " + afstand);
             smallestDistance = afstand;
             if (articlesOutput.size() == 0) {
                 articlesOutput.add(articles.get(0));
