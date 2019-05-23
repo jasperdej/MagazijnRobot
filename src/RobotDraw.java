@@ -48,7 +48,6 @@ public class RobotDraw extends JPanel{
         }
 
         g2.drawRect(widthDiffLeft * coordinatePointOp.getX() - widthDiffLeft/2 - 8 - widthDiffLeft/4, (5 *(heightDiffLeft-8) ) - coordinatePointOp.getY() *(heightDiffLeft -8) + heightDiffLeft - (heightDiffLeft-8)/2+4 - 20, widthDiffLeft/2, heightDiffLeft/2);
-//        graphics.draw3DRect(widthDiffLeft * coordinatePointOp.getX() - widthDiffLeft/2 - 8 - widthDiffLeft/4, (5 *(heightDiffLeft-8) ) - coordinatePointOp.getY() *(heightDiffLeft -8) + heightDiffLeft - (heightDiffLeft-8)/2+4 - 20, widthDiffLeft/2, heightDiffLeft/2,true);
 
         //right side of screen. draws conveyor belt and bins.
         g2.draw(new Rectangle.Float(width/2 + width/50, heightDiffRight, width/3, heightDiffRight - 40));

@@ -62,7 +62,7 @@ public class BPP {
                 }
             }
             if (placed == false) {
-                bins.add(new Bin(order, binCapacity, binMaxItems));
+                bins.add(new Bin(order));
                 bins.get(bins.size() - 1).addItem(l);
                 bins.get(bins.size() - 1).addToTotalWeight(l.getSumWeight());
             }
