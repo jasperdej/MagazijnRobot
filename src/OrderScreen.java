@@ -1,12 +1,10 @@
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class OrderScreen extends JFrame implements MouseListener, ActionListener {
 
@@ -166,9 +164,8 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
                 allOrders[i][4] = rs.getString("o.status");
                 rs.next();
             }
-        } catch (SQLException sqle) {
-            System.out.println("Er is een SQL fout opgetreden in OrderScreen.java in methode fillAllOrders");
         } catch (Exception e) {
+            Start.dbDoneLoading = true;
             fillAllOrders();
         } finally {
             dbConn.killStatement();
@@ -226,7 +223,7 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
                 orderId = Integer.parseInt((String)jTable.getValueAt(row,0));
                 //creates dialog
                 new OrderDialog(this,orderId);
-            } catch (ClassCastException ex) {
+            } catch (ClassCastException cce) {
                 System.out.println("Er is een ClassCastException opgetreden in OrderScreen.java in methode mouseClicked");
             }
         }

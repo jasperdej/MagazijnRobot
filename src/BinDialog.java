@@ -3,8 +3,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import static java.awt.GridBagConstraints.LINE_START;
-
 public class BinDialog extends JDialog implements ActionListener {
     private JPanel panel, buttonPanel;
     private int binId;

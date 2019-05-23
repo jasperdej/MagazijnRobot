@@ -1,5 +1,3 @@
-import arduino.Arduino;
-
 import java.util.ArrayList;
 
 public class OrderPick extends Robot{
