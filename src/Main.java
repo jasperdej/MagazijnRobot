@@ -80,7 +80,15 @@ public class Main {
             }
 
             //get new order from database.
-            order.getNewOrderIdFromDb();
+            while (order.getOrderNr() == -1 || order.getOrderNr() == 0){
+                order.getNewOrderIdFromDb();
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ie) {
+                    System.out.println(ie);
+                }
+            }
+
             System.out.println("orderid: " + order.getOrderNr());
 
             //send both algorithms to work.
@@ -222,6 +230,8 @@ public class Main {
             }
 
             while (isPaused) {
+                inpak.setStatus("Gepauzeerd");
+                orderPick.setStatus("Gepauzeerd");
                 try {
                     Thread.sleep(200);
                 } catch (InterruptedException ie) {
@@ -321,6 +331,8 @@ public class Main {
 
     public void setReset(boolean reset) {
         isReset = reset;
+        inpak.setStatus("Reset");
+        orderPick.setStatus("Reset");
     }
 
     public boolean isReset() {

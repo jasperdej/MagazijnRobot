@@ -265,17 +265,21 @@ public class EditPersonDialog extends JDialog implements ActionListener {
             if(voornaam.equals("") || achternaam.equals("") || adres.equals("") || woonplaats.equals("") || postcode.equals("")){
                 JOptionPane.showMessageDialog(this,"Niet alle verplichte velden zijn ingevuld.");
             } else {
-                if (personExists == true) {
-                    int keuze = JOptionPane.showConfirmDialog(this, "Weet u zeker dat u deze gegevens wilt wijzigen?", "Wijzigen gegevens", JOptionPane.YES_NO_OPTION);
-                    if (keuze == JOptionPane.YES_OPTION) {
-                        editDb();
-                        dispose();
-                    }
+                if(postcode.length() > 6){
+                    JOptionPane.showMessageDialog(this,"Ongeldige invoer.");
                 } else {
-                    int keuze = JOptionPane.showConfirmDialog(this, "Weet u zeker dat u deze persoon wilt toevoegen?", "Toevoegen persoon", JOptionPane.YES_NO_OPTION);
-                    if (keuze == JOptionPane.YES_OPTION) {
-                        addToDb();
-                        dispose();
+                    if (personExists == true) {
+                        int keuze = JOptionPane.showConfirmDialog(this, "Weet u zeker dat u deze gegevens wilt wijzigen?", "Wijzigen gegevens", JOptionPane.YES_NO_OPTION);
+                        if (keuze == JOptionPane.YES_OPTION) {
+                            editDb();
+                            dispose();
+                        }
+                    } else {
+                        int keuze = JOptionPane.showConfirmDialog(this, "Weet u zeker dat u deze persoon wilt toevoegen?", "Toevoegen persoon", JOptionPane.YES_NO_OPTION);
+                        if (keuze == JOptionPane.YES_OPTION) {
+                            addToDb();
+                            dispose();
+                        }
                     }
                 }
             }
