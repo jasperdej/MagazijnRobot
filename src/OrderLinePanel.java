@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class OrderLinePanel {
-    private EditOrderDialog dialog;
     private JTextField jtfOrderLine;
     private JComboBox jcbOrderLine;
     private JButton jbOrderLine;
@@ -13,7 +12,6 @@ public class OrderLinePanel {
     private JPanel jpOrderLine, jpOrderLineRight;
 
     public OrderLinePanel(EditOrderDialog dialog, int articleId, int quantity){
-        this.dialog = dialog;
         jtfOrderLine = new JTextField(String.valueOf(quantity),3);
         jcbOrderLine = new JComboBox(articles);
         jcbOrderLine.setSelectedIndex(articleId);
@@ -24,7 +22,6 @@ public class OrderLinePanel {
     }
 
     public OrderLinePanel(EditOrderDialog dialog){
-        this.dialog = dialog;
         jtfOrderLine = new JTextField(3);
         jcbOrderLine = new JComboBox(articles);
         jcbOrderLine.addActionListener(dialog);
