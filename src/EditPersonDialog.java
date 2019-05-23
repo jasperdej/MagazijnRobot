@@ -15,6 +15,7 @@ public class EditPersonDialog extends JDialog implements ActionListener {
     private JButton jbBevestigen, jbAnnuleren;
     private String voornaam, tussenvoegsel, achternaam, emailadres, adres, woonplaats, postcode;
 
+    //sets private variables, uses existing person
     public EditPersonDialog(JFrame jFrame, int personId){
         super(jFrame,true);
         this.personId = personId;
@@ -22,6 +23,7 @@ public class EditPersonDialog extends JDialog implements ActionListener {
         createDialog();
     }
 
+    //sets private variables, creates new person
     public EditPersonDialog(JFrame jFrame){
         super(jFrame,true);
         setNewPersonId();
@@ -29,6 +31,7 @@ public class EditPersonDialog extends JDialog implements ActionListener {
         createDialog();
     }
 
+    //creates dialog
     public void createDialog(){
         setSize(480,400);
         setResizable(false);
@@ -36,6 +39,7 @@ public class EditPersonDialog extends JDialog implements ActionListener {
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);
 
+        //initialize all panels
         panel = (JPanel)this.getContentPane();
         panel.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
 
@@ -54,7 +58,8 @@ public class EditPersonDialog extends JDialog implements ActionListener {
 
         buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(1,2));
-      
+
+        // //initialize all labels + input fields
         jlTitelNew = new JLabel("Persoon aanmaken");
         jlTitelNew.setFont(new Font("Arial",Font.BOLD,30));
         jlTitelEdit = new JLabel("Persoonsgegevens wijzigen");
@@ -124,6 +129,7 @@ public class EditPersonDialog extends JDialog implements ActionListener {
 
         bottomPanel.add(buttonPanel, BorderLayout.PAGE_END);
 
+        //add Panels to frame
         add(topPanel, BorderLayout.PAGE_START);
         add(middlePanel);
         add(bottomPanel, BorderLayout.PAGE_END);
@@ -131,6 +137,7 @@ public class EditPersonDialog extends JDialog implements ActionListener {
         setVisible(true);
     }
 
+    // adds new person to database
     public void addToDb(){
         if (!Start.dbDoneLoading) {
             try {
@@ -150,6 +157,7 @@ public class EditPersonDialog extends JDialog implements ActionListener {
         Start.dbDoneLoading = true;
     }
 
+    //edits existing person in database
     public void editDb(){
         if (!Start.dbDoneLoading) {
             try {
@@ -169,6 +177,7 @@ public class EditPersonDialog extends JDialog implements ActionListener {
         Start.dbDoneLoading = true;
     }
 
+    // retrieves person details when editing a person
     public void setPerson(){
         if (!Start.dbDoneLoading) {
             try {
@@ -184,6 +193,7 @@ public class EditPersonDialog extends JDialog implements ActionListener {
         DbConn.dbConnect();
         ResultSet rs = dbConn.getResultSetFromDb("SELECT UserFirstName, UserPrefix, UserLastName, UserEmail, UserAddress, UserResidence, UserPostalCode FROM Users WHERE UserID = " + personId);
 
+        // retrieves input person details
         try{
             rs.first();
 
@@ -213,6 +223,7 @@ public class EditPersonDialog extends JDialog implements ActionListener {
         }
     }
 
+    // retrieves new id for newly created person
     public void setNewPersonId(){
         if (!Start.dbDoneLoading) {
             try {
@@ -241,10 +252,14 @@ public class EditPersonDialog extends JDialog implements ActionListener {
         }
     }
 
+    //Functionality behind the buttons
     public void actionPerformed(ActionEvent e){
 
+        // if button annuleren is pushed the dialog closes
         if (e.getSource() == jbAnnuleren) {
             dispose();
+
+        // if button bevestigen is pushed the input is being retrieved
         } else if (e.getSource() == jbBevestigen) {
             voornaam = jtfVoornaam.getText();
             if(!jtfTussenvoegsel.getText().equals("")){
@@ -262,18 +277,23 @@ public class EditPersonDialog extends JDialog implements ActionListener {
             woonplaats = jtfWoonplaats.getText();
             postcode = jtfPostcode.getText();
 
+            // Checks if required field have input and if input is valid
             if(voornaam.equals("") || achternaam.equals("") || adres.equals("") || woonplaats.equals("") || postcode.equals("")){
                 JOptionPane.showMessageDialog(this,"Niet alle verplichte velden zijn ingevuld.");
             } else {
                 if(postcode.length() > 6){
                     JOptionPane.showMessageDialog(this,"Ongeldige invoer.");
                 } else {
+
+                    //Checks if the person exist and shows edit message
                     if (personExists == true) {
                         int keuze = JOptionPane.showConfirmDialog(this, "Weet u zeker dat u deze gegevens wilt wijzigen?", "Wijzigen gegevens", JOptionPane.YES_NO_OPTION);
                         if (keuze == JOptionPane.YES_OPTION) {
                             editDb();
                             dispose();
                         }
+
+                     // Is person does not exist, add to database message
                     } else {
                         int keuze = JOptionPane.showConfirmDialog(this, "Weet u zeker dat u deze persoon wilt toevoegen?", "Toevoegen persoon", JOptionPane.YES_NO_OPTION);
                         if (keuze == JOptionPane.YES_OPTION) {
