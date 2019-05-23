@@ -80,7 +80,15 @@ public class Main {
             }
 
             //get new order from database.
-            order.getNewOrderIdFromDb();
+            while (order.getOrderNr() == -1 || order.getOrderNr() == 0){
+                order.getNewOrderIdFromDb();
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ie) {
+                    System.out.println(ie);
+                }
+            }
+
             System.out.println("orderid: " + order.getOrderNr());
 
             //send both algorithms to work.

@@ -22,7 +22,7 @@ public class Pakbon{
             System.out.println("PDF wordt gemaakt");
             System.out.println("ordernr " + customer.getOrder().getOrderNr());
             System.out.println("binnr: " + customer.getBin().getBinNumber());
-            String fileName = (String) Integer.toString(customer.getOrder().getOrderNr()) + Integer.toString(customer.getBin().getBinNumber()) + ".pdf"; // name of our file
+            String fileName =  (customer.getOrder().getOrderNr() + Integer.toString(customer.getBin().getBinNumber()) + ".pdf"); // name of our file
 
             PDDocument doc = new PDDocument();
             PDPage page = new PDPage();
@@ -31,7 +31,7 @@ public class Pakbon{
 
             PDPageContentStream content = new PDPageContentStream(doc, page);
 
-            PDImageXObject pdImage = PDImageXObject.createFromFile("C:\\Users\\Rick\\IdeaProjects\\MagazijnRobot\\WWI.png", doc);
+            PDImageXObject pdImage = PDImageXObject.createFromFile(System.getProperty("user.dir") + "\\WWI.png", doc);
 
 
             //content.drawImage(pdImage, 300, 670);
@@ -60,7 +60,7 @@ public class Pakbon{
             content.beginText();
             content.setFont(PDType1Font.HELVETICA, 12);
             content.moveTextPositionByAmount(80, 610);
-            content.drawString("klantnummer: ");
+            content.drawString("Klant nummer: ");
             content.endText();
 
             content.beginText();
@@ -133,7 +133,7 @@ public class Pakbon{
             //UserID
             content.beginText();
             content.setFont(PDType1Font.HELVETICA, 12);
-            content.moveTextPositionByAmount(155, 610);
+            content.moveTextPositionByAmount(160, 610);
             content.drawString(customer.userID);
             content.endText();
             //BinID
