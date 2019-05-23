@@ -21,6 +21,7 @@ public class OrderLinePanel {
         createPanel();
     }
 
+    //initializing textfield, combobox, and button
     public OrderLinePanel(EditOrderDialog dialog){
         jtfOrderLine = new JTextField(3);
         jcbOrderLine = new JComboBox(articles);
@@ -30,6 +31,7 @@ public class OrderLinePanel {
         createPanel();
     }
 
+    //creating panel
     public void createPanel(){
         jpOrderLine = new JPanel();
         jpOrderLine.setLayout(new BorderLayout());
@@ -43,6 +45,7 @@ public class OrderLinePanel {
         jpOrderLine.add(jpOrderLineRight,BorderLayout.LINE_END);
     }
 
+    //retrieves a list with all articles for the combobox
     public static void fillArticles(){
         if (!Start.dbDoneLoading){
             try {
