@@ -8,6 +8,7 @@ public class ArduinoConn {
     private static boolean isInpakArduino = false;
     private static int i;
 
+    //automatically searches for the right comm port and connects to PickRobot.
     public static void arduinoConnectPickRobot() {
         i=0;
         while(!isPickArduino) {
@@ -33,9 +34,10 @@ public class ArduinoConn {
                     } catch (Exception e) {
                     }
                 }
-            }
         }
+    }
 
+    //automatically searches for the right comm port and connects to InpakRobot.
     public static void arduinoConnectInpakRobot() {
         i=0;
         while(!isInpakArduino) {
@@ -58,11 +60,11 @@ public class ArduinoConn {
                         System.out.println("Close, but not close enough");
                     }
                 } catch (Exception e) {
+                    System.out.println(e);
                 }
             }
         }
     }
-
 }
 
 

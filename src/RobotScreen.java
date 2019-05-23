@@ -8,6 +8,7 @@ public class RobotScreen extends JFrame implements ActionListener {
     private ScreenManager screenManager;
     private Main main;
 
+    //booleans for turning robots on and off.
     private boolean isOpOn = false;
     private boolean isIpOn = false;
 
@@ -28,6 +29,7 @@ public class RobotScreen extends JFrame implements ActionListener {
 
     //buttons for swithing screens.
     private JButton robotScreen = new JButton("Robot overzicht"){
+        //sets button color
         protected void paintComponent(Graphics g){
             setContentAreaFilled(false);
             Graphics2D g2 = (Graphics2D)g.create();
@@ -195,6 +197,7 @@ public class RobotScreen extends JFrame implements ActionListener {
         } else if (e.getSource() == inventoryScreen) {
             screenManager.buttonPressed("InventoryScreen");
         } else if (e.getSource() == opOnOffButton) {
+            //turns robots on and off
             if (isOpOn) {
                 opOnOffButton.setText("ON");
                 ipOnOffButton.setText("ON");
@@ -207,6 +210,7 @@ public class RobotScreen extends JFrame implements ActionListener {
             }
             isOpOn = !isOpOn;
         } else if (e.getSource() == opResetButton) {
+            //stops robots
             main.getOrderPick().sendToArduino("reset");
             main.getInpak().sendToArduino("reset");
             main.setReset(true);
@@ -214,6 +218,7 @@ public class RobotScreen extends JFrame implements ActionListener {
             ipOnOffButton.setText("ON");
             main.setPaused(true);
         } else if (e.getSource() == ipOnOffButton) {
+            //turns robots on and off
             if (isIpOn) {
                 opOnOffButton.setText("ON");
                 ipOnOffButton.setText("ON");
@@ -226,6 +231,7 @@ public class RobotScreen extends JFrame implements ActionListener {
             }
             isIpOn = !isIpOn;
         } else if (e.getSource() == ipResetButton) {
+            //stops robots
             main.getInpak().sendToArduino("reset");
             main.getOrderPick().sendToArduino("reset");
             main.setReset(true);
@@ -265,6 +271,8 @@ public class RobotScreen extends JFrame implements ActionListener {
         allLabels[3] = ipLabels2;
     }
 
+    //updates values on robotscreen. takes information from arduino's
+    //left half of screen
     public void updateOp(OrderPick orderPickRobot) {
         opStatus2.setText(orderPickRobot.getStatus());
         opOrderNr2.setText(Integer.toString(main.getCurrentOrder().getOrderNr()));
@@ -273,6 +281,8 @@ public class RobotScreen extends JFrame implements ActionListener {
         opCoordinate2.setText(orderPickRobot.getCurrentLocation().toString());
     }
 
+    //updates values on robotscreen. takes information from arduino's
+    //right half of screen.
     public void updateIp(Inpak inpakRobot) {
         ipStatus2.setText(inpakRobot.getStatus());
         ipOrderNr2.setText(Integer.toString(main.getCurrentOrder().getOrderNr()));

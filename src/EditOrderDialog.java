@@ -45,6 +45,7 @@ public class EditOrderDialog extends JDialog implements ActionListener {
         createDialog();
     }
 
+    //creates dialog
     public void createDialog(){
         setSize(800,400);
         setResizable(false);

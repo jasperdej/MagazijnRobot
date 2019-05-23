@@ -8,7 +8,7 @@ public class Bin {
     private Double totalWeight;
     private ArrayList<Article> articles;
 
-    //needs adjusting
+    //sets private variables.
     public Bin(Order order) {
         binCount++;
         this.order = order;
@@ -21,6 +21,7 @@ public class Bin {
         return this.binNumber;
     }
 
+    //prints all bins with their articles.
     public void printBin() {
         for (Article i : articles) {
             System.out.println("- " + i.getWeight());

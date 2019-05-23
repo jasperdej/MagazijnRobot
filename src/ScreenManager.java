@@ -12,6 +12,7 @@ public class ScreenManager extends Thread {
     private OrderPick orderPick;
     private Inpak inpak;
 
+    //starts screens and keeps refreshing robotscreen.
     public void run() {
         robotScreen.setUpOp(orderPick);
         robotScreen.setUpIp(inpak);
@@ -39,17 +40,20 @@ public class ScreenManager extends Thread {
         }
     }
 
+    //starts new thread for starting order- and inventoryscreen.
     public void startDbScreens() {
         Thread thread = new Thread(dbScreens);
         thread.start();
     }
 
+    //updates robotscreen values
     public void updateRobotScreen(OrderPick orderPick, Inpak inpak) {
         robotScreen.updateOp(orderPick);
         robotScreen.updateIp(inpak);
         robotDraw.repaint();
     }
 
+    //updates order- and inventoryscreen.
     public void updateDbscreens() {
         try {
             if(orderScreen.getIsEdited()) {
@@ -63,6 +67,7 @@ public class ScreenManager extends Thread {
         }
     }
 
+    //switches between screens.
     public void buttonPressed(String nameOfScreen) {
         if (nameOfScreen.equals("RobotScreen")) {
             if (currentScreen != robotScreen) {
@@ -89,7 +94,6 @@ public class ScreenManager extends Thread {
     public void createBinDialog(int binId) {
         new BinDialog(robotScreen.getJframe(), binId, main);
     }
-
 
     public void setRobotScreen(RobotScreen robotScreen) {
         this.robotScreen = robotScreen;
