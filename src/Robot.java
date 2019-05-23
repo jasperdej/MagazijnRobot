@@ -1,5 +1,3 @@
-import arduino.Arduino;
-
 public abstract class Robot {
     protected String status = "Aan het verbinden";
 

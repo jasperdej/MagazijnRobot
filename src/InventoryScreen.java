@@ -3,7 +3,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class InventoryScreen extends JFrame implements ActionListener {
     private Object[][] allArticles;
@@ -163,8 +162,9 @@ public class InventoryScreen extends JFrame implements ActionListener {
                 rs1.next();
             }
 
-        } catch (SQLException sqle) {
-            System.out.println(sqle);
+        } catch (Exception e) {
+            Start.dbDoneLoading = true;
+            fillAllArticles();
         } finally {
             dbConn.killStatement();
             Start.dbDoneLoading = true;

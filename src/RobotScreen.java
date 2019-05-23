@@ -1,11 +1,7 @@
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.InvalidPropertiesFormatException;
-
-import static java.awt.GridBagConstraints.*;
 
 public class RobotScreen extends JFrame implements ActionListener {
     //screenmanager is responsible for showing the right screen.
