@@ -230,6 +230,8 @@ public class Main {
             }
 
             while (isPaused) {
+                inpak.setStatus("Gepauzeerd");
+                orderPick.setStatus("Gepauzeerd");
                 try {
                     Thread.sleep(200);
                 } catch (InterruptedException ie) {
@@ -329,6 +331,8 @@ public class Main {
 
     public void setReset(boolean reset) {
         isReset = reset;
+        inpak.setStatus("Reset");
+        orderPick.setStatus("Reset");
     }
 
     public boolean isReset() {
