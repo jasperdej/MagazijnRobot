@@ -10,7 +10,6 @@ import java.util.Date;
 
 public class EditArticleDialog extends JDialog implements ActionListener {
 
-    private InventoryScreen screen;
     private int articleId;
     private boolean articleExists = true;
     private JPanel panel, topPanel, middlePanel, topMiddlePanel, locatiePanel, locatieXPanel, locatieYPanel, bottomMiddlePanel, bottomPanel, buttonPanel;
@@ -21,17 +20,17 @@ public class EditArticleDialog extends JDialog implements ActionListener {
     private String productnaam, productbeschrijving, productprijs, productgewicht, productaantal, productvoorraad, productlocatiex, productlocatiey;
     private boolean isOk = false;
 
-    public EditArticleDialog(InventoryScreen screen, JFrame jFrame, int articleId){
+    //constructor for editing article
+    public EditArticleDialog(JFrame jFrame, int articleId){
         super(jFrame,true);
-        this.screen = screen;
         this.articleId = articleId;
         setArticle();
         createDialog();
     }
 
-    public EditArticleDialog(InventoryScreen screen, JFrame jFrame){
+    //constructor for creating article
+    public EditArticleDialog(JFrame jFrame){
         super(jFrame,true);
-        this.screen = screen;
         setNewArticleId();
         articleExists = false;
         createDialog();
@@ -44,6 +43,7 @@ public class EditArticleDialog extends JDialog implements ActionListener {
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);
 
+        //initializing panels
         panel =(JPanel)this.getContentPane();
         panel.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
 
@@ -75,6 +75,7 @@ public class EditArticleDialog extends JDialog implements ActionListener {
         buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(1,2));
 
+        //initializing and adding labels + textfields
         jlTitelNew = new JLabel("Artikel aanmaken");
         jlTitelNew.setFont(new Font("Arial",Font.BOLD,30));
         jlTitelEdit = new JLabel("Artikel gegevens wijzigen");
@@ -141,6 +142,7 @@ public class EditArticleDialog extends JDialog implements ActionListener {
         jlVerplicht.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
         bottomPanel.add(jlVerplicht, BorderLayout.PAGE_START);
 
+        //adds buttons to screen
         jbBevestigen = new JButton("Bevestigen");
         jbBevestigen.addActionListener(this);
         buttonPanel.add(jbBevestigen);
@@ -151,6 +153,7 @@ public class EditArticleDialog extends JDialog implements ActionListener {
 
         bottomPanel.add(buttonPanel, BorderLayout.PAGE_END);
 
+        //add final panels to screen
         add(topPanel, BorderLayout.PAGE_START);
         add(middlePanel);
         add(bottomPanel, BorderLayout.PAGE_END);
@@ -158,6 +161,7 @@ public class EditArticleDialog extends JDialog implements ActionListener {
         setVisible(true);
     }
 
+    //adds a new article to db
     public void addToDb(){
         if (!Start.dbDoneLoading) {
             try {
@@ -179,6 +183,7 @@ public class EditArticleDialog extends JDialog implements ActionListener {
         isOk = true;
     }
 
+    //edits an article in db
     public void editDb(){
         if (!Start.dbDoneLoading) {
             try {
@@ -200,6 +205,7 @@ public class EditArticleDialog extends JDialog implements ActionListener {
         isOk = true;
     }
 
+    //retrieves article details from db when editing an article
     public void setArticle(){
         if (!Start.dbDoneLoading) {
             try {
@@ -237,7 +243,7 @@ public class EditArticleDialog extends JDialog implements ActionListener {
         }
     }
 
-
+    //sets a new article ID when creating an article
     public void setNewArticleId(){
         if (!Start.dbDoneLoading) {
             try {
@@ -277,6 +283,7 @@ public class EditArticleDialog extends JDialog implements ActionListener {
         return dateFormat.format(date);
     }
 
+    //checks if a String is an coordinate
     public boolean isCoordinate(String input){
         try{
             int x = Integer.parseInt(input);
@@ -290,6 +297,7 @@ public class EditArticleDialog extends JDialog implements ActionListener {
         }
     }
 
+    //checks if a String is an int
     public boolean isInt(String input){
         try{
             int x = Integer.parseInt(input);
@@ -303,6 +311,7 @@ public class EditArticleDialog extends JDialog implements ActionListener {
         }
     }
 
+    //checks if a String is a double
     public boolean isDouble(String input){
         try{
             double x = Double.parseDouble(input);
@@ -316,6 +325,7 @@ public class EditArticleDialog extends JDialog implements ActionListener {
         }
     }
 
+    //checks if a String is an int, unlike the isInt() method, this int can be 0
     public boolean isIntCanBeZero(String input){
         try {
             int x = Integer.parseInt(input);
@@ -334,8 +344,10 @@ public class EditArticleDialog extends JDialog implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e){
+        //"Annuleren" button
         if(e.getSource() == jbAnnuleren) {
             dispose();
+        //"Bevestigen" button
         } else if (e.getSource() == jbBevestigen) {
             productnaam = jtfProductNaam.getText();
             productbeschrijving = jtaProductBeschrijving.getText();
@@ -346,9 +358,11 @@ public class EditArticleDialog extends JDialog implements ActionListener {
             productlocatiex = jtfProductLocatieX.getText();
             productlocatiey = jtfProductLocatieY.getText();
 
+            //checks for empty fields
             if (productnaam.equals("") || productbeschrijving.equals("") || productaantal.equals("") || productprijs.equals("") || productgewicht.equals("") || productvoorraad.equals("") || productlocatiex.equals("") || productlocatiey.equals("")) {
                 JOptionPane.showMessageDialog(this, "Niet alle verplichte velden zijn ingevuld.");
             } else {
+                //checks for invalid entries
                 if(!isInt(productaantal) || !isDouble(productprijs) || !isDouble(productgewicht) || !isIntCanBeZero(productvoorraad) || !isCoordinate(productlocatiex) || !isCoordinate(productlocatiey)){
                     JOptionPane.showMessageDialog(this,"Ongeldige invoer.");
                 } else {

@@ -11,7 +11,6 @@ import java.util.Date;
 
 public class EditOrderDialog extends JDialog implements ActionListener {
 
-    private OrderScreen screen;
     private int orderId;
     private int customerId;
     private boolean orderExists = true;
@@ -28,18 +27,18 @@ public class EditOrderDialog extends JDialog implements ActionListener {
     private int maxOrderLineId;
     private boolean isOk;
 
-    public EditOrderDialog(OrderScreen orderScreen, JFrame jFrame, int orderId){
+    //constructor for editing order
+    public EditOrderDialog(JFrame jFrame, int orderId){
         super(jFrame,true);
-        this.screen = orderScreen;
         this.orderId = orderId;
         setExistingOrderFromDb();
         setLists();
         createDialog();
     }
 
-    public EditOrderDialog(OrderScreen orderScreen, JFrame jFrame){
+    //constructor for creating order
+    public EditOrderDialog(JFrame jFrame){
         super(jFrame,true);
-        this.screen = orderScreen;
         orderExists = false;
         setNewOrderIdFromDb();
         setLists();
@@ -126,6 +125,7 @@ public class EditOrderDialog extends JDialog implements ActionListener {
         setVisible(true);
     }
 
+    //initializing lists
     public void setLists(){
         setCustomerList();
         setArticleList();
@@ -138,12 +138,14 @@ public class EditOrderDialog extends JDialog implements ActionListener {
         }
     }
 
+    //shows panels from the panels arraylist
     public void showPanels(){
         for(int i = 0; i < panels.size(); i++){
             bottomMiddlePanel.add(panels.get(i).getJpOrderLine());
         }
     }
 
+    //adds a new panel to the screen
     public void addPanel(){
         panels.add(new OrderLinePanel(this));
         setRows();
@@ -152,6 +154,7 @@ public class EditOrderDialog extends JDialog implements ActionListener {
         repaint();
     }
 
+    //removes a panel from the screen
     public void removePanel(int index){
         bottomMiddlePanel.remove(panels.get(index).getJpOrderLine());
         panels.remove(index);
@@ -160,6 +163,7 @@ public class EditOrderDialog extends JDialog implements ActionListener {
         repaint();
     }
 
+    //adds a new order to db
     public void addToDb(){
         if (!Start.dbDoneLoading){
             try {
@@ -185,6 +189,7 @@ public class EditOrderDialog extends JDialog implements ActionListener {
         isOk = true;
     }
 
+    //checks which orderlines need to be added, removed and updated in db
     public void editDb(){
         if (!Start.dbDoneLoading){
             try {
@@ -223,19 +228,23 @@ public class EditOrderDialog extends JDialog implements ActionListener {
         isOk = true;
     }
 
+    //updates a record in db
     public void updateRecordInDb(DbConn dbConn, int panelIndex){
         dbConn.updateDb("UPDATE OrderLines SET Quantity = " + Integer.parseInt(panels.get(panelIndex).getJtfOrderLine().getText()) + " WHERE OrderLineID = " + panels.get(panelIndex).getOriginalOrderLine());
     }
 
+    //adds a record to db
     public void addRecordToDb(DbConn dbConn, int panelIndex){
         maxOrderLineId++;
         dbConn.updateDb("INSERT INTO OrderLines (OrderLineID, OrderID, StockItemID, Description, PackageTypeID, Quantity, TaxRate, PickedQuantity, LastEditedBy, LastEditedWhen) VALUES (" + maxOrderLineId + ", " + orderId + ", " + panels.get(panelIndex).getJcbOrderLine().getSelectedIndex() + ", '-', 1, " + Integer.parseInt(panels.get(panelIndex).getJtfOrderLine().getText()) + ", 15.0, 0, 1,'" + getDateTime() + "')");
     }
 
+    //deletes a record from db
     public void deleteRecordFromDb(DbConn dbConn, int originalIndex){
         dbConn.updateDb("DELETE FROM OrderLines WHERE OrderLineID = " + originalOrderLines[originalIndex][0]);
     }
 
+    //retrieves customerID from db when editing an order
     public void setExistingOrderFromDb(){
         if (!Start.dbDoneLoading){
             try {
@@ -263,6 +272,7 @@ public class EditOrderDialog extends JDialog implements ActionListener {
         }
     }
 
+    //sets a new orderID when creating an order
     public void setNewOrderIdFromDb(){
         if (!Start.dbDoneLoading){
             try {
@@ -289,6 +299,7 @@ public class EditOrderDialog extends JDialog implements ActionListener {
         }
     }
 
+    //retrieves a new orderLineID when adding orderlines to db
     public void setMaxOrderLineId(){
         if (!Start.dbDoneLoading){
             try {
@@ -316,6 +327,7 @@ public class EditOrderDialog extends JDialog implements ActionListener {
         }
     }
 
+    //retrieves orderlines from db when editing an order
     public void getOrderLinesFromDb(){
         if (!Start.dbDoneLoading){
             try {
@@ -356,6 +368,7 @@ public class EditOrderDialog extends JDialog implements ActionListener {
         }
     }
 
+    //checks if an article someone is trying to select isn't in the order already
     public void checkIfSelected(int index){
         for(int i = 0; i < panels.size(); i++){
             if(i != index && panels.get(i).getJcbOrderLine().getSelectedIndex() == panels.get(index).getJcbOrderLine().getSelectedIndex()){
@@ -364,10 +377,12 @@ public class EditOrderDialog extends JDialog implements ActionListener {
         }
     }
 
+    //retrieves a list with all articles for the combobox
     public void setArticleList() {
         OrderLinePanel.fillArticles();
     }
 
+    //retrieves a list with all customers for the combobox
     public void setCustomerList(){
         if (!Start.dbDoneLoading){
             try {
@@ -404,6 +419,7 @@ public class EditOrderDialog extends JDialog implements ActionListener {
         }
     }
 
+    //calculates amount of orderlines, the gridlayout needs a minimum of 6 lines to not mess up, so will change to 6 if lesser than 6
     public void setRows(){
         if(panels.size() > 6){
             rows = panels.size();
@@ -413,6 +429,7 @@ public class EditOrderDialog extends JDialog implements ActionListener {
         grBottomMiddlePanel.setRows(rows);
     }
 
+    //checks if an order has been edited when trying to save changes
     public boolean orderEdited(){
         System.out.println(panels.size());
         System.out.println(originalOrderLines.length);
@@ -457,14 +474,17 @@ public class EditOrderDialog extends JDialog implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e){
-
+        //"Annuleren" button
         if (e.getSource() == jbAnnuleren) {
             dispose();
+        //"Bevestigen" button
         } else if (e.getSource() == jbBevestigen) {
             boolean correctInput = true;
+            //checks if an order has at least 1 orderline
             if(panels.size() == 0){
                 correctInput = false;
             } else {
+                //checks if input is valid
                 for(OrderLinePanel o : panels){
                     try{
                         int x = Integer.parseInt(o.getJtfOrderLine().getText());
@@ -497,8 +517,10 @@ public class EditOrderDialog extends JDialog implements ActionListener {
                     }
                 }
             }
+        //adds a new orderline
         } else if(e.getSource() == jbAddArticle){
             addPanel();
+        //removes an orderline
         } else {
             for(int i = 0; i < panels.size(); i++){
                 if(e.getSource() == panels.get(i).getJbOrderLine()){

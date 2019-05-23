@@ -234,7 +234,7 @@ public class InventoryScreen extends JFrame implements ActionListener {
             screenManager.buttonPressed("InventoryScreen");
 
         } else if (e.getSource() == addArticle){
-            createArticleDialog = new EditArticleDialog(this,this);
+            createArticleDialog = new EditArticleDialog(this);
             if(createArticleDialog.getIsOk()){
                 isEdited = true;
             }
@@ -242,7 +242,7 @@ public class InventoryScreen extends JFrame implements ActionListener {
             String artikelid = JOptionPane.showInputDialog(this,"Voer artikel nummer in: ");
             if(!artikelid.equals(null)) {
                 if (checkID("SELECT StockItemID FROM StockItems WHERE StockItemID = ", artikelid)) {
-                    editArticleDialog = new EditArticleDialog(this,this, Integer.parseInt(artikelid));
+                    editArticleDialog = new EditArticleDialog(this, Integer.parseInt(artikelid));
                     if(editArticleDialog.getIsOk()){
                         isEdited = true;
                     }

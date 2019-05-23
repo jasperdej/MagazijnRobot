@@ -257,7 +257,7 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
             screenManager.buttonPressed("InventoryScreen");
         }
         else if (e.getSource() == addOrder) {
-            createOrderDialog = new EditOrderDialog(this,this);
+            createOrderDialog = new EditOrderDialog(this);
             if(createOrderDialog.getIsOk()){
                 isEdited = true;
             }
@@ -265,7 +265,7 @@ public class OrderScreen extends JFrame implements MouseListener, ActionListener
             String orderid = JOptionPane.showInputDialog(this,"Voer order nummer in: ");
             if(orderid != null){
                 if (checkID("SELECT OrderID FROM Orders WHERE Status = 'wachten op actie' AND OrderID = ", orderid)) {
-                    editOrderDialog = new EditOrderDialog(this,this, Integer.parseInt(orderid));
+                    editOrderDialog = new EditOrderDialog(this, Integer.parseInt(orderid));
                     if(editOrderDialog.getIsOk()){
                         isEdited = true;
                     }
