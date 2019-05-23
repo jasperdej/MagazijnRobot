@@ -7,10 +7,12 @@ public class Customer {
     private Order order;
     private Bin bin;
 
+    //sets private variable
     public Customer (Order order) {
         this.order = order;
     }
 
+    //gets customer information from database
     public void getCustomerInfo(){
         if (!Start.dbDoneLoading) {
         try {

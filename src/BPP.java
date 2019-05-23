@@ -10,6 +10,7 @@ public class BPP {
     private double binCapacity = 1.5;
     private int binMaxItems = 10;
 
+    //sets local variables.
     public BPP(Order order) {
         Bin.setBinCount(0);
         this.order = order;
@@ -17,6 +18,7 @@ public class BPP {
         bins = new ArrayList<>();
         packItems();
     }
+
 
     private void packItems() {
         Collections.sort(list, new Comparator<Article>() {

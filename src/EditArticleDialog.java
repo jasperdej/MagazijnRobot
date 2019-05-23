@@ -21,6 +21,7 @@ public class EditArticleDialog extends JDialog implements ActionListener {
     private String productnaam, productbeschrijving, productprijs, productgewicht, productaantal, productvoorraad, productlocatiex, productlocatiey;
     private boolean isOk = false;
 
+    //sets private variables, uses existing article
     public EditArticleDialog(InventoryScreen screen, JFrame jFrame, int articleId){
         super(jFrame,true);
         this.screen = screen;
@@ -29,6 +30,7 @@ public class EditArticleDialog extends JDialog implements ActionListener {
         createDialog();
     }
 
+    //sets private variables, creates new article
     public EditArticleDialog(InventoryScreen screen, JFrame jFrame){
         super(jFrame,true);
         this.screen = screen;
@@ -37,6 +39,7 @@ public class EditArticleDialog extends JDialog implements ActionListener {
         createDialog();
     }
 
+    //creates dialog
     public void createDialog(){
         setSize(480,400);
         setResizable(false);

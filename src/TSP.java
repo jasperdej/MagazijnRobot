@@ -6,7 +6,7 @@ public class TSP {
     private ArrayList<Article> articlesOutput = new ArrayList<>();
     private double smallestDistance;
 
-
+    //sets articles for algorithm
     public void setArticlesInput(Article article1, Article article2, Article article3) {
         articlesInput.clear();
         articlesInput.add(article1);
@@ -14,7 +14,7 @@ public class TSP {
         articlesInput.add(article3);
     }
 
-
+    //sets articles in fastest order based on their location in the warehouse
     public void setInOrder() {
         currentArticleOrder.clear();
         int a;
@@ -32,6 +32,7 @@ public class TSP {
         }
     }
 
+    //calculates route distance.
     private void routeDistance(ArrayList<Article> articles) {
         double afstand = 0;
 
@@ -84,6 +85,7 @@ public class TSP {
         }
     }
 
+    //used for developing. prints algorithm outcome with its distance
     public void printArticlesOutput() {
         for (Article a: articlesOutput) {
             System.out.println(a.getId());

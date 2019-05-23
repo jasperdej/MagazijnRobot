@@ -4,6 +4,7 @@ public class DbConn {
         private static Connection con;
         private Statement stmt;
 
+        //connects to database
         public static void dbConnect() {
                 try {
                         Class.forName("com.mysql.cj.jdbc.Driver");
@@ -14,6 +15,7 @@ public class DbConn {
                 }
         }
 
+        //kills connection with database.
         public static void dbKill() {
                 try {
                         con.close();
@@ -22,6 +24,7 @@ public class DbConn {
                 }
         }
 
+        //kills statement
         public void killStatement() {
                 try{
                         stmt.close();
@@ -31,6 +34,7 @@ public class DbConn {
                 }
         }
 
+        //executes query and returns results
         public ResultSet getResultSetFromDb(String sql) {
                 try {
                         stmt = con.createStatement();
@@ -43,6 +47,7 @@ public class DbConn {
                 }
         }
 
+        //executes query, does not return results
         public void updateDb(String sql){
                 try {
                         stmt = con.createStatement();
