@@ -28,6 +28,7 @@ public class EditOrderDialog extends JDialog implements ActionListener {
     private int maxOrderLineId;
     private boolean isOk;
 
+    //sets private variables, uses existing order
     public EditOrderDialog(OrderScreen orderScreen, JFrame jFrame, int orderId){
         super(jFrame,true);
         this.screen = orderScreen;
@@ -37,6 +38,7 @@ public class EditOrderDialog extends JDialog implements ActionListener {
         createDialog();
     }
 
+    //sets private variables, creates new order
     public EditOrderDialog(OrderScreen orderScreen, JFrame jFrame){
         super(jFrame,true);
         this.screen = orderScreen;
@@ -46,6 +48,7 @@ public class EditOrderDialog extends JDialog implements ActionListener {
         createDialog();
     }
 
+    //creates dialog
     public void createDialog(){
         setSize(800,400);
         setResizable(false);

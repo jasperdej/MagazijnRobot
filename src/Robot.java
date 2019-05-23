@@ -1,8 +1,7 @@
 public abstract class Robot {
     protected String status = "Aan het verbinden";
 
-    //functie voor luisteren naar arduino.
-
+    //sends coordinates of new order to arduino.
     public static void sendToCoords(String coord){
         StackTraceElement[] stactrace = Thread.currentThread().getStackTrace();
         StackTraceElement e = stactrace[2];
@@ -16,6 +15,7 @@ public abstract class Robot {
         }
     }
 
+    //listens to Arduino. returns string send by arduino
     public String recievedFromInpak() {
         String arduino = ArduinoConn.arduinoInpakRobot.serialRead();
         return arduino;
@@ -31,8 +31,5 @@ public abstract class Robot {
 
     public void setStatus(String status) {
         this.status = status;
-        if (status.equals("aan het inpakken")) {
-//            Thread thread = new Thread()
-        }
     }
 }
